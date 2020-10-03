@@ -1,12 +1,12 @@
 package me.aiglez.lonkskit.abilities.itembased;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.ImmutableList;
 import me.aiglez.lonkskit.abilities.Ability;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
-import me.aiglez.lonkskit.utils.Logger;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.config.ConfigurationNode;
+import me.lucko.helper.random.RandomSelector;
 import me.lucko.helper.scheduler.Ticks;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -18,13 +18,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class TrollAbility extends ItemStackAbility {
 
     private final ItemStack item;
-    private final Set<PotionEffectType> randomPotionEffects = Sets.newHashSet();
+    private final RandomSelector<PotionEffectType> potionEffectTypeRandomSelector = RandomSelector.uniform(ImmutableList.of(
+            PotionEffectType.POISON, PotionEffectType.BLINDNESS, PotionEffectType.SLOW_DIGGING
+    ));
 
     public TrollAbility(ConfigurationNode configuration) {
         super("troll", configuration);
@@ -55,18 +56,12 @@ public class TrollAbility extends ItemStackAbility {
         if(damager.hasSelectedKit() && damager.getNullableSelectedKit().hasAbility(Ability.get("troll"))) {
             ItemStack item = damager.toBukkit().getInventory().getItemInMainHand();
             if(isItemStack(item)) {
-                Logger.debug("That item doesn't have item meta / deisplay name");
-
                 victim.toBukkit().addPotionEffect(new PotionEffect(
-                        PotionEffectType.SLOW_DIGGING, (int) Ticks.from(4, TimeUnit.SECONDS), 1
+                        potionEffectTypeRandomSelector.pick(), (int) Ticks.from(4, TimeUnit.SECONDS), 1
                 ));
                 damager.msg("&cYou have trolled {0}", victim.getLastKnownName());
             }
         }
-    }
-
-    private void addRandomPotionEffect(LocalPlayer localPlayer) {
-
     }
 
 }
