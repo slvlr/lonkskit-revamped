@@ -67,6 +67,11 @@ public class AbilityFactoryImpl implements AbilityFactory {
                 getFileByName("troll").orElseThrow(() -> new AbilityFileNotFoundException("troll"))
         );
         this.abilities.add(troll);
+
+        Ability blink = new BlinkAbility(
+                getFileByName("blink").orElseThrow(() -> new AbilityFileNotFoundException("blink"))
+        );
+        this.abilities.add(blink);
     }
 
     @Override
