@@ -25,7 +25,7 @@ public class PlayerListeners implements Listener {
         final Entity entity = e.getEntity();
         if(entity instanceof Player) {
             final LocalPlayer localPlayer = LonksKitProvider.getPlayerFactory().getLocalPlayer((Player) entity);
-            if(localPlayer.getNullableSelectedKit() == null) return;
+            if(!localPlayer.hasSelectedKit()) return;
 
 
             // no fall damage
