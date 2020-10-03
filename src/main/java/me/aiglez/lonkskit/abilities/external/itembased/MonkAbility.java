@@ -1,4 +1,4 @@
-package me.aiglez.lonkskit.abilities.ImadAbilities.itembased;
+package me.aiglez.lonkskit.abilities.external.itembased;
 
 
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
@@ -6,11 +6,8 @@ import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.item.ItemStackBuilder;
 import org.bukkit.Material;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -18,41 +15,46 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-public class Monk extends ItemStackAbility {
-    ItemStack item;
+public class MonkAbility extends ItemStackAbility {
 
-    protected Monk(ConfigurationNode configuration) {
+    private final ItemStack item;
+
+    public MonkAbility(ConfigurationNode configuration) {
         super("monk", configuration);
-        this.item = ItemStackBuilder.of(Material.BLAZE_ROD).name("&6Wand").build();
+        this.item = ItemStackBuilder.of(Material.BLAZE_ROD)
+                .name("&6Wand")
+                .build();
     }
 
     @Override
     public ItemStack getItemStack() {
-        return item;
+        return this.item;
     }
 
     @Override
     public boolean isItemStack(ItemStack item) {
-        return item.isSimilar(this.item);
+        return this.item.isSimilar(item);
     }
 
     @Override
     public void whenClicked(PlayerInteractEvent e) {
+        e.setCancelled(true);
     }
+
     @EventHandler
     public void whenClickPlayer(PlayerInteractEntityEvent event){
         LocalPlayer player = LocalPlayer.get(event.getPlayer());
         if (!this.cooldown.test(player)){
-            player.msg("&cPlease wait, {0} second(s) left", new Object[]{this.cooldown.remainingTime(player, TimeUnit.SECONDS)});
+            player.msg("&cPlease wait, {0} second(s) left", cooldown.remainingTime(player, TimeUnit.SECONDS));
 
         } else {
             if (event.getRightClicked() instanceof Player) {
                 Player target = (Player) event.getRightClicked();
                 int a = new Random().nextInt(30);
                 if (target.getInventory().getItem(a).getType() != Material.AIR) {
-                    ItemStack first = target.getItemInHand();
+                    ItemStack first = target.getInventory().getItemInMainHand(); // Player#getItemInHand is @deprecated
                     ItemStack second = target.getInventory().getItem(a);
-                    target.setItemInHand(second);
+                    target.getInventory().setItemInMainHand(second);
                     target.getInventory().setItem(a, first);
                 }
             }

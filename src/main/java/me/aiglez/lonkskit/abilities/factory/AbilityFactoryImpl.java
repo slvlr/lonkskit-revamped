@@ -2,6 +2,7 @@ package me.aiglez.lonkskit.abilities.factory;
 
 import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.abilities.Ability;
+import me.aiglez.lonkskit.abilities.external.itembased.MonkAbility;
 import me.aiglez.lonkskit.abilities.functionnal.StompAbility;
 import me.aiglez.lonkskit.abilities.itembased.*;
 import me.aiglez.lonkskit.exceptions.AbilityFileNotFoundException;
@@ -72,6 +73,13 @@ public class AbilityFactoryImpl implements AbilityFactory {
                 getFileByName("blink").orElseThrow(() -> new AbilityFileNotFoundException("blink"))
         );
         this.abilities.add(blink);
+
+        // Imad - start
+        Ability monk = new MonkAbility(
+                getFileByName("monk").orElseThrow(() -> new AbilityFileNotFoundException("monk"))
+        );
+        this.abilities.add(monk);
+        // Imad - end
     }
 
     @Override
