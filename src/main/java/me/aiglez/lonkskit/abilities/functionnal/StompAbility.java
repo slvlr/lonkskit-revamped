@@ -7,7 +7,7 @@ import me.lucko.helper.config.ConfigurationNode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 
-public class StompAbility extends FunctionalAbility {
+public class  StompAbility extends FunctionalAbility {
 
     public StompAbility(ConfigurationNode configuration) {
         super("stomp", configuration);
