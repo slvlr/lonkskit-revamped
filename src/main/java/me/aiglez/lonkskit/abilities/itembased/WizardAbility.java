@@ -49,23 +49,9 @@ public class WizardAbility extends ItemStackAbility {
             return;
         }
 
-        /*
-        final Vector direction = localPlayer.toBukkit().getLocation().getDirection();
-        final Snowball snowball = (Snowball) localPlayer.toBukkit().getLocation().getWorld().spawnEntity(
-                localPlayer.toBukkit().getLocation(), EntityType.SNOWBALL
-        );
-        snowball.setShooter(localPlayer.toBukkit());
-        snowball.setVelocity(direction.multiply(1.5D));
-
-         */
         final Snowball snowball = localPlayer.toBukkit().launchProjectile(Snowball.class);
         snowball.setShooter(localPlayer.toBukkit());
-        Logger.debug("Shooter is null: " + (snowball.getShooter() == null));
-        if(snowball.getShooter() != null) {
-            Logger.debug("Shooter: " + snowball.getShooter().getClass());
-        }
         Metadata.provideForEntity(snowball).put(MetadataProvider.SNOWBALL_EXPLODE, true);
-        Logger.debug("Snowball metadatas: " + Metadata.provideForEntity(snowball).asMap());
     }
 
     @Override
@@ -80,7 +66,7 @@ public class WizardAbility extends ItemStackAbility {
                     } else if(e.getHitBlock() == null) {
                         explosionLocation = e.getHitEntity().getLocation();
                     } else {
-                        Logger.severe("[Wizard] The snowball didn't shoot a block/player");
+                        Logger.severe("[Wizard] The snowball didn't shoot any block/player");
                     }
 
                     if(explosionLocation != null) {
