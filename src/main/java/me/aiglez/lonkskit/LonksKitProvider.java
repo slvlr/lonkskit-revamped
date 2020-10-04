@@ -7,15 +7,15 @@ import me.aiglez.lonkskit.players.LocalPlayerFactory;
 
 public class LonksKitProvider {
 
-    public static KitFactory getKitRegistry() {
-        return KitPlugin.getSingleton().getKitRegistry();
+    public static KitFactory getKitFactory() {
+        return KitPlugin.getSingleton().getKitFactory();
     }
 
     public static LocalPlayerFactory getPlayerFactory() { return KitPlugin.getSingleton().getPlayerFactory(); }
 
     public static AbilityFactory getAbilityFactory() {return KitPlugin.getSingleton().getAbilityFactory();}
 
-    public LonksKitProvider() {
+    private LonksKitProvider() {
         throw new UnsupportedOperationException();
     }
 }

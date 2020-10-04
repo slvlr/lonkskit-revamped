@@ -43,7 +43,7 @@ public final class KitPlugin extends JavaPlugin implements Listener {
         this.kitFactory.loadKits();
 
         Logger.fine("Loading players...");
-        this.localPlayerFactory = LocalPlayerFactory.make();
+        this.localPlayerFactory = LocalPlayerFactory.makeInstance();
         this.localPlayerFactory.loadLocalPlayers();
 
         getServer().getPluginManager().registerEvents(this, this);
@@ -63,7 +63,7 @@ public final class KitPlugin extends JavaPlugin implements Listener {
 
     public static KitPlugin getSingleton() { return singleton; }
 
-    public KitFactory getKitRegistry() { return this.kitFactory; }
+    public KitFactory getKitFactory() { return this.kitFactory; }
 
     public LocalPlayerFactory getPlayerFactory() { return this.localPlayerFactory; }
 

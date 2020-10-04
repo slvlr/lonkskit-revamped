@@ -54,7 +54,7 @@ public class KitSelectorGUI extends PaginatedGui {
 
     private static Function<PaginatedGui, List<Item>> getContent(LocalPlayer localPlayer) {
         return gui ->
-                LonksKitProvider.getKitRegistry().getSortedKitsBySlots().stream()
+                LonksKitProvider.getKitFactory().getSortedKitsBySlots().stream()
                 .map(kit -> {
                     final KitSelectorHolder holder = kit.getSelectorHolder();
                     if(!holder.display()) {

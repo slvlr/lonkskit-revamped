@@ -32,7 +32,7 @@ public class PortastompAbility extends ItemStackAbility {
 
     // --------------------------------------------------------------------------------------------
     @Override
-    public void whenClicked(PlayerInteractEvent e) {
+    public void whenUsed(PlayerInteractEvent e) {
         e.setCancelled(true);
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
 

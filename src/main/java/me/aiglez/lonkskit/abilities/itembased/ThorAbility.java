@@ -4,7 +4,7 @@ import com.google.common.collect.Sets;
 import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
-import me.aiglez.lonkskit.utils.Metadatas;
+import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.metadata.ExpiringValue;
 import org.bukkit.Material;
@@ -42,7 +42,7 @@ public class ThorAbility extends ItemStackAbility {
     public boolean isItemStack(ItemStack item) { return this.item.isSimilar(item); }
 
     // --------------------------------------------------------------------------------------------
-    public void whenClicked(PlayerInteractEvent e) {
+    public void whenUsed(PlayerInteractEvent e) {
         e.setCancelled(true);
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
 
@@ -53,7 +53,7 @@ public class ThorAbility extends ItemStackAbility {
 
         final Block target = localPlayer.toBukkit().getTargetBlock(transparentMaterials, configuration.getNode("max-radius").getInt(100));
 
-        localPlayer.metadata().put(Metadatas.PLAYER_NO_LIGHTING_DAMAGE, ExpiringValue.of(true, 2, TimeUnit.SECONDS));
+        localPlayer.metadata().put(MetadataProvider.PLAYER_NO_LIGHTING_DAMAGE, ExpiringValue.of(true, 2, TimeUnit.SECONDS));
         localPlayer.toBukkit().getWorld().strikeLightning(WorldProvider.KP_WORLD.getHighestBlockAt(target.getLocation()).getLocation());
     }
 }

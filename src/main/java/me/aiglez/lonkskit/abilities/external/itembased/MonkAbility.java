@@ -37,7 +37,7 @@ public class MonkAbility extends ItemStackAbility {
     }
 
     @Override
-    public void whenClicked(PlayerInteractEvent e) {
+    public void whenUsed(PlayerInteractEvent e) {
         e.setCancelled(true);
     }
 

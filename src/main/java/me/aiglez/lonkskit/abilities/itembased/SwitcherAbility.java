@@ -39,7 +39,7 @@ public class SwitcherAbility extends ItemStackAbility {
 
     // --------------------------------------------------------------------------------------------
     @Override
-    public void whenClicked(PlayerInteractEvent e) {
+    public void whenUsed(PlayerInteractEvent e) {
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
         if(!cooldown.test(localPlayer)){
             localPlayer.msg("&cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));

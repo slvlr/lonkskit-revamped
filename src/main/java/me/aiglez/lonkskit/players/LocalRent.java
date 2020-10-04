@@ -12,14 +12,14 @@ public interface LocalRent {
 
     int getUses();
 
+    void incrementUses();
+
+    boolean isValid();
+
     default int getLeftUses() {
         if(getRented() == null) return 0;
         return getRented().getUsesPerRent() - getUses();
     }
-
-    void incrementUses();
-
-    boolean isValid();
 
     static LocalRent of(LocalPlayer localPlayer, Kit kit) { return new MemoryRent(localPlayer, kit); }
 

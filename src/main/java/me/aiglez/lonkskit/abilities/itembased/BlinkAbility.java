@@ -37,7 +37,7 @@ public class BlinkAbility extends ItemStackAbility {
 
     // --------------------------------------------------------------------------------------------
     @Override
-    public void whenClicked(PlayerInteractEvent e) {
+    public void whenUsed(PlayerInteractEvent e) {
         e.setCancelled(true);
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
         final Block target = localPlayer.toBukkit().getTargetBlock(transparentMaterials, configuration.getNode("max-radius").getInt(100));
@@ -51,4 +51,8 @@ public class BlinkAbility extends ItemStackAbility {
         localPlayer.msg("&aYou have blinked!");
     }
 
+    @Override
+    public void registerListeners() {
+
+    }
 }

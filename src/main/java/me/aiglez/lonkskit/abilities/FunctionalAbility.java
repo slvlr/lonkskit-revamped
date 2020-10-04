@@ -1,7 +1,6 @@
 package me.aiglez.lonkskit.abilities;
 
 import com.google.common.base.Preconditions;
-import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.cooldown.Cooldown;
@@ -25,8 +24,6 @@ public abstract class FunctionalAbility implements Ability, Listener {
 
         final int cooldownSeconds = configuration.getNode("cooldown").getInt(0);
         cooldown = CooldownMap.create(Cooldown.of(cooldownSeconds, TimeUnit.SECONDS));
-
-        KitPlugin.getSingleton().registerListener(this);
     }
 
     @Override
@@ -43,6 +40,8 @@ public abstract class FunctionalAbility implements Ability, Listener {
     public CooldownMap<LocalPlayer> getCooldown() {
         return this.cooldown;
     }
+
+
 
     @Override
     public String toString() {

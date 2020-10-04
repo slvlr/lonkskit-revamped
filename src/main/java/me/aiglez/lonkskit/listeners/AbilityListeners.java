@@ -26,7 +26,7 @@ public class AbilityListeners implements Listener {
                 if(ability instanceof ItemStackAbility) {
                     final ItemStackAbility itemAbility = (ItemStackAbility) ability;
                     if(itemAbility.isItemStack(item)) {
-                        itemAbility.whenClicked(e);
+                        itemAbility.whenUsed(e);
                         return;
                     }
                 }

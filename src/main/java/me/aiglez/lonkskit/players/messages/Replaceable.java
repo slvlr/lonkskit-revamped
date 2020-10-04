@@ -25,4 +25,7 @@ public class Replaceable {
         return handled;
     }
 
+    private Replaceable() {
+        throw new UnsupportedOperationException();
+    }
 }

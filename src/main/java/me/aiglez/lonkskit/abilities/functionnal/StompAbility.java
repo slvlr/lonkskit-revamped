@@ -24,8 +24,8 @@ public class StompAbility extends FunctionalAbility {
     public void registerListeners() {
         Events.subscribe(EntityDamageEvent.class)
                 .filter(EventFilters.ignoreCancelled())
-                .filter(AbilityPredicates.humanHasAbility(this))
                 .filter(e -> e.getCause() == EntityDamageEvent.DamageCause.FALL)
+                .filter(AbilityPredicates.humanHasAbility(this))
                 .handler(e -> {
                     final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getEntity());
 

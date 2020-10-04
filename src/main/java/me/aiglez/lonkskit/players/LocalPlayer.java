@@ -104,6 +104,7 @@ public interface LocalPlayer extends GsonSerializable {
     }
 
     default void msg(String message) {
+        Preconditions.checkNotNull(message, "message may not be null");
         if(toBukkit() != null) toBukkit().sendMessage(Text.colorize(message));
     }
 
@@ -152,7 +153,7 @@ public interface LocalPlayer extends GsonSerializable {
             final int uses = rentObject.get("uses").getAsInt();
 
             Preconditions.checkArgument(rentObject.has("kit"));
-            final Optional<Kit> optionalKit = LonksKitProvider.getKitRegistry().getKit(rentObject.get("kit").getAsString());
+            final Optional<Kit> optionalKit = LonksKitProvider.getKitFactory().getKit(rentObject.get("kit").getAsString());
             if (!optionalKit.isPresent()) {
                 Logger.warn("No kit with backend-name [" + rentObject.get("kit").getAsString() + "] was found, (Rent deserialization)");
                 continue;

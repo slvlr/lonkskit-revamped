@@ -21,7 +21,7 @@ public class Logger {
         Bukkit.getConsoleSender().sendMessage( ChatColor.YELLOW + "[LonksKit - WARN] " + ChatColor.RESET + message);
     }
 
-    public Logger() {
+    private Logger() {
         throw new UnsupportedOperationException();
     }
 }

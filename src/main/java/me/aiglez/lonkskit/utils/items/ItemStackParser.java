@@ -142,7 +142,7 @@ public class ItemStackParser {
         return Optional.ofNullable(COLORS.get(name.toUpperCase()));
     }
 
-    public ItemStackParser() {
+    private ItemStackParser() {
         throw new UnsupportedOperationException();
     }
 }

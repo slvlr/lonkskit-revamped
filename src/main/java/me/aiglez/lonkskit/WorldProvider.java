@@ -9,4 +9,7 @@ public class WorldProvider {
     public static final World MAIN_WORLD = Bukkit.getWorld("world");
 
 
+    private WorldProvider() {
+        throw new UnsupportedOperationException();
+    }
 }

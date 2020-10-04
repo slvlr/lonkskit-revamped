@@ -32,7 +32,7 @@ public class ShadowbladeAbility extends ItemStackAbility {
     }
 
     @Override
-    public void whenClicked(PlayerInteractEvent e) {
+    public void whenUsed(PlayerInteractEvent e) {
         e.setCancelled(true);
         LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
         if (!this.cooldown.test(localPlayer)){

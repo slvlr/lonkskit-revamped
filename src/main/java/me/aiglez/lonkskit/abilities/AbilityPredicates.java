@@ -1,8 +1,10 @@
 package me.aiglez.lonkskit.abilities;
 
 import me.aiglez.lonkskit.players.LocalPlayer;
+import me.lucko.helper.metadata.Metadata;
+import me.lucko.helper.metadata.MetadataKey;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityEvent;
 import org.bukkit.event.player.PlayerEvent;
 
 import java.util.function.Predicate;
@@ -20,7 +22,11 @@ public class AbilityPredicates {
         };
     }
 
-    public static <T extends EntityDamageEvent> Predicate<T> humanHasAbility(Ability ability) {
+    public static <T extends PlayerEvent> Predicate<T> playerHasMetadata(MetadataKey<?> metadataKey) {
+        return e -> Metadata.provideForPlayer(e.getPlayer()).has(metadataKey);
+    }
+
+    public static <T extends EntityEvent> Predicate<T> humanHasAbility(Ability ability) {
         return e -> {
             if(!(e.getEntity() instanceof Player)) return false;
             final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getEntity());

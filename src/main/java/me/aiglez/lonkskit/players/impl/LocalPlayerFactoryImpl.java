@@ -33,9 +33,7 @@ public class LocalPlayerFactoryImpl implements LocalPlayerFactory {
 
     @Override
     public LocalPlayer getLocalPlayer(Player player) {
-        LocalPlayer localPlayer = this.cache.computeIfAbsent(player.getUniqueId(), x -> new MemoryLocalPlayer(player));
-        if(localPlayer.toBukkit() == null) localPlayer.setBukkit(player);
-        return localPlayer;
+        return this.cache.computeIfAbsent(player.getUniqueId(), x -> new MemoryLocalPlayer(player));
     }
 
     @Override

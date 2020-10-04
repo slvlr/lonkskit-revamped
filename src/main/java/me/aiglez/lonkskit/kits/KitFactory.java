@@ -13,15 +13,15 @@ public interface KitFactory {
 
     SortedSet<Kit> getSortedKitsBySlots();
 
-    default Set<Kit> getEnabledKits() {
-        return Collections.unmodifiableSet(getRegisteredKits().stream().filter(Kit::enabled).collect(Collectors.toSet()));
-    }
-
     Optional<Kit> getKit(String backendName);
 
     boolean tryRegisterKit(final Kit kit);
 
     boolean loadKits();
+
+    default Set<Kit> getEnabledKits() {
+        return Collections.unmodifiableSet(getRegisteredKits().stream().filter(Kit::enabled).collect(Collectors.toSet()));
+    }
 
     static KitFactory make() {
         return new KitFactoryImpl();

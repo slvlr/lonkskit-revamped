@@ -11,7 +11,7 @@ public interface LocalPlayerFactory {
 
     boolean saveLocalPlayers();
 
-    static LocalPlayerFactory make() {
+    static LocalPlayerFactory makeInstance() {
         return new LocalPlayerFactoryImpl();
     }
 }

@@ -1,7 +1,6 @@
 package me.aiglez.lonkskit.abilities;
 
 import com.google.common.base.Preconditions;
-import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.cooldown.Cooldown;
@@ -27,8 +26,6 @@ public abstract class ItemStackAbility implements Ability, Listener {
 
         final int cooldownSeconds = configuration.getNode("cooldown").getInt(0);
         this.cooldown = CooldownMap.create(Cooldown.of(cooldownSeconds, TimeUnit.SECONDS));
-
-        KitPlugin.getSingleton().registerListener(this);
     }
 
     @Override
@@ -46,11 +43,14 @@ public abstract class ItemStackAbility implements Ability, Listener {
         return this.cooldown;
     }
 
+
     public abstract ItemStack getItemStack();
 
     public abstract boolean isItemStack(ItemStack item);
 
-    public abstract void whenClicked(PlayerInteractEvent e);
+    public abstract void whenUsed(PlayerInteractEvent e);
+
+
 
     @Override
     public String toString() {

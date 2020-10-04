@@ -4,7 +4,7 @@ import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.Logger;
-import me.aiglez.lonkskit.utils.Metadatas;
+import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.metadata.Metadata;
@@ -39,7 +39,7 @@ public class WizardAbility extends ItemStackAbility {
     // too slow
     // --------------------------------------------------------------------------------------------
     @Override
-    public void whenClicked(PlayerInteractEvent e) {
+    public void whenUsed(PlayerInteractEvent e) {
         e.setCancelled(true);
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
 
@@ -59,7 +59,7 @@ public class WizardAbility extends ItemStackAbility {
          */
         final Snowball snowball = localPlayer.toBukkit().launchProjectile(Snowball.class);
         snowball.setShooter(localPlayer.toBukkit());
-        Metadata.provideForEntity(snowball).put(Metadatas.SNOWBALL_EXPLODE, true);
+        Metadata.provideForEntity(snowball).put(MetadataProvider.SNOWBALL_EXPLODE, true);
 
     }
 
@@ -67,7 +67,7 @@ public class WizardAbility extends ItemStackAbility {
     public void onProjectileLand(ProjectileHitEvent e) {
         if(e.getEntityType() != EntityType.SNOWBALL) return;
         final Snowball snowball = (Snowball) e.getEntity();
-        if(Metadata.provideForEntity(snowball).has(Metadatas.SNOWBALL_EXPLODE)) {
+        if(Metadata.provideForEntity(snowball).has(MetadataProvider.SNOWBALL_EXPLODE)) {
             Location explosionLocation = null;
             if(e.getHitEntity() == null) {
                 explosionLocation = e.getHitBlock().getLocation();
@@ -80,7 +80,7 @@ public class WizardAbility extends ItemStackAbility {
             if(explosionLocation != null) {
                 WorldProvider.KP_WORLD.createExplosion(explosionLocation, 2F, false, false);
             }
-            Metadata.provideForEntity(snowball).remove(Metadatas.SNOWBALL_EXPLODE);
+            Metadata.provideForEntity(snowball).remove(MetadataProvider.SNOWBALL_EXPLODE);
         }
     }
 }
