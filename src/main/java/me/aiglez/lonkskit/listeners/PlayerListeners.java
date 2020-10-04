@@ -5,6 +5,7 @@ import me.aiglez.lonkskit.LonksKitProvider;
 import me.aiglez.lonkskit.abilities.Ability;
 import me.aiglez.lonkskit.abilities.functionnal.StompAbility;
 import me.aiglez.lonkskit.abilities.itembased.PortastompAbility;
+import me.aiglez.lonkskit.kits.Kit;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.Logger;
 import me.aiglez.lonkskit.utils.Metadatas;
@@ -12,6 +13,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
 public class PlayerListeners implements Listener {
@@ -51,6 +53,20 @@ public class PlayerListeners implements Listener {
                     e.setCancelled(true);
                 }
             }
+        }
+    }
+
+    @EventHandler
+    public void onDamageByEntity(EntityDamageByEntityEvent e) {
+        final Entity victim = e.getEntity();
+        final Entity damager = e.getDamager();
+        if(victim instanceof Player) {
+            final LocalPlayer localVictim = LonksKitProvider.getPlayerFactory().getLocalPlayer((Player) victim);
+            final LocalPlayer localDamager = LonksKitProvider.getPlayerFactory().getLocalPlayer((Player) damager);
+
+            if(!localDamager.hasSelectedKit()) return;
+            final Kit selectedKit = localDamager.getNullableSelectedKit();
+
         }
     }
 }
