@@ -1,6 +1,7 @@
 package me.aiglez.lonkskit.abilities.itembased;
 
 import me.aiglez.lonkskit.WorldProvider;
+import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.Logger;
@@ -57,6 +58,7 @@ public class WizardAbility extends ItemStackAbility {
     @Override
     public void handleListeners() {
         Events.subscribe(ProjectileHitEvent.class)
+                .filter(AbilityPredicates.humanHasAbility(this))
                 .filter(e -> e.getEntityType() == EntityType.SNOWBALL)
                 .filter(EventFilters.entityHasMetadata(MetadataProvider.SNOWBALL_EXPLODE))
                 .handler(e -> {
