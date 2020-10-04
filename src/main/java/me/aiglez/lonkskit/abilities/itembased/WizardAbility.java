@@ -5,8 +5,8 @@ import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.Logger;
 import me.aiglez.lonkskit.utils.Metadatas;
-import me.lucko.helper.config.ConfigurationNode;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
+import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.metadata.Metadata;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -16,7 +16,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
 
 import java.util.concurrent.TimeUnit;
 
@@ -49,13 +48,19 @@ public class WizardAbility extends ItemStackAbility {
             return;
         }
 
+        /*
         final Vector direction = localPlayer.toBukkit().getLocation().getDirection();
         final Snowball snowball = (Snowball) localPlayer.toBukkit().getLocation().getWorld().spawnEntity(
                 localPlayer.toBukkit().getLocation(), EntityType.SNOWBALL
         );
         snowball.setShooter(localPlayer.toBukkit());
         snowball.setVelocity(direction.multiply(1.5D));
+
+         */
+        final Snowball snowball = localPlayer.toBukkit().launchProjectile(Snowball.class);
+        snowball.setShooter(localPlayer.toBukkit());
         Metadata.provideForEntity(snowball).put(Metadatas.SNOWBALL_EXPLODE, true);
+
     }
 
     @EventHandler

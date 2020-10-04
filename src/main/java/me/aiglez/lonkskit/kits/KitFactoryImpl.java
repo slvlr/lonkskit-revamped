@@ -3,6 +3,8 @@ package me.aiglez.lonkskit.kits;
 import com.google.common.primitives.Ints;
 import com.google.common.reflect.TypeToken;
 import me.aiglez.lonkskit.KitPlugin;
+import me.aiglez.lonkskit.LonksKitProvider;
+import me.aiglez.lonkskit.abilities.Ability;
 import me.aiglez.lonkskit.data.MemoryKit;
 import me.aiglez.lonkskit.utils.Logger;
 import me.aiglez.lonkskit.utils.items.ItemStackParser;
@@ -155,6 +157,20 @@ public class KitFactoryImpl implements KitFactory {
             potionEffects = null;
         }
 
+        Set<Ability> abilities;
+        try {
+            abilities = Chain.start(node.getNode("abilities").getList(new TypeToken<String>() {}))
+                    .map(list -> list.stream().map(ability -> {
+                        return LonksKitProvider.getAbilityFactory().getAbility(ability);
+                    }).collect(Collectors.toSet()))
+                    .map(optionals -> optionals.stream().filter(Optional::isPresent).map(Optional::get).collect(Collectors.toSet()))
+                    .orElseIfNull(Collections.emptySet()).endOrNull();
+
+        } catch (ObjectMappingException e) {
+            Logger.severe("Couldn't map an object (LIST) // " + e.getMessage());
+            abilities = null;
+        }
+
         KitSelectorHolder kitSelectorHolder;
         try {
             kitSelectorHolder = KitSelectorHolder.builder(node.getNode("selector")).build();
@@ -173,7 +189,7 @@ public class KitFactoryImpl implements KitFactory {
                 rentCost,
                 usesPerRent,
                 potionEffects,
-                null
+                abilities
         );
 
         if(newKit != null) newKit.setEnabled(enabled);
