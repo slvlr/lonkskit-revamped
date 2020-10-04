@@ -103,14 +103,6 @@ public interface LocalPlayer extends GsonSerializable {
         return Metadata.provideForPlayer(getUniqueId());
     }
 
-
-    boolean isTeleporting();
-
-    Optional<LocalTeleportation> getTeleportation();
-
-
-
-
     default void msg(String message) {
         if(toBukkit() != null) toBukkit().sendMessage(Text.colorize(message));
     }
@@ -124,8 +116,6 @@ public interface LocalPlayer extends GsonSerializable {
     default void msg(String message, Object... replacements) {
         msg(Replaceable.handle(message, replacements));
     }
-
-
 
 
     static LocalPlayer get(Player player) {
@@ -173,6 +163,7 @@ public interface LocalPlayer extends GsonSerializable {
 
         return localPlayer;
     }
+
 
     @Override
     JsonElement serialize();
