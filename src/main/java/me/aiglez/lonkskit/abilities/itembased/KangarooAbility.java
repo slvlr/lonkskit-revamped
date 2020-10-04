@@ -4,7 +4,6 @@ import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.config.ConfigurationNode;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -20,7 +19,7 @@ public class KangarooAbility extends ItemStackAbility {
     public KangarooAbility(ConfigurationNode configuration) {
         super("kangaroo", configuration);
         this.item = ItemStackBuilder.of(Material.EMERALD)
-                .name(ChatColor.of("34eb3a") + "Kangaroo")
+                .name("&6Kangaroo")
                 .build();
     }
 
@@ -36,9 +35,9 @@ public class KangarooAbility extends ItemStackAbility {
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
 
         if(localPlayer.toBukkit().isSneaking()) {
-            localPlayer.toBukkit().setVelocity(localPlayer.getLocation().getDirection().multiply(1.6d).setY(0.5d));
+            localPlayer.toBukkit().setVelocity(localPlayer.getLocation().getDirection().multiply(1.2d).setY(0.3d));
         } else {
-            localPlayer.toBukkit().setVelocity(localPlayer.getLocation().getDirection().multiply(1.6d).setY(1.0d));
+            localPlayer.toBukkit().setVelocity(localPlayer.getLocation().getDirection().multiply(1.1d).setY(0.6d));
         }
 
     }

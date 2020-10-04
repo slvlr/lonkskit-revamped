@@ -2,18 +2,14 @@ package me.aiglez.lonkskit.data;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
-import me.aiglez.lonkskit.WorldProvider;
-import me.aiglez.lonkskit.abilities.Ability;
 import me.aiglez.lonkskit.kits.Kit;
 import me.aiglez.lonkskit.players.LocalMetrics;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.players.LocalRent;
 import me.aiglez.lonkskit.utils.Logger;
-import me.lucko.helper.Schedulers;
 import me.lucko.helper.gson.JsonBuilder;
 import me.lucko.helper.profiles.MojangApi;
 import me.lucko.helper.text3.Text;
-import org.bukkit.Effect;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -143,20 +139,6 @@ public class MemoryLocalPlayer implements LocalPlayer {
             e.printStackTrace();
             return false;
         }
-
-        if(kit.hasAbility(Ability.get("dragon"))) {
-            Schedulers.sync()
-                    .runRepeating(task -> {
-                        if(!hasSelectedKit() || !selectedKit.hasAbility(Ability.get("dragon"))) {
-                            Logger.debug("The player " + getLastKnownName() + " has either changed his ability or something but he lost his particles omg !!!");
-                            task.close();
-                            return;
-                        }
-
-                        WorldProvider.KP_WORLD.playEffect(getLocation(), Effect.MOBSPAWNER_FLAMES, 0);
-                    }, 1L, 20L);
-        }
-
         return true;
     }
 
