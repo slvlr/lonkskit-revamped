@@ -13,7 +13,9 @@ import org.bukkit.inventory.ItemStack;
 import java.util.concurrent.TimeUnit;
 
 public class ShadowbladeAbility extends ItemStackAbility {
-    ItemStack item;
+
+    private final ItemStack item;
+
     protected ShadowbladeAbility(ConfigurationNode configuration) {
         super("shadowblade", configuration);
         this.item = ItemStackBuilder.of(Material.IRON_SWORD).build();
@@ -26,7 +28,7 @@ public class ShadowbladeAbility extends ItemStackAbility {
 
     @Override
     public boolean isItemStack(ItemStack item) {
-        return item.isSimilar(item);
+        return this.item.isSimilar(item); // this.item != item | this.item returns the field itemstack & item returns the parameter itemstack !!!!
     }
 
     @Override
@@ -34,7 +36,7 @@ public class ShadowbladeAbility extends ItemStackAbility {
         LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
         if (!this.cooldown.test(localPlayer)){
             localPlayer.msg("&cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
-        }else {
+        } else {
             if (localPlayer.toBukkit().getInventory().getItemInMainHand() == this.item) {
                 if (e.getAction() == Action.RIGHT_CLICK_AIR) {
                     localPlayer.toBukkit().launchProjectile(Fireball.class);

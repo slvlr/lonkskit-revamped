@@ -1,4 +1,4 @@
-package me.aiglez.lonkskit.abilities.ImadAbilities.functionnal;
+package me.aiglez.lonkskit.abilities.external.functionnal;
 
 import me.aiglez.lonkskit.abilities.FunctionalAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
@@ -9,9 +9,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class AnvilAbility extends FunctionalAbility {
-    protected AnvilAbility(String name, ConfigurationNode configuration) {
-        super(name, configuration);
+
+    protected AnvilAbility(ConfigurationNode configuration) {
+        super("anvil", configuration);
     }
+
     @EventHandler
     public void onPlayerAttackPlayer(EntityDamageByEntityEvent event,LocalPlayer localPlayer)
     {
