@@ -33,7 +33,6 @@ public class AbilityListeners implements Listener {
             }
         }
     }
-
     @EventHandler
     public void onDamage(PlayerItemDamageEvent e) {
         final ItemStack item = e.getItem();

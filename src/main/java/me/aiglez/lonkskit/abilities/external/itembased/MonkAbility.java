@@ -3,11 +3,13 @@ package me.aiglez.lonkskit.abilities.external.itembased;
 
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
+import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.item.ItemStackBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -39,32 +41,31 @@ public class MonkAbility extends ItemStackAbility {
     @Override
     public void whenUsed(PlayerInteractEvent e) {
         e.setCancelled(true);
-    }
-
-    @EventHandler
-    public void whenClickPlayer(PlayerInteractEntityEvent event){
-        LocalPlayer player = LocalPlayer.get(event.getPlayer());
-        if (!this.cooldown.test(player)){
-            player.msg("&cPlease wait, {0} second(s) left", cooldown.remainingTime(player, TimeUnit.SECONDS));
+        if(!cooldown.test(LocalPlayer.get(e.getPlayer()))){
+            LocalPlayer.get(e.getPlayer()).msg("&3(Thor) &cPlease wait, {0} second(s) left", cooldown.remainingTime(LocalPlayer.get(e.getPlayer()), TimeUnit.SECONDS));
             return;
-
         }
-        if (event.getRightClicked() instanceof Player) {
-            Player target = (Player) event.getRightClicked();
-            int a = new Random().nextInt(30);
-            if (target.getInventory().getItem(a).getType() != Material.AIR) {
-                ItemStack first = target.getInventory().getItemInMainHand(); // Player#getItemInHand is @deprecated
-                ItemStack second = target.getInventory().getItem(a);
-                target.getInventory().setItemInMainHand(second);
-                target.getInventory().setItem(a, first);
-            }
 
-        }
     }
 
     @Override
     public void handleListeners() {
-
+        Events.subscribe(PlayerInteractEntityEvent.class)
+                .filter(o -> o.getRightClicked() instanceof Player)
+                .handler(e -> {
+                        Player target = (Player) e.getRightClicked();
+                        int a = new Random().nextInt(30);
+                        if (target.getInventory().getItem(a).getType() != Material.AIR) {
+                            ItemStack first = target.getInventory().getItemInMainHand(); // Player#getItemInHand is @deprecated
+                            ItemStack second = target.getInventory().getItem(a);
+                            target.getInventory().setItemInMainHand(second);
+                            target.getInventory().setItem(a, first);
+                    }else {
+                            ItemStack itemMain = target.getInventory().getItemInMainHand();
+                            target.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
+                            target.getInventory().addItem(itemMain);
+                        }
+                });
     }
 }
 /*Leather Body, leather leggings, letherboots
