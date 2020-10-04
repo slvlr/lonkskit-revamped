@@ -6,6 +6,7 @@ import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.Logger;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
+import me.lucko.helper.event.filter.EventFilters;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 
@@ -22,6 +23,7 @@ public class StompAbility extends FunctionalAbility {
     @Override
     public void registerListeners() {
         Events.subscribe(EntityDamageEvent.class)
+                .filter(EventFilters.ignoreCancelled())
                 .filter(AbilityPredicates.humanHasAbility(this))
                 .filter(e -> e.getCause() == EntityDamageEvent.DamageCause.FALL)
                 .handler(e -> {
