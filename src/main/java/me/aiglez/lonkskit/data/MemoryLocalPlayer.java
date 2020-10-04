@@ -8,7 +8,6 @@ import me.aiglez.lonkskit.kits.Kit;
 import me.aiglez.lonkskit.players.LocalMetrics;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.players.LocalRent;
-import me.aiglez.lonkskit.players.LocalTeleportation;
 import me.aiglez.lonkskit.utils.Logger;
 import me.lucko.helper.Schedulers;
 import me.lucko.helper.gson.JsonBuilder;
@@ -20,7 +19,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -37,7 +35,6 @@ public class MemoryLocalPlayer implements LocalPlayer {
     private Player bukkit;
     private Kit selectedKit;
     private boolean safe, atArena;
-    private LocalTeleportation teleportation;
 
     public MemoryLocalPlayer(Player player) {
         this.uniqueId = player.getUniqueId();
@@ -192,16 +189,6 @@ public class MemoryLocalPlayer implements LocalPlayer {
     @Override
     public void updateSafeStatus() {
 
-    }
-
-    @Override
-    public boolean isTeleporting() {
-        return teleportation != null;
-    }
-
-    @Override
-    public Optional<LocalTeleportation> getTeleportation() {
-        return Optional.of(teleportation);
     }
 
     @Override
