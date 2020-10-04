@@ -1,6 +1,7 @@
 package me.aiglez.lonkskit.abilities.external.itembased;
 
 
+import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.Events;
@@ -51,6 +52,7 @@ public class MonkAbility extends ItemStackAbility {
     @Override
     public void handleListeners() {
         Events.subscribe(PlayerInteractEntityEvent.class)
+                .filter(AbilityPredicates.playerHasAbility(this))
                 .filter(o -> o.getRightClicked() instanceof Player)
                 .handler(e -> {
                         Player target = (Player) e.getRightClicked();
