@@ -82,6 +82,11 @@
            <id>sk89q-repo</id>
            <url>https://maven.enginehub.org/repo/</url>
        </repository>
+       <repository>
+           <id>md_5-public</id>
+           <url>http://repo.md-5.net/content/groups/public/</url>
+       </repository>
+
 
    </repositories>
 
@@ -133,6 +138,13 @@
            <artifactId>MockBukkit-v1.16</artifactId>
            <version>0.5.0</version>
            <scope>test</scope>
+       </dependency>
+
+       <dependency>
+           <groupId>LibsDisguises</groupId>
+           <artifactId>LibsDisguises</artifactId>
+           <version>10.0.16</version>
+           <scope>provided</scope>
        </dependency>
    </dependencies>
 </project>
