@@ -1,15 +1,11 @@
 package me.aiglez.lonkskit.abilities.itembased;
 
-import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.Metadatas;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
-import me.lucko.helper.Schedulers;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.metadata.ExpiringValue;
-import me.lucko.helper.scheduler.Ticks;
-import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -54,11 +50,6 @@ public class DragonAbility extends ItemStackAbility {
 
         final Vector vec = localPlayer.toBukkit().getLocation().getDirection().multiply(strength);
         localPlayer.toBukkit().setVelocity(vec);
-
-        Schedulers.sync()
-                .runRepeating(() -> {
-                    WorldProvider.KP_WORLD.playEffect(localPlayer.getLocation(), Effect.MOBSPAWNER_FLAMES, 0);
-                }, 1L, Ticks.from(4, TimeUnit.SECONDS));
 
         localPlayer.msg("&b[Debug] &fYou have been pushed (strength: {0})", strength);
     }
