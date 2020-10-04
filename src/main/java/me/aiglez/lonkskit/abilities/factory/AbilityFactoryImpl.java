@@ -2,7 +2,9 @@ package me.aiglez.lonkskit.abilities.factory;
 
 import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.abilities.Ability;
+import me.aiglez.lonkskit.abilities.external.functionnal.AnvilAbility;
 import me.aiglez.lonkskit.abilities.external.itembased.MonkAbility;
+import me.aiglez.lonkskit.abilities.external.itembased.ShadowbladeAbility;
 import me.aiglez.lonkskit.abilities.functionnal.StompAbility;
 import me.aiglez.lonkskit.abilities.itembased.*;
 import me.aiglez.lonkskit.exceptions.AbilityFileNotFoundException;
@@ -79,6 +81,17 @@ public class AbilityFactoryImpl implements AbilityFactory {
                 getFileByName("monk").orElseThrow(() -> new AbilityFileNotFoundException("monk"))
         );
         this.abilities.add(monk);
+
+        Ability anvil = new AnvilAbility(
+                getFileByName("anvil").orElseThrow(() -> new AbilityFileNotFoundException("anvil"))
+        );
+        this.abilities.add(anvil);
+
+        Ability shadowblade = new ShadowbladeAbility(
+                getFileByName("shadowblade").orElseThrow(() -> new AbilityFileNotFoundException("shadowblade"))
+        );
+        this.abilities.add(shadowblade);
+
         // Imad - end
     }
 

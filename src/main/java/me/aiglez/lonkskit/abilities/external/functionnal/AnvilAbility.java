@@ -10,31 +10,24 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class AnvilAbility extends FunctionalAbility {
 
-    protected AnvilAbility(ConfigurationNode configuration) {
+    public AnvilAbility(ConfigurationNode configuration) {
         super("anvil", configuration);
     }
 
     @EventHandler
     public void onPlayerAttackPlayer(EntityDamageByEntityEvent event,LocalPlayer localPlayer)
     {
-        if (!event.isCancelled())
-        {
-            // PLAYER ATTACK PLAYER
-            if ((event.getEntity() instanceof HumanEntity) && (event.getDamager() instanceof HumanEntity))
+            if ((event.getEntity() instanceof Player) && (event.getDamager() instanceof Player))
             {
-                // GET VICTIM AND ATTACKER
+                event.setCancelled(true);
                 Player victim = (Player) event.getEntity();
                 LocalPlayer attacker = LocalPlayer.get((Player) event.getDamager());
 
-                // GET EVENT DAMAGE
                 double damage = event.getDamage();
 
-                // SEND DAMAGE TO PLAYER - BECAUSE EVENT IS CANCELING
                 victim.damage(damage);
 
-                // CANCEL EVENT - TO STOP KNOCKBACK EFFECT
-                event.setCancelled(true);
-            }
+
         }
     }
 

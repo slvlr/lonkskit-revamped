@@ -22,7 +22,7 @@ public class MonkAbility extends ItemStackAbility {
     public MonkAbility(ConfigurationNode configuration) {
         super("monk", configuration);
         this.item = ItemStackBuilder.of(Material.BLAZE_ROD)
-                .name("&6Wand")
+                .name("&Staff")
                 .build();
     }
 
@@ -46,18 +46,19 @@ public class MonkAbility extends ItemStackAbility {
         LocalPlayer player = LocalPlayer.get(event.getPlayer());
         if (!this.cooldown.test(player)){
             player.msg("&cPlease wait, {0} second(s) left", cooldown.remainingTime(player, TimeUnit.SECONDS));
+            return;
 
-        } else {
-            if (event.getRightClicked() instanceof Player) {
-                Player target = (Player) event.getRightClicked();
-                int a = new Random().nextInt(30);
-                if (target.getInventory().getItem(a).getType() != Material.AIR) {
-                    ItemStack first = target.getInventory().getItemInMainHand(); // Player#getItemInHand is @deprecated
-                    ItemStack second = target.getInventory().getItem(a);
-                    target.getInventory().setItemInMainHand(second);
-                    target.getInventory().setItem(a, first);
-                }
+        }
+        if (event.getRightClicked() instanceof Player) {
+            Player target = (Player) event.getRightClicked();
+            int a = new Random().nextInt(30);
+            if (target.getInventory().getItem(a).getType() != Material.AIR) {
+                ItemStack first = target.getInventory().getItemInMainHand(); // Player#getItemInHand is @deprecated
+                ItemStack second = target.getInventory().getItem(a);
+                target.getInventory().setItemInMainHand(second);
+                target.getInventory().setItem(a, first);
             }
+
         }
     }
 }
