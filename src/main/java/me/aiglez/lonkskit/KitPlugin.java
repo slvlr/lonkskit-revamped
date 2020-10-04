@@ -1,6 +1,7 @@
 package me.aiglez.lonkskit;
 
 import me.aiglez.lonkskit.abilities.factory.AbilityFactory;
+import me.aiglez.lonkskit.commands.CommandsRegistry;
 import me.aiglez.lonkskit.kits.KitFactory;
 import me.aiglez.lonkskit.listeners.AbilityListeners;
 import me.aiglez.lonkskit.listeners.PlayerListeners;
@@ -48,6 +49,7 @@ public final class KitPlugin extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(this, this);
         new AbilityListeners(this);
         new PlayerListeners(this);
+        new CommandsRegistry(this);
     }
 
     @Override

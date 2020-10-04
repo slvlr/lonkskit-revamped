@@ -13,6 +13,12 @@ public class CommandsRegistry {
 
     public CommandsRegistry(KitPlugin plugin) {
         this.acf = new PaperCommandManager(plugin);
+        try {
+            loadLocales();
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+        registerCommands();
     }
 
     private void loadLocales() throws IOException, InvalidConfigurationException {
@@ -21,5 +27,9 @@ public class CommandsRegistry {
     }
 
     private void registerCompletions() {
+    }
+
+    private void registerCommands() {
+        acf.registerCommand(new MainCommand());
     }
 }

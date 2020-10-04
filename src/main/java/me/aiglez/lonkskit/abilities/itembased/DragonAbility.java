@@ -11,7 +11,6 @@ import me.lucko.helper.metadata.ExpiringValue;
 import me.lucko.helper.scheduler.Ticks;
 import org.bukkit.Effect;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
@@ -31,7 +30,6 @@ public class DragonAbility extends ItemStackAbility {
         super("dragon", configuration);
         this.item = ItemStackBuilder.of(Material.FEATHER)
                 .name("&bBoost")
-                .enchant(Enchantment.DURABILITY, 1)
                 .build();
         this.strength = configuration.getNode("strength").getDouble(5D);
     }

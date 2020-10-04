@@ -24,17 +24,17 @@ public class  StompAbility extends FunctionalAbility {
                 double damage;
                 if(under.toBukkit().isSneaking()) { // is player sneaking
                     damage = Math.min(e.getFinalDamage(), 4.5);
-                    Logger.debug("[Stomp] Damaging a player with " + damage + " damage (SNEAKING)");
+                    Logger.debug("[Stomp/Portastomp] Damaging a player with " + damage + " damage (SNEAKING)");
                 } else {
                     damage = e.getFinalDamage();
-                    Logger.debug("[Stomp] Damaging a player with " + damage + " damage");
+                    Logger.debug("[Stomp/Portastomp] Damaging a player with " + damage + " damage");
                 }
 
                 under.toBukkit().damage(damage);
                 localPlayer.msg("&eDamaging the player {0} with {1} damage", under.getLastKnownName(), damage);
             }
         });
-        Logger.debug("[Stomp] Setting damage of player who use the ability to " + Math.min(e.getDamage(), 2.5D) );
+        Logger.debug("[Stomp/Portastomp] Setting damage of player who use the ability to " + Math.min(e.getDamage(), 2.5D) );
         e.setDamage(Math.min(e.getDamage(), 2.5D));
     }
 }

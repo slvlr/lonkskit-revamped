@@ -51,7 +51,7 @@ public class TrollAbility extends ItemStackAbility {
     public void onEntityDamage(EntityDamageByEntityEvent e) {
         if(!(e.getDamager() instanceof Player) || !(e.getEntity() instanceof Player)) return;
         LocalPlayer victim = LocalPlayer.get((Player) e.getEntity());
-        LocalPlayer damager = LocalPlayer.get((Player) e.getEntity());
+        LocalPlayer damager = LocalPlayer.get((Player) e.getDamager());
 
         if(damager.hasSelectedKit() && damager.getNullableSelectedKit().hasAbility(Ability.get("troll"))) {
             ItemStack item = damager.toBukkit().getInventory().getItemInMainHand();
