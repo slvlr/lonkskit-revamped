@@ -7,7 +7,6 @@ import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
-import me.lucko.helper.event.filter.EventFilters;
 import me.lucko.helper.metadata.ExpiringValue;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -62,7 +61,6 @@ public class DragonAbility extends ItemStackAbility {
     @Override
     public void handleListeners() {
         Events.subscribe(EntityDamageEvent.class)
-                .filter(EventFilters.ignoreCancelled())
                 .filter(e -> e.getCause() == EntityDamageEvent.DamageCause.FALL)
                 .filter(AbilityPredicates.humanHasAbility(this))
                 .filter(AbilityPredicates.humanHasMetadata(MetadataProvider.PLAYER_NO_FALL_DAMAGE))

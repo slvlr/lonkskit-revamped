@@ -7,15 +7,13 @@ import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.item.ItemStackBuilder;
+import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class MonkAbility extends ItemStackAbility {
@@ -41,12 +39,6 @@ public class MonkAbility extends ItemStackAbility {
 
     @Override
     public void whenUsed(PlayerInteractEvent e) {
-        e.setCancelled(true);
-        if(!cooldown.test(LocalPlayer.get(e.getPlayer()))){
-            LocalPlayer.get(e.getPlayer()).msg("&3(Thor) &cPlease wait, {0} second(s) left", cooldown.remainingTime(LocalPlayer.get(e.getPlayer()), TimeUnit.SECONDS));
-            return;
-        }
-
     }
 
     @Override
@@ -55,18 +47,27 @@ public class MonkAbility extends ItemStackAbility {
                 .filter(AbilityPredicates.playerHasAbility(this))
                 .filter(o -> o.getRightClicked() instanceof Player)
                 .handler(e -> {
-                        Player target = (Player) e.getRightClicked();
-                        int a = new Random().nextInt(30);
-                        if (target.getInventory().getItem(a).getType() != Material.AIR) {
-                            ItemStack first = target.getInventory().getItemInMainHand(); // Player#getItemInHand is @deprecated
-                            ItemStack second = target.getInventory().getItem(a);
-                            target.getInventory().setItemInMainHand(second);
-                            target.getInventory().setItem(a, first);
-                    }else {
-                            ItemStack itemMain = target.getInventory().getItemInMainHand();
-                            target.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
-                            target.getInventory().addItem(itemMain);
-                        }
+                    final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
+                    if(!cooldown.test(localPlayer)){
+                        LocalPlayer.get(e.getPlayer()).msg("&5(Monk) &cPlease wait, {0} second(s) left", cooldown.remainingTime(LocalPlayer.get(e.getPlayer()), TimeUnit.SECONDS));
+                        return;
+                    }
+
+                    final Player rightClicked = (Player) e.getRightClicked();
+                    int index = RandomUtils.nextInt(30); // RandomUtils is more optimized then created a new Random object each time
+
+                    final ItemStack itemAtIndex = rightClicked.getInventory().getItem(index);
+                    if (itemAtIndex != null && itemAtIndex.getType() != Material.AIR) {
+                        ItemStack itemInMainHand = rightClicked.getInventory().getItemInMainHand(); // Player#getItemInHand is @deprecated
+                        //ItemStack second = rightClicked.getInventory().getItem(index);
+                        rightClicked.getInventory().setItemInMainHand(itemAtIndex);
+                        rightClicked.getInventory().setItem(index, itemInMainHand);
+                    } else {
+                        final ItemStack itemMain = rightClicked.getInventory().getItemInMainHand();
+                        rightClicked.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
+                        rightClicked.getInventory().addItem(itemMain);
+
+                    }
                 });
     }
 }
