@@ -4,20 +4,18 @@ import com.google.common.collect.Sets;
 import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
-import me.aiglez.lonkskit.utils.Logger;
 import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Events;
-import me.lucko.helper.Schedulers;
 import me.lucko.helper.config.ConfigurationNode;
-import me.lucko.helper.event.SingleSubscription;
 import me.lucko.helper.metadata.ExpiringValue;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.LightningStrike;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.weather.LightningStrikeEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Set;
@@ -67,34 +65,13 @@ public class ThorAbility extends ItemStackAbility {
 
     @Override
     public void handleListeners() {
-        Logger.debug("Registering Thor listeners");
-        Events.subscribe(LightningStrikeEvent.class)
+        Events.subscribe(EntityDamageByEntityEvent.class)
+                .filter(e -> e.getCause() == EntityDamageEvent.DamageCause.LIGHTNING || e.getDamager() instanceof LightningStrike)
+                .filter(e -> AbilityPredicates.humanHasMetadata(MetadataProvider.PLAYER_NO_LIGHTING_DAMAGE).test(e))
                 .handler(e -> {
-                    Logger.debug("A lighning striked at " + e.getLightning().getLocation().toString());
-                });
-
-        final SingleSubscription<EntityDamageEvent> listener = Events.subscribe(EntityDamageEvent.class)
-                .filter(e -> {
-                    Logger.debug("(Thor) " + e.getCause());
-                    return e.getCause() == EntityDamageEvent.DamageCause.LIGHTNING;
-                })
-                .filter(e -> {
-                    Logger.debug("(Thor) Has ability check...");
-                    return AbilityPredicates.humanHasAbility(this).test(e);
-                })
-                .filter(e -> {
-                    Logger.debug("(Thor) Has metadata check...");
-                    return AbilityPredicates.humanHasMetadata(MetadataProvider.PLAYER_NO_LIGHTING_DAMAGE).test(e);
-                })
-                .handler(e -> {
-                    Logger.debug("(Thor) Cancelling damage");
                     e.setDamage(0);
                     e.setCancelled(true);
                 });
 
-        Schedulers.sync()
-                .runRepeating(() -> {
-                    Logger.debug("(Thor) called the listener: " + listener.getCallCounter());
-                }, 1L, 500L);
     }
 }

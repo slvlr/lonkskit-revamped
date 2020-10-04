@@ -3,6 +3,7 @@ package me.aiglez.lonkskit.abilities.itembased;
 import com.google.common.collect.ImmutableList;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
+import me.aiglez.lonkskit.utils.Logger;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
@@ -54,7 +55,13 @@ public class TrollAbility extends ItemStackAbility {
                     final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getDamager());
                     return localPlayer.hasSelectedKit() && localPlayer.getNullableSelectedKit().hasAbility(this);
                 })
-                .filter(e -> isItemStack(((Player) e.getDamager()).getInventory().getItemInMainHand()))
+                .filter(e ->{
+                    boolean match = isItemStack(((Player) e.getDamager()).getInventory().getItemInMainHand());
+                    if(!match) {
+                        Logger.debug("(Troll) The item doesn't match!");
+                    }
+                    return match;
+                })
                 .handler(e -> {
                     LocalPlayer damager = LocalPlayer.get((Player) e.getDamager());
                     LocalPlayer victim = LocalPlayer.get((Player) e.getEntity());
