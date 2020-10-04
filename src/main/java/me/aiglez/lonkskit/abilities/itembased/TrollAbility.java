@@ -20,6 +20,10 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author AigleZ
+ * @date 03/10/2020
+ */
 public class TrollAbility extends ItemStackAbility {
 
     private final ItemStack item;

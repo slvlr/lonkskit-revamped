@@ -17,6 +17,10 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author AigleZ
+ * @date 02/10/2020
+ */
 public class SwitcherAbility extends ItemStackAbility {
 
     private final ItemStack item;

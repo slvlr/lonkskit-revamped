@@ -12,6 +12,10 @@ import org.bukkit.util.Vector;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author AigleZ
+ * @date 02/10/2020
+ */
 public class PortastompAbility extends ItemStackAbility {
 
     private final ItemStack item;

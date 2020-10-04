@@ -20,6 +20,10 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author AigleZ
+ * @date 04/10/2020
+ */
 public class WizardAbility extends ItemStackAbility {
 
     private final ItemStack item;
