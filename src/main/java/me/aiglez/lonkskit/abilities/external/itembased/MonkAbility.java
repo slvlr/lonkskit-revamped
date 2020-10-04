@@ -61,6 +61,11 @@ public class MonkAbility extends ItemStackAbility {
 
         }
     }
+
+    @Override
+    public void handleListeners() {
+
+    }
 }
 /*Leather Body, leather leggings, letherboots
 <-- all unbreaking III, Protection III. Wood Sword:Unbreaking III Sharpness II. Blaze Rod. 34 soup.

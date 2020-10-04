@@ -46,4 +46,9 @@ public class ShadowbladeAbility extends ItemStackAbility {
             }
         }
     }
+
+    @Override
+    public void handleListeners() {
+
+    }
 }

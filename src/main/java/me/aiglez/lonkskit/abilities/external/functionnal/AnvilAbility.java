@@ -18,4 +18,8 @@ public class AnvilAbility extends FunctionalAbility {
         victim.toBukkit().damage(damage);
     }
 
+    @Override
+    public void handleListeners() {
+
+    }
 }

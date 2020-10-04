@@ -2,6 +2,7 @@ package me.aiglez.lonkskit.abilities.itembased;
 
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
+import me.aiglez.lonkskit.utils.Logger;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
@@ -52,8 +53,12 @@ public class SwitcherAbility extends ItemStackAbility {
                 .filter(e -> e.getEntityType() == EntityType.SNOWBALL)
                 .handler(e -> {
                     final Snowball snowball = (Snowball) e.getEntity();
-                    if(!isItemStack(snowball.getItem())) return;
+                    if(!isItemStack(snowball.getItem())) {
+                        Logger.debug("Switcher > item is not same!!");
+                        return;
+                    }
                     if(snowball.getShooter() == null || !(snowball.getShooter() instanceof Player)) {
+                        Logger.debug("Switcher > Shooter not found");
                         return;
                     }
 

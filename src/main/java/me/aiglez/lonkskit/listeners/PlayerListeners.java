@@ -1,20 +1,9 @@
 package me.aiglez.lonkskit.listeners;
 
 import me.aiglez.lonkskit.KitPlugin;
-import me.aiglez.lonkskit.LonksKitProvider;
-import me.aiglez.lonkskit.abilities.Ability;
-import me.aiglez.lonkskit.abilities.functionnal.StompAbility;
-import me.aiglez.lonkskit.abilities.itembased.PortastompAbility;
-import me.aiglez.lonkskit.kits.Kit;
 import me.aiglez.lonkskit.players.LocalPlayer;
-import me.aiglez.lonkskit.utils.Logger;
-import me.aiglez.lonkskit.utils.MetadataProvider;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -35,6 +24,7 @@ public class PlayerListeners implements Listener {
     }
 
 
+    /*
     @EventHandler
     public void onDamage(EntityDamageEvent e) {
         final Entity entity = e.getEntity();
@@ -82,4 +72,6 @@ public class PlayerListeners implements Listener {
 
         }
     }
+
+     */
 }
