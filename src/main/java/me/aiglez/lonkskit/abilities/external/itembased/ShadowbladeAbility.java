@@ -4,7 +4,9 @@ import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.config.ConfigurationNode;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Fireball;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -33,17 +35,18 @@ public class ShadowbladeAbility extends ItemStackAbility {
 
     @Override
     public void whenUsed(PlayerInteractEvent e) {
-        e.setCancelled(true);
         LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
         if (!this.cooldown.test(localPlayer)){
             localPlayer.msg("&cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
+            e.setCancelled(true);
             return;
         }
-
-        if (localPlayer.toBukkit().getInventory().getItemInMainHand() == this.item) {
-            if (e.getAction() == Action.RIGHT_CLICK_AIR) {
-                localPlayer.toBukkit().launchProjectile(Fireball.class);
-            }
+        if (e.getAction() == Action.RIGHT_CLICK_AIR) {
+            Location eye = e.getPlayer().getEyeLocation();
+            Location loc = eye.add(eye.getDirection().multiply(1.2));
+            Fireball fireball = (Fireball) loc.getWorld().spawnEntity(loc, EntityType.FIREBALL);
+            fireball.setVelocity(loc.getDirection().normalize().multiply(2));
+            fireball.setShooter(e.getPlayer());
         }
     }
 
