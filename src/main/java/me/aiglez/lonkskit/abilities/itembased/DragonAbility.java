@@ -70,6 +70,7 @@ public class DragonAbility extends ItemStackAbility {
                     final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getEntity());
 
                     localPlayer.metadata().remove(MetadataProvider.PLAYER_NO_FALL_DAMAGE);
+                    localPlayer.msg("&e(Dragon) &eRemoving metadata...");
                     e.setCancelled(true);
                 });
     }

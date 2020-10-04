@@ -54,7 +54,6 @@ public class SwitcherAbility extends ItemStackAbility {
                 .handler(e -> {
                     final Snowball snowball = (Snowball) e.getEntity();
                     if(!isItemStack(snowball.getItem())) {
-                        Logger.debug("Switcher > item is not same!!");
                         return;
                     }
                     if(snowball.getShooter() == null || !(snowball.getShooter() instanceof Player)) {

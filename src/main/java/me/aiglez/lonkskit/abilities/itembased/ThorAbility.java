@@ -5,6 +5,7 @@ import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
+import me.aiglez.lonkskit.utils.Logger;
 import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
@@ -57,7 +58,7 @@ public class ThorAbility extends ItemStackAbility {
 
         final Block target = localPlayer.toBukkit().getTargetBlock(transparentMaterials, configuration.getNode("max-radius").getInt(100));
 
-        localPlayer.metadata().put(MetadataProvider.PLAYER_NO_LIGHTING_DAMAGE, ExpiringValue.of(true, 2, TimeUnit.SECONDS));
+        localPlayer.metadata().put(MetadataProvider.PLAYER_NO_LIGHTING_DAMAGE, ExpiringValue.of(true, 3, TimeUnit.SECONDS));
         localPlayer.toBukkit().getWorld().strikeLightning(WorldProvider.KP_WORLD.getHighestBlockAt(target.getLocation()).getLocation());
     }
 
@@ -69,6 +70,7 @@ public class ThorAbility extends ItemStackAbility {
                 .filter(AbilityPredicates.humanHasAbility(this))
                 .filter(AbilityPredicates.humanHasMetadata(MetadataProvider.PLAYER_NO_LIGHTING_DAMAGE))
                 .handler(e -> {
+                    Logger.debug("(Thor) Cancelling damage");
                     e.setDamage(0);
                     e.setCancelled(true);
                 });
