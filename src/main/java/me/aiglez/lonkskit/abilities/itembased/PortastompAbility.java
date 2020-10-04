@@ -15,7 +15,6 @@ import java.util.concurrent.TimeUnit;
 public class PortastompAbility extends ItemStackAbility {
 
     private final ItemStack item;
-    private final int MAX_HEIGHT = 125;
 
     public PortastompAbility(ConfigurationNode configuration) {
         super("portastomp", configuration);
@@ -37,14 +36,15 @@ public class PortastompAbility extends ItemStackAbility {
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
 
         if(!cooldown.test(localPlayer)){
-            localPlayer.msg("&cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
+            localPlayer.msg("&a(Portastomp) &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
             return;
         }
 
-        Schedulers.sync().runLater(() -> {
-            //localPlayer.toBukkit().teleport(localPlayer.getLocation().clone().add(0D, 60D, 0D));
+        Schedulers.sync().runLater(() -> localPlayer.toBukkit().setVelocity(new Vector(0, 10, 0)), 2L);
+    }
 
-            localPlayer.toBukkit().setVelocity(new Vector(0, 10, 0));
-            }, 2L);
+    @Override
+    public void handleListeners() {
+
     }
 }

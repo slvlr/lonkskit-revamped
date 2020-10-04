@@ -43,16 +43,15 @@ public class BlinkAbility extends ItemStackAbility {
         final Block target = localPlayer.toBukkit().getTargetBlock(transparentMaterials, configuration.getNode("max-radius").getInt(100));
 
         if(!cooldown.test(localPlayer)){
-            localPlayer.msg("&cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
+            localPlayer.msg("&9(Blink) &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
             return;
         }
 
         localPlayer.toBukkit().teleport(target.getLocation().clone().add(0D, 1D, 0D));
-        localPlayer.msg("&aYou have blinked!");
+        localPlayer.msg("&9(Blink) &aYou have blinked!");
     }
 
     @Override
-    public void registerListeners() {
-
+    public void handleListeners() {
     }
 }

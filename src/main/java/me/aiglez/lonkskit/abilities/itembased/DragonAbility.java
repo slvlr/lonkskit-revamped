@@ -3,7 +3,6 @@ package me.aiglez.lonkskit.abilities.itembased;
 import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
-import me.aiglez.lonkskit.utils.Logger;
 import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Events;
@@ -48,7 +47,7 @@ public class DragonAbility extends ItemStackAbility {
         e.setCancelled(true);
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
         if(!cooldown.test(localPlayer)){
-            localPlayer.msg("&cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
+            localPlayer.msg("&e(Dragon) &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
             return;
         }
 
@@ -57,42 +56,21 @@ public class DragonAbility extends ItemStackAbility {
         final Vector vec = localPlayer.toBukkit().getLocation().getDirection().multiply(strength);
         localPlayer.toBukkit().setVelocity(vec);
 
-        localPlayer.msg("&b[Debug] &fYou have been pushed (strength: {0})", strength);
+        localPlayer.msg("&e(Dragon) You have been pushed (strength: {0})", strength);
     }
 
     @Override
-    public void registerListeners() {
-        EventFilters
+    public void handleListeners() {
         Events.subscribe(EntityDamageEvent.class)
                 .filter(EventFilters.ignoreCancelled())
                 .filter(e -> e.getCause() == EntityDamageEvent.DamageCause.FALL)
                 .filter(AbilityPredicates.humanHasAbility(this))
-
+                .filter(AbilityPredicates.humanHasMetadata(MetadataProvider.PLAYER_NO_FALL_DAMAGE))
                 .handler(e -> {
                     final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getEntity());
 
-                    localPlayer.toBukkit().getWorld().getNearbyEntities(
-                            localPlayer.toBukkit().getLocation(),
-                            5, 5, 5,
-                            entity -> entity instanceof Player
-                    ).forEach(entity -> {
-                        final LocalPlayer under = LocalPlayer.get(((Player) entity));
-                        if(!(under.getUniqueId().equals(localPlayer.getUniqueId()))) {
-                            double damage;
-                            if(under.toBukkit().isSneaking()) { // is player sneaking
-                                damage = Math.min(e.getFinalDamage(), 4.5);
-                                Logger.debug("[Stomp/Portastomp] Damaging a player with " + damage + " damage (SNEAKING)");
-                            } else {
-                                damage = e.getFinalDamage();
-                                Logger.debug("[Stomp/Portastomp] Damaging a player with " + damage + " damage");
-                            }
-
-                            under.toBukkit().damage(damage);
-                            localPlayer.msg("&eDamaging the player {0} with {1} damage", under.getLastKnownName(), damage);
-                        }
-                    });
-                    Logger.debug("[Stomp/Portastomp] Setting damage of player who use the ability to " + Math.min(e.getDamage(), 2.5D) );
-                    e.setDamage(Math.min(e.getDamage(), 2.5D));
+                    localPlayer.metadata().remove(MetadataProvider.PLAYER_NO_FALL_DAMAGE);
+                    e.setCancelled(true);
                 });
     }
 }

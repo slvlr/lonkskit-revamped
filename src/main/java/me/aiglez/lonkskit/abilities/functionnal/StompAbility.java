@@ -1,5 +1,6 @@
 package me.aiglez.lonkskit.abilities.functionnal;
 
+import me.aiglez.lonkskit.abilities.Ability;
 import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.FunctionalAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
@@ -21,11 +22,17 @@ public class StompAbility extends FunctionalAbility {
     }
 
     @Override
-    public void registerListeners() {
+    public void handleListeners() {
         Events.subscribe(EntityDamageEvent.class)
                 .filter(EventFilters.ignoreCancelled())
                 .filter(e -> e.getCause() == EntityDamageEvent.DamageCause.FALL)
-                .filter(AbilityPredicates.humanHasAbility(this))
+                .filter(e -> {
+                    if(AbilityPredicates.humanHasAbility(this).test(e)) return true;
+                    if(Ability.get("portastomp") != null){
+                        return AbilityPredicates.humanHasAbility(Ability.get("portastomp")).test(e);
+                    }
+                    return false;
+                })
                 .handler(e -> {
                     final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getEntity());
 
@@ -46,7 +53,7 @@ public class StompAbility extends FunctionalAbility {
                             }
 
                             under.toBukkit().damage(damage);
-                            localPlayer.msg("&eDamaging the player {0} with {1} damage", under.getLastKnownName(), damage);
+                            localPlayer.msg("&6(Stomp) &eDamaging the player {0} with {1} damage", under.getLastKnownName(), damage);
                         }
                     });
                     Logger.debug("[Stomp/Portastomp] Setting damage of player who use the ability to " + Math.min(e.getDamage(), 2.5D) );

@@ -6,13 +6,14 @@ import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.Logger;
 import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
+import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
+import me.lucko.helper.event.filter.EventFilters;
 import me.lucko.helper.metadata.Metadata;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Snowball;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -63,24 +64,25 @@ public class WizardAbility extends ItemStackAbility {
 
     }
 
-    @EventHandler
-    public void onProjectileLand(ProjectileHitEvent e) {
-        if(e.getEntityType() != EntityType.SNOWBALL) return;
-        final Snowball snowball = (Snowball) e.getEntity();
-        if(Metadata.provideForEntity(snowball).has(MetadataProvider.SNOWBALL_EXPLODE)) {
-            Location explosionLocation = null;
-            if(e.getHitEntity() == null) {
-                explosionLocation = e.getHitBlock().getLocation();
-            } else if(e.getHitBlock() == null) {
-                explosionLocation = e.getHitEntity().getLocation();
-            } else {
-                Logger.severe("[Wizard] The snowball didn't shoot a block/player");
-            }
+    @Override
+    public void handleListeners() {
+        Events.subscribe(ProjectileHitEvent.class)
+                .filter(e -> e.getEntityType() == EntityType.SNOWBALL)
+                .filter(EventFilters.entityHasMetadata(MetadataProvider.SNOWBALL_EXPLODE))
+                .handler(e -> {
+                    Location explosionLocation = null;
+                    if(e.getHitEntity() == null) {
+                        explosionLocation = e.getHitBlock().getLocation();
+                    } else if(e.getHitBlock() == null) {
+                        explosionLocation = e.getHitEntity().getLocation();
+                    } else {
+                        Logger.severe("[Wizard] The snowball didn't shoot a block/player");
+                    }
 
-            if(explosionLocation != null) {
-                WorldProvider.KP_WORLD.createExplosion(explosionLocation, 2F, false, false);
-            }
-            Metadata.provideForEntity(snowball).remove(MetadataProvider.SNOWBALL_EXPLODE);
+                    if(explosionLocation != null) {
+                        WorldProvider.KP_WORLD.createExplosion(explosionLocation, 2F, false, false);
+                    }
+                    Metadata.provideForEntity(e.getEntity()).remove(MetadataProvider.SNOWBALL_EXPLODE);
+                });
         }
-    }
 }

@@ -11,19 +11,14 @@ import java.util.function.Predicate;
 
 public class AbilityPredicates {
 
-    /**
-     * Look at {@see EventFilters.class}
-     */
-
+    // -------------------------------------------- //
+    // ABILITIES
+    // -------------------------------------------- //
     public static <T extends PlayerEvent> Predicate<T> playerHasAbility(Ability ability) {
         return e -> {
             final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
             return localPlayer.hasSelectedKit() && localPlayer.getNullableSelectedKit().hasAbility(ability);
         };
-    }
-
-    public static <T extends PlayerEvent> Predicate<T> playerHasMetadata(MetadataKey<?> metadataKey) {
-        return e -> Metadata.provideForPlayer(e.getPlayer()).has(metadataKey);
     }
 
     public static <T extends EntityEvent> Predicate<T> humanHasAbility(Ability ability) {
@@ -33,4 +28,21 @@ public class AbilityPredicates {
             return localPlayer.hasSelectedKit() && localPlayer.getNullableSelectedKit().hasAbility(ability);
         };
     }
+    // -------------------------------------------- //
+    // METADATA
+    // -------------------------------------------- //
+    public static <T extends PlayerEvent> Predicate<T> playerHasMetadata(MetadataKey<?> metadataKey) {
+        return e -> Metadata.provideForPlayer(e.getPlayer()).has(metadataKey);
+    }
+
+    public static <T extends EntityEvent> Predicate<T> humanHasMetadata(MetadataKey<?> metadataKey) {
+        return e -> {
+            if(!(e.getEntity() instanceof Player)) return false;
+            return Metadata.provideForPlayer((Player) e.getEntity()).has(metadataKey);
+        };
+    }
+
+    // -------------------------------------------- //
+    // MISC
+    // -------------------------------------------- //
 }

@@ -14,6 +14,8 @@ public interface Ability {
 
     CooldownMap<LocalPlayer> getCooldown();
 
+    void handleListeners();
+
     static Ability get(String name) {
         Preconditions.checkNotNull(name, "ability name may not be null");
         return LonksKitProvider.getAbilityFactory().getAbility(name).orElseThrow(() -> new NullPointerException("ability with name " + name + " not found:"));
