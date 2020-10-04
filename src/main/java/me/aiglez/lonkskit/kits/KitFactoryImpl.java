@@ -81,7 +81,26 @@ public class KitFactoryImpl implements KitFactory {
             }
         }
 
-        orderedKits.addAll(kits.stream().filter(kit -> kit.enabled() && kit.getSelectorHolder().display()).collect(Collectors.toSet()));
+        Logger.debug("Ordering kits by slots...");
+        for (final Kit kit : kits) {
+            if(!kit.enabled()) {
+                Logger.debug("> " + kit.getBackendName() + " : disabled skipping it");
+                continue;
+            }
+
+            if(!kit.getSelectorHolder().display()) {
+                Logger.debug("> " + kit.getBackendName() + " : 'display' is false, skipping it");
+                continue;
+            }
+
+            Logger.debug("> " + kit.getBackendName() + " | slot: " + kit.getSelectorHolder().slot());
+            orderedKits.add(kit);
+
+        }
+        orderedKits.stream().forEach(kit -> {
+            Logger.debug("[Ordered] " + kit.getBackendName() + " | slot: " + kit.getSelectorHolder().slot());
+        });
+        //orderedKits.addAll(kits.stream().filter(kit -> kit.enabled() && kit.getSelectorHolder().display()).collect(Collectors.toSet()));
         Logger.fine("Loaded " + kits.size() + " kit(s) (" + (kits.size() - getEnabledKits().size()) + " disabled)");
         return true;
     }
