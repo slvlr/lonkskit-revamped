@@ -28,6 +28,7 @@ public final class KitPlugin extends JavaPlugin implements Listener {
     private ConfigurationNode conf;
 
 
+
     @Override
     public void onEnable() {
         singleton = this;

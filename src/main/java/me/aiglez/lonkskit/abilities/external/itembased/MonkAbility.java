@@ -50,6 +50,7 @@ public class MonkAbility extends ItemStackAbility {
                     final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
                     if(!cooldown.test(localPlayer)){
                         LocalPlayer.get(e.getPlayer()).msg("&5(Monk) &cPlease wait, {0} second(s) left", cooldown.remainingTime(LocalPlayer.get(e.getPlayer()), TimeUnit.SECONDS));
+                        e.setCancelled(true);
                         return;
                     }
 
@@ -57,15 +58,13 @@ public class MonkAbility extends ItemStackAbility {
                     int index = RandomUtils.nextInt(30); // RandomUtils is more optimized then created a new Random object each time
 
                     final ItemStack itemAtIndex = rightClicked.getInventory().getItem(index);
+                    final ItemStack itemInMainHand = rightClicked.getInventory().getItemInMainHand(); // Player#getItemInHand is @deprecated
                     if (itemAtIndex != null && itemAtIndex.getType() != Material.AIR) {
-                        ItemStack itemInMainHand = rightClicked.getInventory().getItemInMainHand(); // Player#getItemInHand is @deprecated
-                        //ItemStack second = rightClicked.getInventory().getItem(index);
                         rightClicked.getInventory().setItemInMainHand(itemAtIndex);
                         rightClicked.getInventory().setItem(index, itemInMainHand);
                     } else {
-                        final ItemStack itemMain = rightClicked.getInventory().getItemInMainHand();
                         rightClicked.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
-                        rightClicked.getInventory().addItem(itemMain);
+                        rightClicked.getInventory().addItem(itemInMainHand);
 
                     }
                 });

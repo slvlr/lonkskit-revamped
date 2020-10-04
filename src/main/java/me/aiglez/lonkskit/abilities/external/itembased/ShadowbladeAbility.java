@@ -33,15 +33,14 @@ public class ShadowbladeAbility extends ItemStackAbility {
 
     @Override
     public void whenUsed(PlayerInteractEvent e) {
-        e.setCancelled(true);
         LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
         if (!this.cooldown.test(localPlayer)){
             localPlayer.msg("&cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
+            e.setCancelled(true);
             return;
         }
-
-        if (localPlayer.toBukkit().getInventory().getItemInMainHand() == this.item) {
-            if (e.getAction() == Action.RIGHT_CLICK_AIR) {
+        if (e.getAction() == Action.RIGHT_CLICK_AIR) {
+            if (isItemStack(localPlayer.toBukkit().getInventory().getItemInMainHand())) {
                 localPlayer.toBukkit().launchProjectile(Fireball.class);
             }
         }
