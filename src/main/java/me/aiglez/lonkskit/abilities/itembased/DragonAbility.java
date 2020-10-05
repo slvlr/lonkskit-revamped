@@ -71,7 +71,7 @@ public class DragonAbility extends ItemStackAbility {
                     }
 
                     WorldProvider.KP_WORLD.playEffect(localPlayer.getLocation(), Effect.MOBSPAWNER_FLAMES, 0);
-                }, 1L, 8L);
+                }, 10L, 8L);
 
         localPlayer.msg("&e(Dragon) You have been pushed (strength: {0})", strength);
     }
