@@ -87,6 +87,15 @@ public class AbilityFactoryImpl implements AbilityFactory {
         );
         this.abilities.add(shark);
 
+        Ability jedi = new JediAbility(
+                getFileByName("jedi").orElseThrow(() -> new AbilityFileNotFoundException("jedi"))
+        );
+        this.abilities.add(jedi);
+
+        Ability chomp = new ChompAbility(
+                getFileByName("chomp").orElseThrow(() -> new AbilityFileNotFoundException("chomp"))
+        );
+        this.abilities.add(chomp);
 
         // Imad - start
         Ability monk = new MonkAbility(

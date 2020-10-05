@@ -41,16 +41,20 @@ public class KangarooAbility extends ItemStackAbility {
             return;
         }
 
-        if(localPlayer.toBukkit().isSneaking()) {
-            localPlayer.toBukkit().setSneaking(false);
-            localPlayer.toBukkit().setVelocity(localPlayer.getLocation().getDirection().multiply(1.2d).setY(0.3d));
-        } else {
-            localPlayer.toBukkit().setVelocity(localPlayer.getLocation().getDirection().multiply(1.1d).setY(0.6d));
-        }
+        localPlayer.toBukkit().setVelocity(localPlayer.getLocation().getDirection().multiply(1.1d).setY(0.8));
     }
 
     @Override
-    public void whenLeftClicked(PlayerInteractEvent e) { }
+    public void whenLeftClicked(PlayerInteractEvent e) {
+        e.setCancelled(true);
+        final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
+
+        if(!cooldown.test(localPlayer)) {
+            localPlayer.msg("&6(Kangaroo) &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
+            return;
+        }
+        localPlayer.toBukkit().setVelocity(localPlayer.getLocation().getDirection().multiply(1.5d).setY(0.3d));
+    }
 
     @Override
     public void handleListeners() { }
