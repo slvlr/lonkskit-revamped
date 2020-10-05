@@ -38,17 +38,11 @@ public class ShadowbladeAbility extends ItemStackAbility {
         LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
         if (!this.cooldown.test(localPlayer)){
             localPlayer.msg("&cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
-            e.setCancelled(true);
             return;
         }
-        if (e.getAction() == Action.RIGHT_CLICK_AIR) {
-            // Player#launchProjectile Fireball.class
-            Location eye = e.getPlayer().getEyeLocation();
-            Location loc = eye.add(eye.getDirection().multiply(1.2));
-            Fireball fireball = (Fireball) loc.getWorld().spawnEntity(loc, EntityType.FIREBALL);
-            fireball.setVelocity(loc.getDirection().normalize().multiply(2));
-            fireball.setShooter(e.getPlayer());
-        }
+            // Player#launchProjectile Fireball.class ------> DRTHA LMRA LWLA W MAKHDMATCH
+            e.getPlayer().launchProjectile(Fireball.class);
+
     }
 
     @Override

@@ -61,14 +61,8 @@ public class MonkAbility extends ItemStackAbility {
 
                     final ItemStack itemAtIndex = rightClicked.getInventory().getItem(index);
                     final ItemStack itemInMainHand = rightClicked.getInventory().getItemInMainHand(); // Player#getItemInHand is @deprecated
-                    if (itemAtIndex != null && itemAtIndex.getType() != Material.AIR) {
                         rightClicked.getInventory().setItemInMainHand(itemAtIndex);
-                        rightClicked.getInventory().setItem(index, itemInMainHand);
-                    } else {
-                        rightClicked.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
-                        rightClicked.getInventory().addItem(itemInMainHand);
-
-                    }
+                        rightClicked.getInventory().setItem(index,itemInMainHand);
                 });
     }
 }

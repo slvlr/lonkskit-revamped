@@ -5,6 +5,7 @@ import me.aiglez.lonkskit.abilities.Ability;
 import me.aiglez.lonkskit.abilities.external.functionnal.AnvilAbility;
 import me.aiglez.lonkskit.abilities.external.itembased.MonkAbility;
 import me.aiglez.lonkskit.abilities.external.itembased.ShadowbladeAbility;
+import me.aiglez.lonkskit.abilities.external.itembased.SonicAbility;
 import me.aiglez.lonkskit.abilities.functionnal.SharkAbility;
 import me.aiglez.lonkskit.abilities.functionnal.StompAbility;
 import me.aiglez.lonkskit.abilities.itembased.*;
@@ -104,6 +105,10 @@ public class AbilityFactoryImpl implements AbilityFactory {
         );
         this.abilities.add(shadowblade);
 
+        Ability sonic = new SonicAbility(
+                getFileByName("sonic").orElseThrow(() -> new AbilityFileNotFoundException("sonic"))
+        );
+        this.abilities.add(sonic);
         // Imad - end
     }
 
