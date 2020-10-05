@@ -42,6 +42,7 @@ public class ShadowbladeAbility extends ItemStackAbility {
             return;
         }
         if (e.getAction() == Action.RIGHT_CLICK_AIR) {
+            // Player#launchProjectile Fireball.class
             Location eye = e.getPlayer().getEyeLocation();
             Location loc = eye.add(eye.getDirection().multiply(1.2));
             Fireball fireball = (Fireball) loc.getWorld().spawnEntity(loc, EntityType.FIREBALL);
