@@ -43,9 +43,14 @@ public class SonicAbility extends ItemStackAbility {
             localPlayer.msg("&e(Sonic) &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
             return;
         }
-        if (isItemStack(localPlayer.toBukkit().getInventory().getItemInMainHand()))
-            localPlayer.toBukkit().addPotionEffect(new PotionEffect(PotionEffectType.SPEED,300, 3));
+        if (isItemStack(localPlayer.toBukkit().getInventory().getItemInMainHand())) {
+            PotionEffect speed3 = new PotionEffect(PotionEffectType.SPEED, 300, 3);
+            if (!localPlayer.toBukkit().hasPotionEffect(PotionEffectType.SPEED)){
+                localPlayer.toBukkit().addPotionEffect(speed3);
+            }else
+                localPlayer.msg("&c You have Speed III Already !!");
 
+        }
     }
 
     @Override

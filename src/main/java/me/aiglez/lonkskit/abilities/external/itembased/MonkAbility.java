@@ -23,7 +23,7 @@ public class MonkAbility extends ItemStackAbility {
     public MonkAbility(ConfigurationNode configuration) {
         super("monk", configuration);
         this.item = ItemStackBuilder.of(Material.BLAZE_ROD)
-                .name("&Staff")
+                .name("&bStaff")
                 .build();
     }
 
@@ -48,6 +48,7 @@ public class MonkAbility extends ItemStackAbility {
         Events.subscribe(PlayerInteractEntityEvent.class)
                 .filter(AbilityPredicates.playerHasAbility(this))
                 .filter(o -> o.getRightClicked() instanceof Player)
+                .filter(e -> isItemStack(e.getPlayer().getInventory().getItemInMainHand()))
                 .handler(e -> {
                     final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
                     if(!cooldown.test(localPlayer)){

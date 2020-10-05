@@ -3,12 +3,15 @@ package me.aiglez.lonkskit.abilities.external.itembased;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
+import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Fireball;
+import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -40,16 +43,16 @@ public class ShadowbladeAbility extends ItemStackAbility {
             localPlayer.msg("&cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
             return;
         }
+        if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)
+        {
+            e.getPlayer().launchProjectile(Fireball.class).setDirection(e.getPlayer().getVelocity().multiply(3));
+        }
             // Player#launchProjectile Fireball.class ------> DRTHA LMRA LWLA W MAKHDMATCH
-            e.getPlayer().launchProjectile(Fireball.class);
-
     }
 
     @Override
     public void whenLeftClicked(PlayerInteractEvent e) { }
 
     @Override
-    public void handleListeners() {
-
-    }
+    public void handleListeners() {}
 }
