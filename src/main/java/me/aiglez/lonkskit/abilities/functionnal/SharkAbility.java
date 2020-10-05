@@ -38,9 +38,12 @@ public class SharkAbility extends FunctionalAbility {
                     if(isWater(localPlayer.getLocation()) || isWater(localPlayer.toBukkit().getEyeLocation())) {
                         localPlayer.toBukkit().addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, (int) Ticks.from(10, TimeUnit.SECONDS), 0));
                         localPlayer.toBukkit().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, (int) Ticks.from(10, TimeUnit.SECONDS), 1));
+
+                        localPlayer.toBukkit().setRemainingAir((int) Ticks.from(10, TimeUnit.SECONDS));
                     } else {
                         localPlayer.toBukkit().removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
                         localPlayer.toBukkit().removePotionEffect(PotionEffectType.SPEED);
+                        localPlayer.toBukkit().setRemainingAir(localPlayer.toBukkit().getMaximumAir());
                     }
                 });
 
