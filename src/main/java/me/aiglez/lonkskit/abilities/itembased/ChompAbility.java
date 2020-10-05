@@ -61,13 +61,13 @@ public class ChompAbility extends ItemStackAbility {
                     return localPlayer.hasSelectedKit() && localPlayer.getNullableSelectedKit().hasAbility(this);
                 })
                 .filter(e ->{
-                    return  isItemStack(((Player) e.getDamager()).getInventory().getItemInMainHand());
+                    return isItemStack(((Player) e.getDamager()).getInventory().getItemInMainHand());
                 })
                 .handler(e -> {
                     LocalPlayer damager = LocalPlayer.get((Player) e.getDamager());
                     LocalPlayer victim = LocalPlayer.get((Player) e.getEntity());
 
-                    victim.toBukkit().damage(damage, damager.toBukkit());
+                    victim.toBukkit().damage(damage);
                     damager.toBukkit().addPotionEffects(negativeEffects);
 
                     damager.msg("(Chomp) &cYou have chomped {0} [damage: {1}]", victim.getLastKnownName(), damage);
