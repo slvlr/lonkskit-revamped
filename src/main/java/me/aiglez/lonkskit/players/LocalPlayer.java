@@ -5,26 +5,22 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import me.aiglez.lonkskit.LonksKitProvider;
-import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.data.MemoryLocalPlayer;
 import me.aiglez.lonkskit.kits.Kit;
-import me.aiglez.lonkskit.kits.KitSelectorGUI;
-import me.aiglez.lonkskit.players.messages.Replaceable;
 import me.aiglez.lonkskit.utils.Logger;
 import me.lucko.helper.gson.GsonSerializable;
 import me.lucko.helper.metadata.Metadata;
 import me.lucko.helper.metadata.MetadataMap;
-import me.lucko.helper.text3.Text;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.PlayerInventory;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @SuppressWarnings("unused")
-public interface LocalPlayer extends GsonSerializable {
+public interface LocalPlayer extends GsonSerializable, LocalMessager, LocalRenter {
 
     UUID getUniqueId();
 
@@ -32,43 +28,19 @@ public interface LocalPlayer extends GsonSerializable {
 
     Player toBukkit();
 
-    default Location getLocation() {
-        if(toBukkit() != null) return toBukkit().getLocation();
-        return new Location(WorldProvider.KP_WORLD, 0, 0, 0);
-    }
-
-    default World getWorld() {
-        if(toBukkit() != null) return WorldProvider.MAIN_WORLD;
-        return toBukkit().getWorld();
-    }
-
     void setBukkit(Player bukkit);
+
+    Location getLocation();
+
+    World getWorld();
+
+    PlayerInventory getInventory();
 
     LocalMetrics getMetrics();
 
-    void updateMetrics(int killsCount, int deathsCount);
-
-    List<LocalRent> getRents();
-
-    default Optional<LocalRent> getRent(Kit kit) {
-        if(kit == null) return Optional.empty();
-        for (final LocalRent rent : getRents()) {
-            if(rent.getRented().equals(kit)) return Optional.of(rent);
-        }
-        return Optional.empty();
-    }
-
-    boolean hasRented(Kit kit);
-
-    void addRent(LocalRent rent);
-
-    void removeRent(LocalRent rent);
-
     Kit getNullableSelectedKit();
 
-    default boolean hasSelectedKit() {
-        return getNullableSelectedKit() != null;
-    }
+    boolean hasSelectedKit();
 
     boolean setSelectedKit(Kit kit);
 
@@ -86,36 +58,15 @@ public interface LocalPlayer extends GsonSerializable {
 
     void setSafeStatus(boolean status);
 
-    void updateSafeStatus();
-
     default boolean hasAccess(Kit kit) {
         if(kit == null || !kit.enabled() || toBukkit() == null) return false;
         return toBukkit().hasPermission("lonkskit." + kit.getBackendName());
     }
 
-    default void openKitSelector() {
-        if(toBukkit() != null) {
-            new KitSelectorGUI(this).open();
-        }
-    }
+    void openKitSelector();
 
     default MetadataMap metadata() {
         return Metadata.provideForPlayer(getUniqueId());
-    }
-
-    default void msg(String message) {
-        Preconditions.checkNotNull(message, "message may not be null");
-        if(toBukkit() != null) toBukkit().sendMessage(Text.colorize(message));
-    }
-
-    default void msg(Iterable<String> messages) {
-        if(toBukkit() != null) {
-            messages.forEach(this::msg);
-        }
-    }
-
-    default void msg(String message, Object... replacements) {
-        msg(Replaceable.handle(message, replacements));
     }
 
 
@@ -140,7 +91,7 @@ public interface LocalPlayer extends GsonSerializable {
         final JsonObject metrics = object.getAsJsonObject("metrics");
         final int metricsDeathsCount = metrics.has("deaths") ? metrics.get("deaths").getAsInt() : 0;
         final int metricsKillsCount = metrics.has("kills") ? metrics.get("kills").getAsInt() : 0;
-        localPlayer.updateMetrics(metricsKillsCount, metricsDeathsCount);
+        //localPlayer.metadata()t(metricsKillsCount, metricsDeathsCount);
 
         Preconditions.checkArgument(object.has("rents"));
         final JsonArray rents = object.getAsJsonArray("rents");
