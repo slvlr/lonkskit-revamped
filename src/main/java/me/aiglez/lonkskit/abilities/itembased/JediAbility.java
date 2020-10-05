@@ -52,7 +52,7 @@ public class JediAbility extends ItemStackAbility {
                     pushed.getAndIncrement();
                 });
 
-        localPlayer.msg("&0(Jedi) &8Pushed a way entities [number: {0}]" + pushed.get());
+        localPlayer.msg("&0(Jedi) &fPushed away entities [number: {0}]", pushed.get());
     }
 
     @Override
