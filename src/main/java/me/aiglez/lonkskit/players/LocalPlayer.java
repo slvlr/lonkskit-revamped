@@ -91,7 +91,7 @@ public interface LocalPlayer extends GsonSerializable, LocalMessager, LocalRente
         final JsonObject metrics = object.getAsJsonObject("metrics");
         final int metricsDeathsCount = metrics.has("deaths") ? metrics.get("deaths").getAsInt() : 0;
         final int metricsKillsCount = metrics.has("kills") ? metrics.get("kills").getAsInt() : 0;
-        //localPlayer.metadata()t(metricsKillsCount, metricsDeathsCount);
+        localPlayer.getMetrics().updateAll(metricsKillsCount, metricsDeathsCount);
 
         Preconditions.checkArgument(object.has("rents"));
         final JsonArray rents = object.getAsJsonArray("rents");
