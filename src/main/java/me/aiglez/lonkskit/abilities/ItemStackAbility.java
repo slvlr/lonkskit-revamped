@@ -49,9 +49,10 @@ public abstract class ItemStackAbility implements Ability, Listener {
 
     public abstract boolean isItemStack(ItemStack item);
 
-    public abstract void whenUsed(PlayerInteractEvent e);
 
+    public abstract void whenRightClicked(PlayerInteractEvent e);
 
+    public abstract void whenLeftClicked(PlayerInteractEvent e);
 
     @Override
     public String toString() {

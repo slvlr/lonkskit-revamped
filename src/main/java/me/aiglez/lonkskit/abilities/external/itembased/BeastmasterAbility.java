@@ -3,10 +3,7 @@ package me.aiglez.lonkskit.abilities.external.itembased;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.config.ConfigurationNode;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -34,7 +31,7 @@ public class BeastmasterAbility extends ItemStackAbility {
     }
 
     @Override
-    public void whenUsed(PlayerInteractEvent e) {
+    public void whenRightClicked(PlayerInteractEvent e) {
         if (e.getPlayer().getInventory().getItemInMainHand().isSimilar(this.item)) {
             if (e.getAction() == Action.RIGHT_CLICK_AIR){
                 Player player = e.getPlayer();
@@ -48,7 +45,8 @@ public class BeastmasterAbility extends ItemStackAbility {
     }
 
     @Override
-    public void handleListeners() {
+    public void whenLeftClicked(PlayerInteractEvent e) { }
 
-    }
+    @Override
+    public void handleListeners() { }
 }

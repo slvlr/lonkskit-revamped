@@ -13,6 +13,7 @@ public class CommandsRegistry {
 
     public CommandsRegistry(KitPlugin plugin) {
         this.acf = new PaperCommandManager(plugin);
+        this.acf.enableUnstableAPI("brigadier");
         try {
             loadLocales();
         } catch (IOException | InvalidConfigurationException e) {

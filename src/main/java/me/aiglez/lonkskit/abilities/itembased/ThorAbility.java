@@ -46,7 +46,7 @@ public class ThorAbility extends ItemStackAbility {
     public boolean isItemStack(ItemStack item) { return this.item.isSimilar(item); }
 
     // --------------------------------------------------------------------------------------------
-    public void whenUsed(PlayerInteractEvent e) {
+    public void whenRightClicked(PlayerInteractEvent e) {
         e.setCancelled(true);
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
 
@@ -62,6 +62,9 @@ public class ThorAbility extends ItemStackAbility {
         localPlayer.toBukkit().getWorld().strikeLightning(target.getLocation());
 
     }
+
+    @Override
+    public void whenLeftClicked(PlayerInteractEvent e) { }
 
     @Override
     public void handleListeners() {

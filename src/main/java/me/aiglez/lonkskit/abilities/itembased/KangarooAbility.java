@@ -30,7 +30,7 @@ public class KangarooAbility extends ItemStackAbility {
     public boolean isItemStack(ItemStack item) { return this.item.isSimilar(item); }
 
     @Override
-    public void whenUsed(PlayerInteractEvent e) {
+    public void whenRightClicked(PlayerInteractEvent e) {
         e.setCancelled(true);
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
 
@@ -39,11 +39,11 @@ public class KangarooAbility extends ItemStackAbility {
         } else {
             localPlayer.toBukkit().setVelocity(localPlayer.getLocation().getDirection().multiply(1.1d).setY(0.6d));
         }
-
     }
 
     @Override
-    public void handleListeners() {
+    public void whenLeftClicked(PlayerInteractEvent e) { }
 
-    }
+    @Override
+    public void handleListeners() { }
 }

@@ -45,7 +45,7 @@ public class DragonAbility extends ItemStackAbility {
 
     // --------------------------------------------------------------------------------------------
     @Override
-    public void whenUsed(PlayerInteractEvent e) {
+    public void whenRightClicked(PlayerInteractEvent e) {
         e.setCancelled(true);
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
         if(!cooldown.test(localPlayer)){
@@ -75,6 +75,9 @@ public class DragonAbility extends ItemStackAbility {
 
         localPlayer.msg("&e(Dragon) You have been pushed (strength: {0})", strength);
     }
+
+    @Override
+    public void whenLeftClicked(PlayerInteractEvent e) { }
 
     @Override
     public void handleListeners() {

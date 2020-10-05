@@ -47,9 +47,10 @@ public class TrollAbility extends ItemStackAbility {
 
     // --------------------------------------------------------------------------------------------
     @Override
-    public void whenUsed(PlayerInteractEvent e) {
+    public void whenRightClicked(PlayerInteractEvent e) { }
 
-    }
+    @Override
+    public void whenLeftClicked(PlayerInteractEvent e) { }
 
     @Override
     public void handleListeners() {

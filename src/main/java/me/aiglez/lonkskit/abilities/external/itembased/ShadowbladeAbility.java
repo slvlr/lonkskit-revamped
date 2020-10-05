@@ -34,7 +34,7 @@ public class ShadowbladeAbility extends ItemStackAbility {
     }
 
     @Override
-    public void whenUsed(PlayerInteractEvent e) {
+    public void whenRightClicked(PlayerInteractEvent e) {
         LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
         if (!this.cooldown.test(localPlayer)){
             localPlayer.msg("&cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
@@ -49,6 +49,9 @@ public class ShadowbladeAbility extends ItemStackAbility {
             fireball.setShooter(e.getPlayer());
         }
     }
+
+    @Override
+    public void whenLeftClicked(PlayerInteractEvent e) { }
 
     @Override
     public void handleListeners() {

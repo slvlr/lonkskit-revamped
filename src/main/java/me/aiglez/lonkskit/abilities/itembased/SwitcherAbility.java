@@ -42,13 +42,16 @@ public class SwitcherAbility extends ItemStackAbility {
 
     // --------------------------------------------------------------------------------------------
     @Override
-    public void whenUsed(PlayerInteractEvent e) {
+    public void whenRightClicked(PlayerInteractEvent e) {
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
         if(!cooldown.test(localPlayer)){
             localPlayer.msg("&b(Switcher) &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
             e.setCancelled(true);
         }
     }
+
+    @Override
+    public void whenLeftClicked(PlayerInteractEvent e) { }
 
     @Override
     public void handleListeners() {

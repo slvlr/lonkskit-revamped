@@ -34,7 +34,7 @@ public class BlinkAbility extends ItemStackAbility {
 
     // --------------------------------------------------------------------------------------------
     @Override
-    public void whenUsed(PlayerInteractEvent e) {
+    public void whenRightClicked(PlayerInteractEvent e) {
         e.setCancelled(true);
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
 
@@ -61,8 +61,10 @@ public class BlinkAbility extends ItemStackAbility {
     }
 
     @Override
-    public void handleListeners() {
-    }
+    public void whenLeftClicked(PlayerInteractEvent e) { }
+
+    @Override
+    public void handleListeners() { }
 
     private boolean isValid(Material material) {
         return !material.isAir() && material != Material.GRASS && material != Material.TALL_GRASS;

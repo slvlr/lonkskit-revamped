@@ -20,13 +20,25 @@ public class AbilityListeners implements Listener {
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
         // handle abilities
-        if(e.hasItem() && (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)) {
-            final ItemStack item = e.getItem();
+        if(!e.hasItem()) return;
+        final ItemStack item = e.getItem();
+
+        if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             for (final Ability ability : LonksKitProvider.getAbilityFactory().getAbilities()) {
                 if(ability instanceof ItemStackAbility) {
                     final ItemStackAbility itemAbility = (ItemStackAbility) ability;
                     if(itemAbility.isItemStack(item)) {
-                        itemAbility.whenUsed(e);
+                        itemAbility.whenRightClicked(e);
+                        return;
+                    }
+                }
+            }
+        } else if(e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
+            for (final Ability ability : LonksKitProvider.getAbilityFactory().getAbilities()) {
+                if(ability instanceof ItemStackAbility) {
+                    final ItemStackAbility itemAbility = (ItemStackAbility) ability;
+                    if(itemAbility.isItemStack(item)) {
+                        itemAbility.whenLeftClicked(e);
                         return;
                     }
                 }

@@ -35,7 +35,7 @@ public class PortastompAbility extends ItemStackAbility {
 
     // --------------------------------------------------------------------------------------------
     @Override
-    public void whenUsed(PlayerInteractEvent e) {
+    public void whenRightClicked(PlayerInteractEvent e) {
         e.setCancelled(true);
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
 
@@ -43,12 +43,12 @@ public class PortastompAbility extends ItemStackAbility {
             localPlayer.msg("&a(Portastomp) &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
             return;
         }
-
         Schedulers.sync().runLater(() -> localPlayer.toBukkit().setVelocity(new Vector(0, 10, 0)), 2L);
     }
 
     @Override
-    public void handleListeners() {
+    public void whenLeftClicked(PlayerInteractEvent e) { }
 
-    }
+    @Override
+    public void handleListeners() { }
 }

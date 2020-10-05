@@ -44,7 +44,7 @@ public class WizardAbility extends ItemStackAbility {
     // too slow
     // --------------------------------------------------------------------------------------------
     @Override
-    public void whenUsed(PlayerInteractEvent e) {
+    public void whenRightClicked(PlayerInteractEvent e) {
         e.setCancelled(true);
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
 
@@ -57,6 +57,9 @@ public class WizardAbility extends ItemStackAbility {
         snowball.setShooter(localPlayer.toBukkit());
         Metadata.provideForEntity(snowball).put(MetadataProvider.SNOWBALL_EXPLODE, true);
     }
+
+    @Override
+    public void whenLeftClicked(PlayerInteractEvent e) { }
 
     @Override
     public void handleListeners() {
