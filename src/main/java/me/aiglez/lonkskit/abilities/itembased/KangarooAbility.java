@@ -37,6 +37,7 @@ public class KangarooAbility extends ItemStackAbility {
         if(localPlayer.toBukkit().isSneaking()) {
             localPlayer.toBukkit().setVelocity(localPlayer.getLocation().getDirection().multiply(1.2d).setY(0.3d));
         } else {
+            localPlayer.toBukkit().setSneaking(false);
             localPlayer.toBukkit().setVelocity(localPlayer.getLocation().getDirection().multiply(1.1d).setY(0.6d));
         }
     }
