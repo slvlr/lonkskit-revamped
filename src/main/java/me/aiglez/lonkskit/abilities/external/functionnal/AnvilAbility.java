@@ -28,7 +28,7 @@ public class AnvilAbility extends FunctionalAbility {
                 .filter(e -> e.getEntity() instanceof Player && e.getDamager() instanceof Player )
                 .handler(a -> {
                     final Vector vec = new Vector();
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(KitPlugin.getSingleton(), new Runnable() {
+                    Bukkit.getScheduler().runTaskLater(KitPlugin.getSingleton(), new Runnable() {
                         @Override
                         public void run() {
                             a.getEntity().setVelocity(vec);
