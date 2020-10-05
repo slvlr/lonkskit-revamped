@@ -42,6 +42,10 @@ public class StompAbility extends FunctionalAbility {
                             entity -> entity instanceof Player
                     ).forEach(entity -> {
                         final LocalPlayer under = LocalPlayer.get(((Player) entity));
+                        if(!localPlayer.toBukkit().hasLineOfSight(under.toBukkit())) {
+                            localPlayer.msg("&6(Stomp) &fNear: " + under.getLastKnownName() + " &cnot in line of sight");
+                            return;
+                        }
                         if(!(under.getUniqueId().equals(localPlayer.getUniqueId()))) {
                             double damage;
                             if(under.toBukkit().isSneaking()) { // is player sneaking
