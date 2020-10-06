@@ -84,7 +84,7 @@ public class KitSelectorGUI extends PaginatedGui {
                                     .of(holder.buildItem(kit, State.PERMANENT_ACCESS, 0))
                                     .build(() -> {
                                         boolean result = localPlayer.setSelectedKit(kit);
-                                        if(!result) {
+                                        if (!result) {
                                             localPlayer.msg("&cAn error occurred while trying to select the kit, please try again.");
                                             gui.redraw();
                                             return;

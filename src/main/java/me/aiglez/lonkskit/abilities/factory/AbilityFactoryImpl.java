@@ -2,10 +2,7 @@ package me.aiglez.lonkskit.abilities.factory;
 
 import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.abilities.Ability;
-import me.aiglez.lonkskit.abilities.external.functionnal.AnvilAbility;
-import me.aiglez.lonkskit.abilities.external.functionnal.BerserkerAbility;
-import me.aiglez.lonkskit.abilities.external.functionnal.PigAbility;
-import me.aiglez.lonkskit.abilities.external.functionnal.TurtleAbility;
+import me.aiglez.lonkskit.abilities.external.functionnal.*;
 import me.aiglez.lonkskit.abilities.external.itembased.*;
 import me.aiglez.lonkskit.abilities.functionnal.SharkAbility;
 import me.aiglez.lonkskit.abilities.functionnal.StompAbility;
@@ -135,6 +132,23 @@ public class AbilityFactoryImpl implements AbilityFactory {
                 getFileByName("pig").orElseThrow(() -> new AbilityFileNotFoundException("pig"))
         );
         this.abilities.add(pig);
+
+        Ability snake = new SnakeAbility(
+                getFileByName("snake").orElseThrow(() -> new AbilityFileNotFoundException("snake"))
+        );
+        this.abilities.add(snake);
+
+        Ability flamer = new FlamerAbility(
+                getFileByName("flamer").orElseThrow(() -> new AbilityFileNotFoundException("flamer"))
+        );
+
+        this.abilities.add(flamer);
+
+        Ability killer = new FlamerAbility(
+                getFileByName("killer").orElseThrow(() -> new AbilityFileNotFoundException("killer"))
+        );
+
+        this.abilities.add(killer);
         // Imad - end
     }
 
