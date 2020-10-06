@@ -4,6 +4,9 @@ import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.metadata.Metadata;
 import me.lucko.helper.metadata.MetadataKey;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityEvent;
 import org.bukkit.event.player.PlayerEvent;
 
@@ -28,6 +31,16 @@ public class AbilityPredicates {
             return localPlayer.hasSelectedKit() && localPlayer.getNullableSelectedKit().hasAbility(ability);
         };
     }
+    // IMAAAD START
+    public static <T extends EntityEvent> Predicate<T> isKillerhaveAbility(Ability ability) {
+        return e -> {
+            if(!(e.getEntity() instanceof Player)) return false;
+            final LocalPlayer localPlayer = LocalPlayer.get(((Player) e.getEntity()).getKiller());
+            return localPlayer.hasSelectedKit() && localPlayer.getNullableSelectedKit().hasAbility(ability);
+        };
+    }
+    //IMAD END :)
+
     // -------------------------------------------- //
     // METADATA
     // -------------------------------------------- //

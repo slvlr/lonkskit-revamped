@@ -3,9 +3,8 @@ package me.aiglez.lonkskit.abilities.factory;
 import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.abilities.Ability;
 import me.aiglez.lonkskit.abilities.external.functionnal.AnvilAbility;
-import me.aiglez.lonkskit.abilities.external.itembased.MonkAbility;
-import me.aiglez.lonkskit.abilities.external.itembased.ShadowbladeAbility;
-import me.aiglez.lonkskit.abilities.external.itembased.SonicAbility;
+import me.aiglez.lonkskit.abilities.external.functionnal.BerserkerAbility;
+import me.aiglez.lonkskit.abilities.external.itembased.*;
 import me.aiglez.lonkskit.abilities.functionnal.SharkAbility;
 import me.aiglez.lonkskit.abilities.functionnal.StompAbility;
 import me.aiglez.lonkskit.abilities.itembased.*;
@@ -109,6 +108,21 @@ public class AbilityFactoryImpl implements AbilityFactory {
                 getFileByName("sonic").orElseThrow(() -> new AbilityFileNotFoundException("sonic"))
         );
         this.abilities.add(sonic);
+
+        Ability ghost = new GhostAbility(
+                getFileByName("ghost").orElseThrow(() -> new AbilityFileNotFoundException("ghost"))
+        );
+        this.abilities.add(ghost);
+
+        Ability hyper = new HyperAbility(
+                getFileByName("hyper").orElseThrow(() -> new AbilityFileNotFoundException("hyper"))
+        );
+        this.abilities.add(hyper);
+
+        Ability berserker = new BerserkerAbility(
+                getFileByName("berserker").orElseThrow(() -> new AbilityFileNotFoundException("berserker"))
+        );
+        this.abilities.add(berserker);
         // Imad - end
     }
 

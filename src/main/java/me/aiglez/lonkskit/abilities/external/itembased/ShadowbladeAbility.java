@@ -9,11 +9,13 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Fireball;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 import java.util.concurrent.TimeUnit;
 
@@ -45,7 +47,12 @@ public class ShadowbladeAbility extends ItemStackAbility {
         }
         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)
         {
-            e.getPlayer().launchProjectile(Fireball.class).setDirection(e.getPlayer().getVelocity().multiply(3));
+            Player p = localPlayer.toBukkit();
+            Vector direction = p.getLocation().getDirection();
+            Fireball fireball = (Fireball) p.getWorld().spawnEntity(p.getEyeLocation().add(direction), EntityType.FIREBALL);
+            fireball.setShooter(p);
+            fireball.setVelocity(direction.multiply(2));
+
         }
             // Player#launchProjectile Fireball.class ------> DRTHA LMRA LWLA W MAKHDMATCH
     }

@@ -44,12 +44,19 @@ public class SonicAbility extends ItemStackAbility {
             return;
         }
         if (isItemStack(localPlayer.toBukkit().getInventory().getItemInMainHand())) {
-            PotionEffect speed3 = new PotionEffect(PotionEffectType.SPEED, 300, 3);
-            if (!localPlayer.toBukkit().hasPotionEffect(PotionEffectType.SPEED)){
-                localPlayer.toBukkit().addPotionEffect(speed3);
-            }else
-                localPlayer.msg("&c You have Speed III Already !!");
-
+            if (getConfiguration().getValue("duration") != null) {
+                PotionEffect speed3 = new PotionEffect(PotionEffectType.SPEED, Integer.parseInt((String) getConfiguration().getValue("duration")) * 20, 3);
+                if (!localPlayer.toBukkit().hasPotionEffect(PotionEffectType.SPEED)) {
+                    localPlayer.toBukkit().addPotionEffect(speed3);
+                } else
+                    localPlayer.msg("&c You have Speed III Already !!");
+            }else if (getConfiguration().getValue("duration") == null){
+                PotionEffect speed3 = new PotionEffect(PotionEffectType.SPEED, 300, 3);
+                if (!localPlayer.toBukkit().hasPotionEffect(PotionEffectType.SPEED)) {
+                    localPlayer.toBukkit().addPotionEffect(speed3);
+                } else
+                    localPlayer.msg("&c You have Speed III Already !!");
+            }
         }
     }
 
