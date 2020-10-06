@@ -4,6 +4,8 @@ import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.abilities.Ability;
 import me.aiglez.lonkskit.abilities.external.functionnal.AnvilAbility;
 import me.aiglez.lonkskit.abilities.external.functionnal.BerserkerAbility;
+import me.aiglez.lonkskit.abilities.external.functionnal.PigAbility;
+import me.aiglez.lonkskit.abilities.external.functionnal.TurtleAbility;
 import me.aiglez.lonkskit.abilities.external.itembased.*;
 import me.aiglez.lonkskit.abilities.functionnal.SharkAbility;
 import me.aiglez.lonkskit.abilities.functionnal.StompAbility;
@@ -123,6 +125,16 @@ public class AbilityFactoryImpl implements AbilityFactory {
                 getFileByName("berserker").orElseThrow(() -> new AbilityFileNotFoundException("berserker"))
         );
         this.abilities.add(berserker);
+
+        Ability turtle = new TurtleAbility(
+                getFileByName("turtle").orElseThrow(() -> new AbilityFileNotFoundException("turtle"))
+        );
+        this.abilities.add(turtle);
+
+        Ability pig = new PigAbility(
+                getFileByName("pig").orElseThrow(() -> new AbilityFileNotFoundException("pig"))
+        );
+        this.abilities.add(pig);
         // Imad - end
     }
 
