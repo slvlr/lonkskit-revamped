@@ -1,5 +1,0 @@
-name: LonksKit
-version: ${project.version}
-main: me.aiglez.lonkskit.KitPlugin
-api-version: 1.16
-depend: [helper]

@@ -1,4 +1,0 @@
-acf-core:
-  permission-denied: "§b[LonksKit] §cYou do not have access to this command !"
-  error_performing_command: "§b[LonksKit] §cI'm sorry, but there was an error performing this command."
-  could_not_find_player: "§b[LonksKit] §cCouldn't find a player matching that name."
