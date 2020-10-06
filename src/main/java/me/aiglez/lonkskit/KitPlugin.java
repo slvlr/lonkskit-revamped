@@ -22,12 +22,11 @@ import java.io.File;
 public final class KitPlugin extends JavaPlugin implements Listener {
 
     private static KitPlugin singleton;
+
     private KitFactory kitFactory;
     private LocalPlayerFactory localPlayerFactory;
     private AbilityFactory abilityFactory;
     private ConfigurationNode conf;
-
-
 
     @Override
     public void onEnable() {
@@ -88,6 +87,7 @@ public final class KitPlugin extends JavaPlugin implements Listener {
      For testing
     */
     public KitPlugin() { super(); }
+
     protected KitPlugin(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
         super(loader, description, dataFolder, file);
     }

@@ -43,7 +43,6 @@ public class BlinkAbility extends ItemStackAbility {
             return;
         }
 
-        //localPlayer.toBukkit().teleport(getTargetBlock(localPlayer).getLocation().clone().add(0D, 1D, 0D));
         int range = 30;
         Location from = localPlayer.toBukkit().getEyeLocation();
         Location to = localPlayer.toBukkit().getEyeLocation();
