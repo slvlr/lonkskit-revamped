@@ -6,6 +6,7 @@ import me.aiglez.lonkskit.abilities.external.functionnal.AnvilAbility;
 import me.aiglez.lonkskit.abilities.external.itembased.MonkAbility;
 import me.aiglez.lonkskit.abilities.external.itembased.ShadowbladeAbility;
 import me.aiglez.lonkskit.abilities.functionnal.SharkAbility;
+import me.aiglez.lonkskit.abilities.functionnal.ShooterAbility;
 import me.aiglez.lonkskit.abilities.functionnal.StompAbility;
 import me.aiglez.lonkskit.abilities.itembased.*;
 import me.aiglez.lonkskit.exceptions.AbilityFileNotFoundException;
@@ -96,6 +97,16 @@ public class AbilityFactoryImpl implements AbilityFactory {
                 getFileByName("chomp").orElseThrow(() -> new AbilityFileNotFoundException("chomp"))
         );
         this.abilities.add(chomp);
+
+        Ability shooter = new ShooterAbility(
+                getFileByName("shooter").orElseThrow(() -> new AbilityFileNotFoundException("shooter"))
+        );
+        this.abilities.add(shooter);
+
+        Ability superman = new SupermanAbility(
+                getFileByName("superman").orElseThrow(() -> new AbilityFileNotFoundException("superman"))
+        );
+        this.abilities.add(superman);
 
         // Imad - start
         Ability monk = new MonkAbility(
