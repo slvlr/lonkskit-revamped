@@ -8,6 +8,7 @@ import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.scheduler.Ticks;
 import org.bukkit.Material;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -33,7 +34,7 @@ public class ChompAbility extends ItemStackAbility {
         this.item = ItemStackBuilder.of(Material.CHEST)
                 .name("&6Chomp")
                 .build();
-        this.damage = configuration.getNode("damage").getDouble(1);
+        this.damage = configuration.getNode("damage").getDouble(5);
         this.negativeEffects = Sets.newHashSet(
                 new PotionEffect(PotionEffectType.SLOW, (int) Ticks.from(6, TimeUnit.SECONDS), 1),
                 new PotionEffect(PotionEffectType.WEAKNESS, (int) Ticks.from(6, TimeUnit.SECONDS), 1)
@@ -55,7 +56,7 @@ public class ChompAbility extends ItemStackAbility {
     @Override
     public void handleListeners() {
         Events.subscribe(EntityDamageByEntityEvent.class)
-                .filter(e -> e.getDamager() instanceof Player && e.getEntity() instanceof Player)
+                .filter(e -> e.getDamager() instanceof Player)
                 .filter(e -> {
                     final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getDamager());
                     return localPlayer.hasSelectedKit() && localPlayer.getNullableSelectedKit().hasAbility(this);
@@ -65,12 +66,15 @@ public class ChompAbility extends ItemStackAbility {
                 })
                 .handler(e -> {
                     LocalPlayer damager = LocalPlayer.get((Player) e.getDamager());
-                    LocalPlayer victim = LocalPlayer.get((Player) e.getEntity());
+                    LivingEntity victim = (LivingEntity) e.getEntity();
 
-                    victim.toBukkit().damage(damage);
-                    damager.toBukkit().addPotionEffects(negativeEffects);
+                    double oldHP = victim.getHealth();
 
-                    damager.msg("(Chomp) &cYou have chomped {0} [damage: {1}]", victim.getLastKnownName(), damage);
+                    //damager.toBukkit().addPotionEffects(negativeEffects);
+
+                    e.setDamage(damage);
+                    damager.msg("(Chomp) &cYou have chomped {0} [damage: {1}] (OLD HP: {2}  NEW HP: {3})", victim.getName(), damage,
+                            oldHP, victim.getHealth());
                 });
     }
 }

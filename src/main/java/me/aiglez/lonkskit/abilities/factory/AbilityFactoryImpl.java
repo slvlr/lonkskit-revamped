@@ -108,6 +108,10 @@ public class AbilityFactoryImpl implements AbilityFactory {
         );
         this.abilities.add(superman);
 
+        Ability cowboy = new CowboyAbility(
+                getFileByName("cowboy").orElseThrow(() -> new AbilityFileNotFoundException("cowboy"))
+        );
+        this.abilities.add(cowboy);
         // Imad - start
         Ability monk = new MonkAbility(
                 getFileByName("monk").orElseThrow(() -> new AbilityFileNotFoundException("monk"))

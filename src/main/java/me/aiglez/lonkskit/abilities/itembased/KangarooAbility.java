@@ -69,8 +69,8 @@ public class KangarooAbility extends ItemStackAbility {
                 .filter(AbilityPredicates.humanHasAbility(this))
                 .handler(e -> {
                     final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getEntity());
-                    e.setDamage(Math.max(e.getDamage() - 0.5, 0));
-                    localPlayer.msg("&6(Kangaroo) Reduced your damage by 0.5");
+                    e.setDamage(e.getDamage() - 0.5);
+                    localPlayer.msg("&6(Kangaroo) Reduced your damage by 0.5 (current damage: {0})", e.getFinalDamage());
                 });
     }
 }
