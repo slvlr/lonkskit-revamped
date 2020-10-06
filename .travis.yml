@@ -27,4 +27,4 @@ deploy:
   file: "target/LonksKit-1.0.5.jar"
   cleanup: true
   on:
-    tags: true
+    branch: "ability/aiglez"
