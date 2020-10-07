@@ -1,10 +1,8 @@
 package me.aiglez.lonkskit.abilities.external.functionnal;
 
 import me.aiglez.lonkskit.KitPlugin;
-import me.aiglez.lonkskit.abilities.Ability;
 import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.FunctionalAbility;
-import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
 import org.bukkit.entity.Player;

@@ -17,10 +17,6 @@ public class StompAbility extends FunctionalAbility {
         super("stomp", configuration);
     }
 
-    public void handleLanding(LocalPlayer localPlayer, EntityDamageEvent e) {
-
-    }
-
     @Override
     public void handleListeners() {
         Events.subscribe(EntityDamageEvent.class)
