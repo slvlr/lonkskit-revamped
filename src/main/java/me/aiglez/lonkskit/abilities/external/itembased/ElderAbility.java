@@ -15,6 +15,8 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Arrays;
+import java.util.Queue;
 import java.util.concurrent.TimeUnit;
 
 public class ElderAbility extends ItemStackAbility {
@@ -62,7 +64,14 @@ public class ElderAbility extends ItemStackAbility {
                     int index = RandomUtils.nextInt(4);
                     ItemStack item =  victim.getInventory().getArmorContents()[index];
                     ItemStack[] armor = victim.getInventory().getArmorContents();
-                    victim.getInventory().remove(item);
+                    String displayname = item.getItemMeta().getDisplayName();
+                    ItemStack[] newarmor = victim.getInventory().getArmorContents();
+                    for (int i = 0 ; i > armor.length ; i++){
+                        if (!armor[i].getItemMeta().getDisplayName().equalsIgnoreCase(displayname)){
+                            newarmor[0] = armor[i];
+                        }
+                    }
+                    victim.getInventory().setArmorContents(newarmor);
                     Bukkit.getScheduler().runTaskLater(KitPlugin.getSingleton(), new Runnable() {
                         @Override
                         public void run() {

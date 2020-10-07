@@ -40,18 +40,7 @@ public class GhostAbility extends ItemStackAbility {
             localPlayer.msg("&e(Sonic) &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
             return;
         }
-        //localPlayer.toBukkit().setInvisible();
-        for (Player player : Bukkit.getOnlinePlayers()){
-            player.hidePlayer(KitPlugin.getSingleton(),localPlayer.toBukkit());
-        }
-        Bukkit.getScheduler().runTaskLater(KitPlugin.getSingleton(), new Runnable() {
-            @Override
-            public void run() {
-                for (Player player : Bukkit.getOnlinePlayers()){
-                    player.showPlayer(KitPlugin.getSingleton(),localPlayer.toBukkit());
-                }
-            }
-        },300L);
+        new GhostHelp(localPlayer.toBukkit());
 
 
     }

@@ -28,13 +28,11 @@ public class BerserkerAbility extends FunctionalAbility {
                 .handler(e -> {
                     FileConfiguration config = null;
                     try {
-                        config = SonicAbility.getConfig("duration");
-                    } catch (IOException ioException) {
-                        ioException.printStackTrace();
-                    } catch (InvalidConfigurationException invalidConfigurationException) {
-                        invalidConfigurationException.printStackTrace();
+                        config = SonicAbility.getConfig("berserker");
+                    } catch (IOException | InvalidConfigurationException ioException) {
+                        System.out.println("BERSERKER ERROR");
                     }
-                    e.getEntity().getKiller().addPotionEffect(new PotionEffect(PotionType.STRENGTH.getEffectType(),config.getInt("duration"),1));
+                    e.getEntity().getKiller().addPotionEffect(new PotionEffect(PotionType.STRENGTH.getEffectType(),config.getInt("duration"),2));
                     Bukkit.getScheduler().runTaskLater(KitPlugin.getSingleton(), new Runnable() {
                         @Override
                         public void run() {

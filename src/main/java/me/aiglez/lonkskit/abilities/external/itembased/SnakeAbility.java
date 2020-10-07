@@ -45,11 +45,15 @@ public class SnakeAbility extends ItemStackAbility {
     public void handleListeners() {
         Events.subscribe(EntityDamageByEntityEvent.class)
                 .filter(AbilityPredicates.humanHasAbility(this))
-                .filter(e -> isItemStack(((Player)e.getDamager()).getInventory().getItemInMainHand()))
                 .handler(e -> {
-                    Player victim = (Player) e.getEntity();
-                    if (!victim.hasPotionEffect(PotionEffectType.POISON))
-                        victim.addPotionEffect(new PotionEffect(PotionEffectType.POISON,80,2));
+                    Player Killer = (Player) e.getDamager();
+                    if (isItemStack(Killer.getInventory().getItemInMainHand())) {
+                        Player victim = (Player) e.getEntity();
+                        if (!victim.hasPotionEffect(PotionEffectType.POISON)) {
+                            victim.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 80, 2));
+                            e.getDamager().sendMessage("RIGHT");
+                        }
+                    }
 
                 });
 

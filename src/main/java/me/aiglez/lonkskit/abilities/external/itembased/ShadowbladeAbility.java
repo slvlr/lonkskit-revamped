@@ -1,5 +1,6 @@
 package me.aiglez.lonkskit.abilities.external.itembased;
 
+import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
@@ -40,26 +41,26 @@ public class ShadowbladeAbility extends ItemStackAbility {
 
     @Override
     public void whenRightClicked(PlayerInteractEvent e) {
-        LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
-        if (!this.cooldown.test(localPlayer)){
-            localPlayer.msg("&cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
-            return;
-        }
-        if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)
-        {
-            Player p = localPlayer.toBukkit();
-            Vector direction = p.getLocation().getDirection();
-            Fireball fireball = (Fireball) p.getWorld().spawnEntity(p.getEyeLocation().add(direction), EntityType.FIREBALL);
-            fireball.setShooter(p);
-            fireball.setVelocity(direction.multiply(2));
-
-        }
-            // Player#launchProjectile Fireball.class ------> DRTHA LMRA LWLA W MAKHDMATCH
+        //CHECK HANDLE
     }
 
     @Override
     public void whenLeftClicked(PlayerInteractEvent e) { }
 
     @Override
-    public void handleListeners() {}
+    public void handleListeners() {
+        Events.subscribe(PlayerInteractEvent.class)
+                .filter(AbilityPredicates.playerHasAbility(this))
+                .filter(e -> isItemStack(e.getItem()))
+                .filter(e -> e.getAction() == Action.RIGHT_CLICK_AIR ||e.getAction() == Action.RIGHT_CLICK_BLOCK )
+                .handler(e -> {
+                    e.setCancelled(true);
+                    final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
+                    if (!cooldown.test(localPlayer)){
+                        localPlayer.msg("&e(Sonic) &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
+                        return;
+                    }
+                    localPlayer.toBukkit().launchProjectile(Fireball.class);
+                });
+    }
 }
