@@ -20,6 +20,7 @@ public interface Ability {
         Preconditions.checkNotNull(name, "ability name may not be null");
         return LonksKitProvider.getAbilityFactory().getAbility(name).orElseThrow(() -> new NullPointerException("ability with name " + name + " not found:"));
     }
+<<<<<<< HEAD
 
     enum Type {
 
@@ -27,4 +28,6 @@ public interface Ability {
         ITEMSTACK;
 
     }
+=======
+>>>>>>> 652ee15... Track all files
 }
