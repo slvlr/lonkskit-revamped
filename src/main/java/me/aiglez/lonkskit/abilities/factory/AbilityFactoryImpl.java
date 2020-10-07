@@ -145,6 +145,12 @@ public class AbilityFactoryImpl implements AbilityFactory {
         );
 
         this.abilities.add(killer);
+
+        Ability elder = new ElderAbility(
+                getFileByName("elder").orElseThrow(() -> new AbilityFileNotFoundException("elder"))
+        );
+
+        this.abilities.add(elder);
         // Imad - end
     }
 
