@@ -5,7 +5,6 @@ import me.aiglez.lonkskit.data.MemoryMetrics;
 @SuppressWarnings("unused")
 public interface LocalMetrics {
 
-
     LocalPlayer getHolder();
 
     int getKillsCount();
