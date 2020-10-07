@@ -1,20 +1,29 @@
 package me.aiglez.lonkskit.data;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
+import me.aiglez.lonkskit.events.KitSelectEvent;
 import me.aiglez.lonkskit.kits.Kit;
+import me.aiglez.lonkskit.kits.KitSelectorGUI;
 import me.aiglez.lonkskit.players.LocalMetrics;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.players.LocalRent;
+import me.aiglez.lonkskit.players.messages.Replaceable;
 import me.aiglez.lonkskit.utils.Logger;
+import me.lucko.helper.Events;
 import me.lucko.helper.gson.JsonBuilder;
 import me.lucko.helper.profiles.MojangApi;
 import me.lucko.helper.text3.Text;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -60,6 +69,7 @@ public class MemoryLocalPlayer implements LocalPlayer {
                 this.lastKnownName = bukkit.getName();
             } else {
                 try {
+                    Logger.fine("Fetching username of [" + uniqueId + "]" );
                     this.lastKnownName = MojangApi.uuidToUsername(uniqueId).get();
                 } catch (Exception e) {
                     this.lastKnownName = "Unknown";
@@ -78,33 +88,33 @@ public class MemoryLocalPlayer implements LocalPlayer {
     public void setBukkit(Player bukkit) { this.bukkit = bukkit; }
 
     @Override
+    public Location getLocation() {
+        Preconditions.checkNotNull(bukkit, "player is not online");
+        return bukkit.getLocation();
+    }
+
+    @Override
+    public World getWorld() {
+        Preconditions.checkNotNull(bukkit, "player is not online");
+        return bukkit.getWorld();
+    }
+
+    @Override
+    public PlayerInventory getInventory() {
+        Preconditions.checkNotNull(bukkit, "player is not online");
+        return bukkit.getInventory();
+    }
+
+    @Override
     public LocalMetrics getMetrics() { return this.metrics; }
 
     @Override
-    public void updateMetrics(int killsCount, int deathsCount) {
-        this.metrics.updateAll(killsCount, deathsCount);
-    }
-
-    @Override
-    public List<LocalRent> getRents() { return this.rents; }
-
-    @Override
-    public boolean hasRented(Kit kit) {
-        return this.rents.stream().map(LocalRent::getRented).anyMatch(k -> k.equals(kit));
-    }
-
-    @Override
-    public void addRent(LocalRent rent) {
-        this.rents.add(rent);
-    }
-
-    @Override
-    public void removeRent(LocalRent rent) {
-        this.rents.remove(rent);
-    }
-
-    @Override
     public Kit getNullableSelectedKit() { return this.selectedKit; }
+
+    @Override
+    public boolean hasSelectedKit() {
+        return this.selectedKit != null;
+    }
 
     @Override
     public boolean setSelectedKit(Kit kit) {
@@ -113,6 +123,8 @@ public class MemoryLocalPlayer implements LocalPlayer {
             return false;
         }
         this.selectedKit = kit;
+
+        Events.call(new KitSelectEvent(kit, this));
 
         if(kit == null || toBukkit() == null) {
             Logger.severe("Kit not found: " + (kit == null) + " // Player not found: " + (toBukkit() == null));
@@ -163,20 +175,55 @@ public class MemoryLocalPlayer implements LocalPlayer {
     public void setAtArena(boolean bool) { this.atArena = bool; }
 
     @Override
-    public boolean isSafe() { return safe; }
+    public boolean isSafe() { return this.safe; }
 
     @Override
     public void setSafeStatus(boolean status) { this.safe = status; }
 
     @Override
-    public void updateSafeStatus() {
-
+    public void openKitSelector() {
+        Preconditions.checkNotNull(bukkit, "player is not online");
+        new KitSelectorGUI(this).open();
     }
 
     @Override
     public void msg(String message) {
         if(message == null || toBukkit() == null) return;
         toBukkit().sendMessage(Text.colorize(message));
+    }
+
+    @Override
+    public void msg(Iterable<String> messages) {
+        messages.forEach(this::msg);
+    }
+
+    @Override
+    public void msg(String message, Object... replacements) {
+        msg(Replaceable.handle(message, replacements));
+    }
+
+
+    @Override
+    public List<LocalRent> getRents() { return this.rents; }
+
+    @Override
+    public Optional<LocalRent> getRent(Kit kit) {
+        return this.rents.stream().filter(localRent -> localRent.getRented().equals(kit)).findFirst();
+    }
+
+    @Override
+    public boolean hasRented(Kit kit) {
+        return this.rents.stream().map(LocalRent::getRented).anyMatch(k -> k.equals(kit));
+    }
+
+    @Override
+    public void addRent(LocalRent rent) {
+        this.rents.add(rent);
+    }
+
+    @Override
+    public void removeRent(LocalRent rent) {
+        this.rents.remove(rent);
     }
 
     @Override
