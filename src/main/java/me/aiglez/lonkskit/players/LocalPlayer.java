@@ -19,7 +19,7 @@ import org.bukkit.inventory.PlayerInventory;
 import java.util.Optional;
 import java.util.UUID;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "RedundantSuppression"})
 public interface LocalPlayer extends GsonSerializable, LocalMessager, LocalRenter {
 
     UUID getUniqueId();

@@ -3,7 +3,7 @@ package me.aiglez.lonkskit.players;
 import me.aiglez.lonkskit.data.MemoryRent;
 import me.aiglez.lonkskit.kits.Kit;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "RedundantSuppression"})
 public interface LocalRent {
 
     Kit getRented();

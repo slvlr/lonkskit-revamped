@@ -6,7 +6,6 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("unused")
 public interface KitFactory {
 
     Set<Kit> getRegisteredKits();

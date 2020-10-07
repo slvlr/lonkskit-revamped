@@ -2,7 +2,7 @@ package me.aiglez.lonkskit.players;
 
 import me.aiglez.lonkskit.data.MemoryMetrics;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "RedundantSuppression"})
 public interface LocalMetrics {
 
     LocalPlayer getHolder();
