@@ -21,7 +21,7 @@ public class KillerAbility extends FunctionalAbility {
                 .filter(AbilityPredicates.humanHasAbility(this))
                 .handler(e->{
                     Location loc = e.getEntity().getLocation();    //GET LOCATION WHEN THE PLAYER DIES :)
-                    TNTPrimed tnt = (TNTPrimed) loc.getWorld().spawnEntity(loc,EntityType.PRIMED_TNT);
+                    TNTPrimed tnt = (TNTPrimed) loc.getWorld().spawnEntity(loc,EntityType.PRIMED_TNT); //BACK IN BLACK <3
                     tnt.setFuseTicks(70);
                 });
     }

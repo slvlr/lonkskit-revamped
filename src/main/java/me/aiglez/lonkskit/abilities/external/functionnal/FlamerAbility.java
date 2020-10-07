@@ -29,8 +29,16 @@ public class FlamerAbility extends FunctionalAbility {
                 .filter(AbilityPredicates.humanHasAbility(this))
                 .handler(e -> {
                    if (e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK
-                           || e.getCause() == EntityDamageEvent.DamageCause.FIRE
-                   || e.getCause() == EntityDamageEvent.DamageCause.LAVA){
+                           || e.getCause() == EntityDamageEvent.DamageCause.FIRE || e.getCause() == EntityDamageEvent.DamageCause.HOT_FLOOR){
+                       e.setCancelled(true);
+                       Player player = (Player) e.getEntity();
+                       if (!player.hasPotionEffect(PotionType.STRENGTH.getEffectType())){
+                           player.addPotionEffect(new PotionEffect(PotionType.STRENGTH.getEffectType(),200,1));
+
+                       }
+                   }
+                   if (e.getEntity().getLocation().getBlock().getType() == Material.LAVA
+                           ||e.getEntity().getLocation().getBlock().getType() == Material.LAVA_BUCKET){
                        e.setCancelled(true);
                        Player player = (Player) e.getEntity();
                        if (!player.hasPotionEffect(PotionType.STRENGTH.getEffectType())){

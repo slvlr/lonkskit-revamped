@@ -18,12 +18,5 @@ public class PigAbility extends FunctionalAbility {
 
     @Override
     public void handleListeners() {
-        Events.subscribe(PlayerChangedWorldEvent.class)
-                .filter(AbilityPredicates.playerHasAbility(this))
-                .filter(e -> e.getPlayer().getLocation().getWorld().getName().equalsIgnoreCase("kitpvp"))
-                .handler(e -> {
-                    DisguiseAPI.disguiseToAll(e.getPlayer(),new MobDisguise(DisguiseType.PIG,true));
-                    e.getPlayer().sendMessage(ChatColor.LIGHT_PURPLE + "You have been disguised as PIG");
-                });
     }
 }

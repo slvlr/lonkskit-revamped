@@ -11,6 +11,7 @@ import me.aiglez.lonkskit.exceptions.AbilityFileNotFoundException;
 import me.aiglez.lonkskit.exceptions.AbilityRegisterException;
 import me.lucko.helper.config.ConfigFactory;
 import me.lucko.helper.config.ConfigurationNode;
+import org.bukkit.Material;
 
 import java.io.File;
 import java.util.Collections;
@@ -38,6 +39,7 @@ public class AbilityFactoryImpl implements AbilityFactory {
     public void registerAbilities() {
         Ability thor = new ThorAbility(
                 getFileByName("thor").orElseThrow(() -> new AbilityFileNotFoundException("thor"))
+
         );
         this.abilities.add(thor);
 
@@ -127,12 +129,6 @@ public class AbilityFactoryImpl implements AbilityFactory {
                 getFileByName("turtle").orElseThrow(() -> new AbilityFileNotFoundException("turtle"))
         );
         this.abilities.add(turtle);
-
-        Ability pig = new PigAbility(
-                getFileByName("pig").orElseThrow(() -> new AbilityFileNotFoundException("pig"))
-        );
-        this.abilities.add(pig);
-
         Ability snake = new SnakeAbility(
                 getFileByName("snake").orElseThrow(() -> new AbilityFileNotFoundException("snake"))
         );

@@ -44,7 +44,6 @@ public class SnakeAbility extends ItemStackAbility {
     @Override
     public void handleListeners() {
         Events.subscribe(EntityDamageByEntityEvent.class)
-                .filter(e -> e.getEntity() instanceof Player && e.getDamager() instanceof Player)
                 .filter(AbilityPredicates.humanHasAbility(this))
                 .filter(e -> isItemStack(((Player)e.getDamager()).getInventory().getItemInMainHand()))
                 .handler(e -> {
