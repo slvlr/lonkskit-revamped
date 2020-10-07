@@ -3,6 +3,7 @@ package me.aiglez.lonkskit.data;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
+import me.aiglez.lonkskit.events.KitSelectEvent;
 import me.aiglez.lonkskit.kits.Kit;
 import me.aiglez.lonkskit.kits.KitSelectorGUI;
 import me.aiglez.lonkskit.players.LocalMetrics;
@@ -10,6 +11,7 @@ import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.players.LocalRent;
 import me.aiglez.lonkskit.players.messages.Replaceable;
 import me.aiglez.lonkskit.utils.Logger;
+import me.lucko.helper.Events;
 import me.lucko.helper.gson.JsonBuilder;
 import me.lucko.helper.profiles.MojangApi;
 import me.lucko.helper.text3.Text;
@@ -121,6 +123,8 @@ public class MemoryLocalPlayer implements LocalPlayer {
             return false;
         }
         this.selectedKit = kit;
+
+        Events.call(new KitSelectEvent(kit, this));
 
         if(kit == null || toBukkit() == null) {
             Logger.severe("Kit not found: " + (kit == null) + " // Player not found: " + (toBukkit() == null));
