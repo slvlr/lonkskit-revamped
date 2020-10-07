@@ -60,6 +60,8 @@ public interface LocalPlayer extends GsonSerializable, LocalMessager, LocalRente
 
     void updateSafeStatus();
 
+    boolean hasAccess(Kit kit);
+
     void openKitSelector();
 
     default MetadataMap metadata() {

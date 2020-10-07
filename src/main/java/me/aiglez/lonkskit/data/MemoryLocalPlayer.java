@@ -184,6 +184,12 @@ public class MemoryLocalPlayer implements LocalPlayer {
     }
 
     @Override
+    public boolean hasAccess(Kit kit) {
+        if(kit == null || bukkit == null) return false;
+        return bukkit.hasPermission("lonkskit.kit" + kit.getBackendName());
+    }
+
+    @Override
     public void openKitSelector() {
         Preconditions.checkNotNull(bukkit, "player is not online");
         new KitSelectorGUI(this).open();

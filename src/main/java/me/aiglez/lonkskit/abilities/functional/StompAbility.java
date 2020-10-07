@@ -1,4 +1,4 @@
-package me.aiglez.lonkskit.abilities.functionnal;
+package me.aiglez.lonkskit.abilities.functional;
 
 import me.aiglez.lonkskit.abilities.Ability;
 import me.aiglez.lonkskit.abilities.AbilityPredicates;
