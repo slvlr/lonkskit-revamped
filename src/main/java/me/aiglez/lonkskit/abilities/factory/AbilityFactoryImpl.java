@@ -151,6 +151,12 @@ public class AbilityFactoryImpl implements AbilityFactory {
         );
 
         this.abilities.add(elder);
+
+        Ability BeastMaster = new BeastmasterAbility(
+                getFileByName("beastmaster").orElseThrow(() -> new AbilityFileNotFoundException("beastmaster"))
+        );
+
+        this.abilities.add(BeastMaster);
         // Imad - end
     }
 

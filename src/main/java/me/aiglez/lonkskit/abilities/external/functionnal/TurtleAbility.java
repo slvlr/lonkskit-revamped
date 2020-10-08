@@ -21,8 +21,10 @@ public class TurtleAbility extends FunctionalAbility {
                 .handler(e -> {
                     Player player = (Player) e.getEntity();
                     if (e.getCause() != EntityDamageEvent.DamageCause.FALL) {
-                        if (player.isSneaking())
-                            e.setDamage(0.5D);
+                        if (player.isSneaking()) {
+                            e.setCancelled(true);
+                            ((Player) e.getEntity()).damage(1);
+                        }
                     }
                 });
     }
