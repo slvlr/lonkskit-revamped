@@ -37,7 +37,6 @@ public class FlamerAbility extends FunctionalAbility {
                             || block.getType() == Material.LAVA || block.getType() == Material.MAGMA_BLOCK);
                     {
                         e.setCancelled(true);
-                        player.setHealth(20D);
                         if (!player.hasPotionEffect(PotionType.STRENGTH.getEffectType())){
                             player.addPotionEffect(new PotionEffect(PotionType.STRENGTH.getEffectType(),200,1));
 
