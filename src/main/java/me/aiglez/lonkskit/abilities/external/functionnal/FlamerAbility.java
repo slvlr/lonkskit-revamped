@@ -32,7 +32,7 @@ public class FlamerAbility extends FunctionalAbility {
                     Player player = (Player) e.getEntity();
                     Location loc = player.getLocation().subtract(0,1,0);
                     Block block = loc.getBlock();
-                    if (e.getCause() == EntityDamageEvent.DamageCause.LAVA
+                    if (e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK
                             || e.getCause() == EntityDamageEvent.DamageCause.FIRE || e.getCause() == EntityDamageEvent.DamageCause.HOT_FLOOR
                             || block.getType() == Material.LAVA || block.getType() == Material.MAGMA_BLOCK);
                     {
