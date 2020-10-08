@@ -51,12 +51,11 @@ public class ShadowbladeAbility extends ItemStackAbility {
     public void handleListeners() {
         Events.subscribe(PlayerInteractEvent.class)
                 .filter(AbilityPredicates.playerHasAbility(this))
-                .filter(e -> isItemStack(e.getItem()))
-                .filter(e -> e.getAction() == Action.RIGHT_CLICK_AIR ||e.getAction() == Action.RIGHT_CLICK_BLOCK )
+                .filter(e -> e.getAction() == Action.RIGHT_CLICK_AIR ||e.getAction() == Action.RIGHT_CLICK_BLOCK)
                 .handler(e -> {
                     e.setCancelled(true);
                     final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
-                    if (!cooldown.test(localPlayer)){
+                    if (!cooldown.test(localPlayer)) {
                         localPlayer.msg("&e(Sonic) &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
                         return;
                     }

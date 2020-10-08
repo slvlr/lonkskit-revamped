@@ -32,15 +32,8 @@ public class BerserkerAbility extends FunctionalAbility {
                     } catch (IOException | InvalidConfigurationException ioException) {
                         System.out.println("BERSERKER ERROR");
                     }
-                    e.getEntity().getKiller().addPotionEffect(new PotionEffect(PotionType.STRENGTH.getEffectType(),config.getInt("duration"),2));
-                    Bukkit.getScheduler().runTaskLater(KitPlugin.getSingleton(), new Runnable() {
-                        @Override
-                        public void run() {
-                            if (!e.getEntity().hasPotionEffect(PotionType.STRENGTH.getEffectType())){
-                                e.getEntity().getKiller().addPotionEffect(new PotionEffect(PotionType.STRENGTH.getEffectType(),400,1));
-                            }
-                        }
-                    },65L);
+                    e.getEntity().getKiller().addPotionEffect(new PotionEffect(PotionType.STRENGTH.getEffectType(),400,2));
+
 
                 });
     }

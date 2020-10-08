@@ -68,7 +68,7 @@ public class ElderAbility extends ItemStackAbility {
                     ItemStack[] newarmor = victim.getInventory().getArmorContents();
                     for (int i = 0 ; i > armor.length ; i++){
                         if (!armor[i].getItemMeta().getDisplayName().equalsIgnoreCase(displayname)){
-                            newarmor[0] = armor[i];
+                            newarmor[i] = armor[i];
                         }
                     }
                     victim.getInventory().setArmorContents(newarmor);

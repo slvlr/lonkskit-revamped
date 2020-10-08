@@ -10,6 +10,7 @@ import me.lucko.helper.Schedulers;
 import me.lucko.helper.config.ConfigurationNode;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
@@ -25,19 +26,16 @@ public class AnvilAbility extends FunctionalAbility {
     public void handleListeners() {
         Events.subscribe(EntityDamageByEntityEvent.class)
                 .filter(AbilityPredicates.humanHasAbility(this))
-                .filter(e -> e.getEntity() instanceof Player && e.getDamager() instanceof Player )
+                .filter(e -> e.getDamager() instanceof Player ||e.getDamager() instanceof Projectile)
                 .handler(a -> {
-                    final Vector vec = new Vector();
-                    Bukkit.getScheduler().runTaskLater(KitPlugin.getSingleton(), new Runnable() {
-                        @Override
-                        public void run() {
-                            a.getEntity().setVelocity(vec);
-                        }
-                    },1L);
-                    a.getEntity().setVelocity(vec);
+                    a.setCancelled(true);
+                    Player victim = (Player) a.getEntity();
+                    victim.damage(a.getDamage());
 
 
                 });
 
+
     }
+
 }

@@ -53,12 +53,12 @@ public class AbilityFactoryImpl implements AbilityFactory {
         );
         this.abilities.add(switcher);
 
-        Ability portastomp = new PortastompAbility(
+        /*Ability portastomp = new PortastompAbility(
                 getFileByName("portastomp").orElseThrow(() -> new AbilityFileNotFoundException("portastomp"))
         );
-        this.abilities.add(portastomp);
+        this.abilities.add(portastomp);*/
 
-        Ability wizard = new WizardAbility(
+        /*Ability wizard = new WizardAbility(
                 getFileByName("wizard").orElseThrow(() -> new AbilityFileNotFoundException("wizard"))
         );
         this.abilities.add(wizard);
@@ -76,17 +76,17 @@ public class AbilityFactoryImpl implements AbilityFactory {
         Ability blink = new BlinkAbility(
                 getFileByName("blink").orElseThrow(() -> new AbilityFileNotFoundException("blink"))
         );
-        this.abilities.add(blink);
+        this.abilities.add(blink);*/
 
-        Ability kangaroo = new KangarooAbility(
+        /*Ability kangaroo = new KangarooAbility(
                 getFileByName("kangaroo").orElseThrow(() -> new AbilityFileNotFoundException("kangaroo"))
         );
         this.abilities.add(kangaroo);
-
-        Ability shark = new SharkAbility(
+*/
+        /*Ability shark = new SharkAbility(
                 getFileByName("shark").orElseThrow(() -> new AbilityFileNotFoundException("shark"))
         );
-        this.abilities.add(shark);
+        this.abilities.add(shark);*/
 
 
         // Imad - start
@@ -129,6 +129,7 @@ public class AbilityFactoryImpl implements AbilityFactory {
                 getFileByName("turtle").orElseThrow(() -> new AbilityFileNotFoundException("turtle"))
         );
         this.abilities.add(turtle);
+
         Ability snake = new SnakeAbility(
                 getFileByName("snake").orElseThrow(() -> new AbilityFileNotFoundException("snake"))
         );

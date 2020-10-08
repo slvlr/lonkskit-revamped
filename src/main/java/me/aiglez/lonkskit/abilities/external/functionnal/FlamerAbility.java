@@ -34,15 +34,17 @@ public class FlamerAbility extends FunctionalAbility {
                     Block block = loc.getBlock();
                     if (e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK
                             || e.getCause() == EntityDamageEvent.DamageCause.FIRE || e.getCause() == EntityDamageEvent.DamageCause.HOT_FLOOR
-                            || block.getType() == Material.LAVA || block.getType() == Material.MAGMA_BLOCK);
+                            || block.getType() == Material.LAVA || block.getType() == Material.MAGMA_BLOCK || e.getCause() == EntityDamageEvent.DamageCause.LAVA);
                     {
+                        System.out.println("JOHAN");
                         e.setCancelled(true);
                         player.setHealth(20D);
                         if (!player.hasPotionEffect(PotionType.STRENGTH.getEffectType())){
                             player.addPotionEffect(new PotionEffect(PotionType.STRENGTH.getEffectType(),200,1));
-
+                            System.out.println("RANGEWONK");
                         }
                    }
+                    System.out.println("WORK");
 
 
                 });

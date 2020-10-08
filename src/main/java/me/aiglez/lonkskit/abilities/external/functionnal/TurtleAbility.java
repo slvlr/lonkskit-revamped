@@ -5,6 +5,7 @@ import me.aiglez.lonkskit.abilities.FunctionalAbility;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
 public class TurtleAbility extends FunctionalAbility {
@@ -15,18 +16,16 @@ public class TurtleAbility extends FunctionalAbility {
 
     @Override
     public void handleListeners() {
-        Events.subscribe(EntityDamageEvent.class)
-                .filter(e -> e.getEntity() instanceof Player)
+        Events.subscribe(EntityDamageByEntityEvent.class)
                 .filter(AbilityPredicates.humanHasAbility(this))
+                .filter(e -> e.getDamager() instanceof Player && e.getEntity() instanceof Player)
                 .handler(e -> {
+                    e.setCancelled(true);
                     Player player = (Player) e.getEntity();
-                    if (e.getCause() != EntityDamageEvent.DamageCause.FALL) {
-                        if (player.isSneaking()) {
-                            e.setCancelled(true);
-                            ((Player) e.getEntity()).damage(1);
-                        }
-                    }
+                    Double Health = player.getHealth();
+                    player.setHealth(Health);
                 });
+
     }
 }
 
