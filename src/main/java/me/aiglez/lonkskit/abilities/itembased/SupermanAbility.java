@@ -33,6 +33,11 @@ public class SupermanAbility extends ItemStackAbility {
         e.setCancelled(true);
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
 
+        if(!cooldown.test(localPlayer)){
+            localPlayer.msg("&b[LonksKit] &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
+            return;
+        }
+
         // start
         // wait 7 seconds > send 3 second warn
         // wait 1 second  > send 3 second warn

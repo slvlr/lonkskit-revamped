@@ -23,7 +23,7 @@ public class PortastompAbility extends ItemStackAbility {
     public PortastompAbility(ConfigurationNode configuration) {
         super("portastomp", configuration);
         this.item = ItemStackBuilder.of(Material.ENDER_EYE)
-                .name("&cPort")
+                .name(configuration.getNode("item-name").getString("Stomper"))
                 .build();
     }
 
@@ -40,14 +40,16 @@ public class PortastompAbility extends ItemStackAbility {
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
 
         if(!cooldown.test(localPlayer)){
-            localPlayer.msg("&a(Portastomp) &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
+            localPlayer.msg("&b[LonksKit] &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
             return;
         }
-        Schedulers.sync().runLater(() -> localPlayer.toBukkit().setVelocity(new Vector(0, 10, 0)), 2L);
+        Schedulers.sync().runLater(() -> localPlayer.toBukkit().setVelocity(new Vector(0, configuration.getNode("velocities", "y-component").getDouble(1), 0)), 2L);
     }
 
     @Override
-    public void whenLeftClicked(PlayerInteractEvent e) { }
+    public void whenLeftClicked(PlayerInteractEvent e) {
+        e.setCancelled(true);
+    }
 
     @Override
     public void handleListeners() { }

@@ -51,7 +51,7 @@ public class MonkAbility extends ItemStackAbility {
                 .handler(e -> {
                     final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
                     if(!cooldown.test(localPlayer)){
-                        LocalPlayer.LocalPlayer.get(e.getPlayer()).msg("&5(Monk) &cPlease wait, {0} second(s) left", cooldown.remainingTime(LocalPlayer.get(e.getPlayer()), TimeUnit.SECONDS));
+                        LocalPlayer.get(e.getPlayer()).msg("&5(Monk) &cPlease wait, {0} second(s) left", cooldown.remainingTime(LocalPlayer.get(e.getPlayer()), TimeUnit.SECONDS));
                         e.setCancelled(true);
                         return;
                     }

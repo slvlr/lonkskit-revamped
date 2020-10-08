@@ -74,13 +74,4 @@ public final class KitPlugin extends ExtendedJavaPlugin implements Listener {
         }
     }
 
-    /*
-     For testing
-    */
-    public KitPlugin() { super(); }
-
-    protected KitPlugin(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
-        super(loader, description, dataFolder, file);
-    }
-
 }

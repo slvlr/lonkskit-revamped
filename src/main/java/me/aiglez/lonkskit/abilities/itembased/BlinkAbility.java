@@ -22,7 +22,7 @@ public class BlinkAbility extends ItemStackAbility {
     public BlinkAbility(ConfigurationNode configuration) {
         super("blink", configuration);
         this.item = ItemStackBuilder.of(Material.REDSTONE_TORCH)
-                .name("&bBlinker")
+                .name(configuration.getNode("item-name").getString("Blinker"))
                 .build();
     }
 
@@ -39,29 +39,32 @@ public class BlinkAbility extends ItemStackAbility {
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
 
         if(!cooldown.test(localPlayer)){
-            localPlayer.msg("&9(Blink) &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
+            localPlayer.msg("&b[LonksKit] &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
             return;
         }
 
-        int range = 30;
+        int range = configuration.getNode("range").getInt(50);
         Location from = localPlayer.toBukkit().getEyeLocation();
         Location to = localPlayer.toBukkit().getEyeLocation();
+
         // TODO: safe zone check
         while (to.distanceSquared(localPlayer.toBukkit().getEyeLocation()) <= range) {
             from = to;
             to = from.add(localPlayer.getLocation().getDirection().normalize().multiply(.5));
             if (isValid(to.getBlock().getType())) {
                 localPlayer.toBukkit().teleport(from.clone().add(0, 1, 0));
-                localPlayer.msg("&9(Blink) &aYou have blinked! (while loo)");
+                localPlayer.msg(configuration.getNode("messages", "blinked").getString("Blinked Message Null"));
                 return;
             }
         }
         localPlayer.toBukkit().teleport(to.add(0, 1, 0));
-        localPlayer.msg("&9(Blink) &aYou have blinked!");
+        localPlayer.msg(configuration.getNode("messages", "blinked").getString("Blinked Message Null"));
     }
 
     @Override
-    public void whenLeftClicked(PlayerInteractEvent e) { }
+    public void whenLeftClicked(PlayerInteractEvent e) {
+        e.setCancelled(true);
+    }
 
     @Override
     public void handleListeners() { }

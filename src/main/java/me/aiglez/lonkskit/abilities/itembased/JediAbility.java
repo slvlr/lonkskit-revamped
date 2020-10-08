@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -25,7 +26,7 @@ public class JediAbility extends ItemStackAbility {
     public JediAbility(ConfigurationNode configuration) {
         super("jedi", configuration);
         this.item = ItemStackBuilder.of(Material.SUNFLOWER)
-                .name("&cThe force")
+                .name(configuration.getNode("item-name").getString("The Force"))
                 .build();
     }
 
@@ -38,7 +39,13 @@ public class JediAbility extends ItemStackAbility {
     // --------------------------------------------------------------------------------------------
     @Override
     public void whenRightClicked(PlayerInteractEvent e) {
+        e.setCancelled(true);
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
+
+        if(!cooldown.test(localPlayer)){
+            localPlayer.msg("&b[LonksKit] &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
+            return;
+        }
 
         Location fromLocation = localPlayer.getLocation();
 
@@ -46,17 +53,19 @@ public class JediAbility extends ItemStackAbility {
         WorldProvider.KP_WORLD.getNearbyEntities(localPlayer.getLocation(), 6, 6, 6).stream()
                 .forEach(entity -> {
                     Location newLoc = entity.getLocation().subtract(fromLocation.toVector());
-                    Vector newV = newLoc.toVector().normalize().multiply(2);
+                    Vector newV = newLoc.toVector().normalize().multiply(
+                            configuration.getNode("strength").getDouble(3)
+                    );
 
                     entity.setVelocity(Various.makeFinite(newV));
                     pushed.getAndIncrement();
                 });
 
-        localPlayer.msg("&0(Jedi) &fPushed away entities [number: {0}]", pushed.get());
+        localPlayer.msg("&b(Debug - Jedi) &fPushed away entities [number: {0}]", pushed.get());
     }
 
     @Override
-    public void whenLeftClicked(PlayerInteractEvent e) { }
+    public void whenLeftClicked(PlayerInteractEvent e) { e.setCancelled(true); }
 
     @Override
     public void handleListeners() { }

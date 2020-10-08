@@ -2,7 +2,6 @@ package me.aiglez.lonkskit.abilities.itembased;
 
 
 import me.aiglez.lonkskit.WorldProvider;
-import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.MetadataProvider;
@@ -17,8 +16,8 @@ import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.spigotmc.event.entity.EntityDismountEvent;
 
 /**
  * @author AigleZ
@@ -29,9 +28,9 @@ public class CowboyAbility extends ItemStackAbility {
     private final ItemStack item;
 
     public CowboyAbility(ConfigurationNode configuration) {
-        super("chomp", configuration);
-        this.item = ItemStackBuilder.of(Material.CHEST)
-                .name("&6Chomp")
+        super("cowboy", configuration);
+        this.item = ItemStackBuilder.of(Material.SADDLE)
+                .name("&eCowboy")
                 .build();
     }
 
@@ -76,15 +75,37 @@ public class CowboyAbility extends ItemStackAbility {
                 });
 
         // block player from dismounting an entity
-        Events.subscribe(EntityDismountEvent.class)
-                .filter(AbilityPredicates.humanHasAbility(this))
-                .filter(e -> e.getDismounted().getType() == EntityType.HORSE)
-                .filter(e -> Metadata.provideForEntity(e.getDismounted()).has(MetadataProvider.HORSE_PERSISTENT))
+        Events.subscribe(VehicleExitEvent.class)
+                .filter(e -> e.getExited() instanceof Player)
+                .filter(e -> {
+                    final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getExited());
+                    return localPlayer.hasSelectedKit() && localPlayer.getNullableSelectedKit().hasAbility(this);
+                })
+                .filter(e -> e.getVehicle().getType() == EntityType.HORSE)
+                .filter(e -> Metadata.provideForEntity(e.getVehicle()).has(MetadataProvider.HORSE_PERSISTENT))
                 .handler(e -> {
-                    final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getEntity());
-                    localPlayer.msg("&6(Cowboy) &cYou can't dismount your horse!");
+                    final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getExited());
+                    localPlayer.msg("&6(Cowboy) &cYou can't dismount your horse! (Exit Event) &c(cancellable: {0})", e.isCancellable());
 
                     e.setCancelled(true);
                 });
+
+
+        // listen to teleport event
+        /*
+        Events.subscribe(PlayerTeleportEvent.class)
+                .filter(AbilityPredicates.playerHasAbility(this))
+                .handler(e -> {
+                    final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
+                    if (localPlayer.toBukkit().getVehicle() != null && localPlayer.toBukkit().getVehicle() instanceof Horse){
+                        localPlayer.msg("&6(Cowboy) &cYou can't dismount your horse! &4(Teleport Event)");
+
+                        e.setCancelled(true);
+                    }
+                });
         }
+
+         */
+
+    }
 }
