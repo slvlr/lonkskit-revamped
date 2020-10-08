@@ -38,7 +38,6 @@ public class FlamerAbility extends FunctionalAbility {
                     {
                         System.out.println("JOHAN");
                         e.setCancelled(true);
-                        player.setHealth(20D);
                         if (!player.hasPotionEffect(PotionType.STRENGTH.getEffectType())){
                             player.addPotionEffect(new PotionEffect(PotionType.STRENGTH.getEffectType(),200,1));
                             System.out.println("RANGEWONK");
