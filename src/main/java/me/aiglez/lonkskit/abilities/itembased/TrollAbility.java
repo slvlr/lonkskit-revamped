@@ -3,7 +3,6 @@ package me.aiglez.lonkskit.abilities.itembased;
 import com.google.common.collect.ImmutableList;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
-import me.aiglez.lonkskit.utils.Logger;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
@@ -34,7 +33,7 @@ public class TrollAbility extends ItemStackAbility {
     public TrollAbility(ConfigurationNode configuration) {
         super("troll", configuration);
         this.item = ItemStackBuilder.of(Material.WOODEN_HOE)
-                .name("&dtrolololol")
+                .name(configuration.getNode("item-name").getString("Trolololololo"))
                 .enchant(Enchantment.DURABILITY, 1)
                 .build();
     }
@@ -60,13 +59,7 @@ public class TrollAbility extends ItemStackAbility {
                     final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getDamager());
                     return localPlayer.hasSelectedKit() && localPlayer.getNullableSelectedKit().hasAbility(this);
                 })
-                .filter(e ->{
-                    boolean match = isItemStack(((Player) e.getDamager()).getInventory().getItemInMainHand());
-                    if(!match) {
-                        Logger.debug("(Troll) The item doesn't match!");
-                    }
-                    return match;
-                })
+                .filter(e -> isItemStack(((Player) e.getDamager()).getInventory().getItemInMainHand()))
                 .handler(e -> {
                     LocalPlayer damager = LocalPlayer.get((Player) e.getDamager());
                     LocalPlayer victim = LocalPlayer.get((Player) e.getEntity());
@@ -74,7 +67,7 @@ public class TrollAbility extends ItemStackAbility {
                     victim.toBukkit().addPotionEffect(new PotionEffect(
                             potionEffectTypeRandomSelector.pick(), (int) Ticks.from(4, TimeUnit.SECONDS), 1
                     ));
-                    damager.msg("&d(Troll) &cYou have trolled {0}", victim.getLastKnownName());
+                    damager.msg(configuration.getNode("messages", "trolled").getString("Message trolled Null"), victim.getLastKnownName());
                 });
     }
 }

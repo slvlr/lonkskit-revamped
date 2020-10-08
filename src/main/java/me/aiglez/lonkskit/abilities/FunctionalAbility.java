@@ -12,9 +12,9 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class FunctionalAbility implements Ability, Listener {
 
-    private final String name;
-    private final ConfigurationNode configuration;
-    private final CooldownMap<LocalPlayer> cooldown;
+    protected final String name;
+    protected final ConfigurationNode configuration;
+    protected final CooldownMap<LocalPlayer> cooldown;
 
     protected FunctionalAbility(String name, ConfigurationNode configuration) {
         Preconditions.checkNotNull(name);

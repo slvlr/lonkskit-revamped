@@ -36,10 +36,10 @@ public class ShooterAbility extends FunctionalAbility {
                     final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
                     final PlayerInventory inventory = localPlayer.toBukkit().getInventory();
 
-                    HashMap<Integer, ItemStack> map = inventory.removeItem(new ItemStack(Material.ARROW, 5));
+                    final HashMap<Integer, ItemStack> map = inventory.removeItem(new ItemStack(Material.ARROW, 5));
                     int toRemove = 5;
                     if(!map.isEmpty()) {
-                        localPlayer.msg("&e(Shooter) seems like you don't have 5 arrows:: (you need {0} more)", map.size());
+                        localPlayer.msg("&e(Debug - Shooter) seems like you don't have 5 arrows:: (you need {0} more)", map.size());
                         toRemove = 5 - map.size();
                     }
 
@@ -47,7 +47,7 @@ public class ShooterAbility extends FunctionalAbility {
                         Schedulers.sync()
                                 .runLater(() -> {
                                     launchArrows(localPlayer);
-                                }, 1L);
+                                }, configuration.getNode("delay-between-arrows").getLong(1L));
                     }
                 });
     }

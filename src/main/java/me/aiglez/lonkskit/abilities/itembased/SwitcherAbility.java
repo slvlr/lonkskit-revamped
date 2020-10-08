@@ -29,13 +29,13 @@ public class SwitcherAbility extends ItemStackAbility {
     public SwitcherAbility(ConfigurationNode configuration) {
         super("switcher", configuration);
         this.item = ItemStackBuilder.of(Material.SNOWBALL)
-                .name("&dSwitchers")
+                .name(configuration.getNode("item-name").getString("Switcher"))
                 .amount(16)
                 .build();
     }
 
     @Override
-    public ItemStack getItemStack() { return item; }
+    public ItemStack getItemStack() { return this.item; }
 
     @Override
     public boolean isItemStack(ItemStack item) { return this.item.isSimilar(item); }
@@ -45,13 +45,15 @@ public class SwitcherAbility extends ItemStackAbility {
     public void whenRightClicked(PlayerInteractEvent e) {
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
         if(!cooldown.test(localPlayer)){
-            localPlayer.msg("&b(Switcher) &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
+            localPlayer.msg("&b[LonksKit] &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
             e.setCancelled(true);
         }
     }
 
     @Override
-    public void whenLeftClicked(PlayerInteractEvent e) { }
+    public void whenLeftClicked(PlayerInteractEvent e) {
+        e.setCancelled(true);
+    }
 
     @Override
     public void handleListeners() {
@@ -62,7 +64,7 @@ public class SwitcherAbility extends ItemStackAbility {
                     if(!isItemStack(snowball.getItem()) || snowball.getShooter() == null || !(snowball.getShooter() instanceof Player)) return;
 
                     final Entity hit = e.getHitEntity();
-                    if(hit == null) return;
+                    if(!(hit instanceof Player)) return;
 
                     final LocalPlayer localPlayer = LocalPlayer.get((Player) snowball.getShooter());
                     final Location playerLocation = localPlayer.toBukkit().getLocation();
@@ -71,7 +73,7 @@ public class SwitcherAbility extends ItemStackAbility {
                     localPlayer.toBukkit().teleport(hitLocation);
                     hit.teleport(playerLocation);
 
-                    localPlayer.msg("&b(Switcher) &fYou have swapped locations with {0} ", hit.getName());
+                    localPlayer.msg(configuration.getNode("messages", "switcher").getString("Message switched Null"), hit.getName());
                 });
     }
 }

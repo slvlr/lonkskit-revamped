@@ -3,7 +3,6 @@ package me.aiglez.lonkskit.abilities.itembased;
 import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
-import me.aiglez.lonkskit.utils.Logger;
 import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Events;
@@ -31,7 +30,7 @@ public class WizardAbility extends ItemStackAbility {
     public WizardAbility(ConfigurationNode configuration) {
         super("wizard", configuration);
         this.item = ItemStackBuilder.of(Material.BLAZE_ROD)
-                .name("&6Wand")
+                .name(configuration.getNode("item-name").getString("Wizard"))
                 .build();
     }
 
@@ -49,7 +48,7 @@ public class WizardAbility extends ItemStackAbility {
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
 
         if(!cooldown.test(localPlayer)){
-            localPlayer.msg("&cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
+            localPlayer.msg("&b[LonksKit] &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
             return;
         }
 
@@ -72,12 +71,12 @@ public class WizardAbility extends ItemStackAbility {
                         explosionLocation = e.getHitBlock().getLocation();
                     } else if(e.getHitBlock() == null) {
                         explosionLocation = e.getHitEntity().getLocation();
-                    } else {
-                        Logger.severe("[Wizard] The snowball didn't shoot any block/player");
                     }
 
                     if(explosionLocation != null) {
-                        WorldProvider.KP_WORLD.createExplosion(explosionLocation, 2F, false, false);
+                        WorldProvider.KP_WORLD.createExplosion(explosionLocation,
+                                configuration.getNode("explosion-power").getFloat(1f)
+                                , false, false);
                     }
                     Metadata.provideForEntity(e.getEntity()).remove(MetadataProvider.SNOWBALL_EXPLODE);
                 });

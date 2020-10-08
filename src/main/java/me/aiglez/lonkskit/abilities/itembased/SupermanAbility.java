@@ -18,7 +18,7 @@ public class SupermanAbility extends ItemStackAbility {
     public SupermanAbility(ConfigurationNode configuration) {
         super("superman", configuration);
         this.item = ItemStackBuilder.of(Material.FEATHER)
-                .name("&bFly")
+                .name(configuration.getNode("item-name").getString("Fly"))
                 .build();
     }
 
@@ -48,25 +48,25 @@ public class SupermanAbility extends ItemStackAbility {
 
         Schedulers.sync()
                 .run(() -> {
-                    localPlayer.msg("&b(Superman) &ayou can now fly for {0} second(s)", 10);
+                    localPlayer.msg(configuration.getNode("messages", "start").getString("Message start Null"));
                     localPlayer.toBukkit().setAllowFlight(true);
 
                 })
 
                 .thenRunDelayedSync(() -> {
-                    localPlayer.msg("&b(Superman) &eyou can fly for {0} more second(s)", 3);
+                    localPlayer.msg(configuration.getNode("messages", "three-sec-remaining").getString("Message Three sec remaining Null"));
                 }, 7, TimeUnit.SECONDS)
 
                 .thenRunDelayedSync(() -> {
-                    localPlayer.msg("&b(Superman) &eyou can fly for {0} more second(s)", 2);
+                    localPlayer.msg(configuration.getNode("messages", "two-sec-remaining").getString("Message Two sec remaining Null"));
                 }, 1, TimeUnit.SECONDS)
 
                 .thenRunDelayedSync(() -> {
-                    localPlayer.msg("&b(Superman) &eyou can fly for {0} more second(s)", 1);
+                    localPlayer.msg(configuration.getNode("messages", "one-sec-remaining").getString("Message One sec remaining Null"));
                 }, 1, TimeUnit.SECONDS)
 
                 .thenRunDelayedSync(() -> {
-                    localPlayer.msg("&b(Superman) &cyou can no longer fly");
+                    localPlayer.msg(configuration.getNode("messages", "end").getString("Message end Null"));
                     localPlayer.toBukkit().setAllowFlight(false);
                 }, 7, TimeUnit.SECONDS);
 
@@ -74,7 +74,9 @@ public class SupermanAbility extends ItemStackAbility {
     }
 
     @Override
-    public void whenLeftClicked(PlayerInteractEvent e) { }
+    public void whenLeftClicked(PlayerInteractEvent e) {
+        e.setCancelled(true);
+    }
 
     @Override
     public void handleListeners() { }

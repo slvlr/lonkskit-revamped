@@ -8,7 +8,6 @@ import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.scheduler.Ticks;
 import org.bukkit.Material;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -61,7 +60,7 @@ public class ChompAbility extends ItemStackAbility {
     @Override
     public void handleListeners() {
         Events.subscribe(EntityDamageByEntityEvent.class)
-                .filter(e -> e.getDamager() instanceof Player)
+                .filter(e -> e.getDamager() instanceof Player && e.getEntity() instanceof Player)
                 .filter(e -> {
                     final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getDamager());
                     return localPlayer.hasSelectedKit() && localPlayer.getNullableSelectedKit().hasAbility(this);
@@ -69,12 +68,12 @@ public class ChompAbility extends ItemStackAbility {
                 .filter(e -> isItemStack(((Player) e.getDamager()).getInventory().getItemInMainHand()))
                 .handler(e -> {
                     LocalPlayer damager = LocalPlayer.get((Player) e.getDamager());
-                    LivingEntity victim = (LivingEntity) e.getEntity();
+                    LocalPlayer victim = LocalPlayer.get((Player) e.getEntity());
 
-                    //damager.toBukkit().addPotionEffects(negativeEffects);
+                    damager.toBukkit().addPotionEffects(negativeEffects);
 
                     e.setDamage(damage);
-                    damager.msg("(Debug - Chomp) &cYou have chomped {0} [damage: {1}]", victim.getName(), damage);
+                    damager.msg("(Debug - Chomp) &cYou have chomped {0} [damage: {1}]", victim.getLastKnownName(), damage);
                 });
     }
 }
