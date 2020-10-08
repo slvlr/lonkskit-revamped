@@ -9,6 +9,8 @@ import me.lucko.helper.Events;
 import me.lucko.helper.Schedulers;
 import me.lucko.helper.config.ConfigurationNode;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.AbstractArrow;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -26,11 +28,21 @@ public class AnvilAbility extends FunctionalAbility {
     public void handleListeners() {
         Events.subscribe(EntityDamageByEntityEvent.class)
                 .filter(AbilityPredicates.humanHasAbility(this))
-                .filter(e -> e.getDamager() instanceof Player ||e.getDamager() instanceof Projectile)
                 .handler(a -> {
-                    a.setCancelled(true);
                     Player victim = (Player) a.getEntity();
-                    victim.damage(a.getDamage());
+                    if (a.getDamager() instanceof Player) {
+                        a.setCancelled(true);
+                        victim.damage(a.getDamage());
+                    }else if (a.getDamager() instanceof Projectile){
+                        if (a.getDamager() instanceof AbstractArrow){
+                            Arrow arrow = (Arrow) a.getDamager();
+                            arrow.setKnockbackStrength(0);
+                        }else{
+                            Arrow arrow = (Arrow) a.getDamager();
+                            arrow.setKnockbackStrength(0);
+                            System.out.println("HEY RANGEWONK PLEASE TELL ME THIS WORD IN THE CHAT NIHAA");
+                        }
+                    }
 
 
                 });

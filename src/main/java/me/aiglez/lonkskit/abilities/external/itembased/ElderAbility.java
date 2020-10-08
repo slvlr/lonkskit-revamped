@@ -61,27 +61,72 @@ public class ElderAbility extends ItemStackAbility {
                         localPlayer.msg("&e(Sonic) &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
                         return;
                     }
-                    int index = RandomUtils.nextInt(4);
-                    ItemStack item =  victim.getInventory().getArmorContents()[index];
-                    ItemStack[] armor = victim.getInventory().getArmorContents();
-                    String displayname = item.getItemMeta().getDisplayName();
-                    ItemStack[] newarmor = victim.getInventory().getArmorContents();
-                    for (int i = 0 ; i > armor.length ; i++){
-                        if (!armor[i].getItemMeta().getDisplayName().equalsIgnoreCase(displayname)){
-                            newarmor[i] = armor[i];
-                        }
-                    }
-                    victim.getInventory().setArmorContents(newarmor);
-                    Bukkit.getScheduler().runTaskLater(KitPlugin.getSingleton(), new Runnable() {
-                        @Override
-                        public void run() {
-                            victim.getInventory().setArmorContents(armor);
-                        }
-                    },200L);
+                    work(victim);
 
                 });
 
 
+    }
+    public void work(Player player){
+        int index = RandomUtils.nextInt(5);
+        ItemStack[] armor = {player.getInventory().getHelmet(),player.getInventory().getChestplate(),player.getInventory().getLeggings(),player.getInventory().getBoots()};
+        switch (index){
+            case 0:
+                clearArmor(player);
+                player.getInventory().setChestplate(armor[1]);
+                player.getInventory().setLeggings(armor[2]);
+                player.getInventory().setBoots(armor[3]);
+                Bukkit.getScheduler().runTaskLater(KitPlugin.getSingleton(), new Runnable() {
+                    @Override
+                    public void run() {
+                        player.getInventory().setArmorContents(armor);
+                    }
+                },200L);
+                break;
+            case 1:
+                clearArmor(player);
+                player.getInventory().setHelmet(armor[0]);
+                player.getInventory().setLeggings(armor[2]);
+                player.getInventory().setBoots(armor[3]);
+                Bukkit.getScheduler().runTaskLater(KitPlugin.getSingleton(), new Runnable() {
+                    @Override
+                    public void run() {
+                        player.getInventory().setArmorContents(armor);
+                    }
+                },200L);
+                break;
+            case 2:
+                clearArmor(player);
+                player.getInventory().setHelmet(armor[0]);
+                player.getInventory().setChestplate(armor[1]);
+                player.getInventory().setBoots(armor[3]);
+                Bukkit.getScheduler().runTaskLater(KitPlugin.getSingleton(), new Runnable() {
+                    @Override
+                    public void run() {
+                        player.getInventory().setArmorContents(armor);
+                    }
+                },200L);
+                break;
+            case 3:
+                clearArmor(player);
+                player.getInventory().setChestplate(armor[1]);
+                player.getInventory().setLeggings(armor[2]);
+                player.getInventory().setHelmet(armor[0]);
+                Bukkit.getScheduler().runTaskLater(KitPlugin.getSingleton(), new Runnable() {
+                    @Override
+                    public void run() {
+                        player.getInventory().setArmorContents(armor);
+                    }
+                },200L);
+                break;
+
+        }
+    }
+    public void clearArmor(Player player){
+        player.getInventory().setHelmet(null);
+        player.getInventory().setChestplate(null);
+        player.getInventory().setLeggings(null);
+        player.getInventory().setBoots(null);
     }
 }
 /*Elder: Leatherbody, leather leggings, leather boots <-- all Protection III. Woodsword:Unbreaking III Sharpness II. Blaze rod. 34 soup.
