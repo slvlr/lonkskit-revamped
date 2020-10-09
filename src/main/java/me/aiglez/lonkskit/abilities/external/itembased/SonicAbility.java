@@ -58,10 +58,8 @@ public class SonicAbility extends ItemStackAbility {
                     localPlayer.toBukkit().addPotionEffect(speed3);
                 } else
                     localPlayer.msg("&c You have Speed III Already !!");
-            } catch (IOException ioException) {
+            } catch (IOException | InvalidConfigurationException ioException) {
                 ioException.printStackTrace();
-            } catch (InvalidConfigurationException invalidConfigurationException) {
-                invalidConfigurationException.printStackTrace();
             }
         }
     }

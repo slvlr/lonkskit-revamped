@@ -64,13 +64,9 @@ public class ShadowbladeAbility extends ItemStackAbility {
                         localPlayer.msg("&e(Sonic) &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
                         return;
                     }
-                    Fireball fireball = (Fireball) localPlayer.toBukkit().getWorld()
-                            .spawnEntity(localPlayer.toBukkit().getTargetBlock((Set<Material>) null, 1)
-                                    .getLocation(), EntityType.FIREBALL);
-                    fireball.setIsIncendiary(false);
-                    fireball.setBounce(false);
-                    fireball.setVelocity(localPlayer.toBukkit().getLocation().getDirection().normalize().multiply(5));
-                    fireball.setShooter(localPlayer.toBukkit());
+                    Fireball fireball = (Fireball) e.getPlayer().getWorld().spawnEntity(e.getPlayer().getEyeLocation(), EntityType.FIREBALL);
+                    fireball.setShooter(e.getPlayer());
+                    fireball.setVelocity(localPlayer.toBukkit().getVelocity().multiply(3));
                 });
         Events.subscribe(EntityExplodeEvent.class)
                 .filter(q-> q.getEntity() instanceof Fireball)

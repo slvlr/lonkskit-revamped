@@ -158,6 +158,12 @@ public class AbilityFactoryImpl implements AbilityFactory {
         );
 
         this.abilities.add(BeastMaster);
+
+        /*Ability casper = new Casper(
+                getFileByName("casper").orElseThrow(() -> new AbilityFileNotFoundException("casper"))
+        );
+        this.abilities.add(casper);*/
+
         // Imad - end
     }
 

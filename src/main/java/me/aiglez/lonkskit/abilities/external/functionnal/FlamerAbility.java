@@ -32,16 +32,30 @@ public class FlamerAbility extends FunctionalAbility {
                 .handler(e -> {
                     Player player = (Player) e.getEntity();
                     Block loc = player.getLocation().getBlock();
+                    player.sendMessage(e.getCause().toString());
+                    player.sendMessage(e.getCause().name());
+                    //FIRST TRY
                     if (e.getCause() == EntityDamageEvent.DamageCause.LAVA || e.getCause() == EntityDamageEvent.DamageCause.HOT_FLOOR || e.getCause() == EntityDamageEvent.DamageCause.FIRE || e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK){
                         e.setCancelled(true);
-                        if (!player.hasPotionEffect(PotionType.STRENGTH.getEffectType()))
-                            player.addPotionEffect(new PotionEffect(PotionType.STRENGTH.getEffectType(),200,1));
+                        if (!player.hasPotionEffect(PotionType.STRENGTH.getEffectType())) {
+                            player.addPotionEffect(new PotionEffect(PotionType.STRENGTH.getEffectType(), 200, 1));
+                        }
                     }
-                    if (loc.getType() == Material.MAGMA_BLOCK || loc.getType() == Material.LAVA || loc.getType() == Material.LAVA_BUCKET || loc.getType() == Material.LEGACY_STATIONARY_LAVA    ){
+                    //SECOND ONE
+                    if (e.getCause() == EntityDamageEvent.DamageCause.LAVA && e.getCause() == EntityDamageEvent.DamageCause.FIRE && e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK){
                         e.setCancelled(true);
-                        if (!player.hasPotionEffect(PotionType.STRENGTH.getEffectType()))
-                            player.addPotionEffect(new PotionEffect(PotionType.STRENGTH.getEffectType(),200,1));
+                        if (!player.hasPotionEffect(PotionType.STRENGTH.getEffectType())) {
+                            player.addPotionEffect(new PotionEffect(PotionType.STRENGTH.getEffectType(), 200, 1));
+                        }
                     }
+                    if (e.getCause() == EntityDamageEvent.DamageCause.HOT_FLOOR){
+                        e.setCancelled(true);
+                        if (!player.hasPotionEffect(PotionType.STRENGTH.getEffectType())) {
+                            player.addPotionEffect(new PotionEffect(PotionType.STRENGTH.getEffectType(), 200, 1));
+                        }
+                    }
+
+
                 });
     }
 }

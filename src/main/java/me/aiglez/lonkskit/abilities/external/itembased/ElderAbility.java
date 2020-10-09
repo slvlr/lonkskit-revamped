@@ -6,10 +6,12 @@ import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Events;
+import me.lucko.helper.Schedulers;
 import me.lucko.helper.config.ConfigurationNode;
 import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -70,62 +72,48 @@ public class ElderAbility extends ItemStackAbility {
     public void work(Player player){
         int index = RandomUtils.nextInt(5);
         ItemStack[] armor = {player.getInventory().getHelmet(),player.getInventory().getChestplate(),player.getInventory().getLeggings(),player.getInventory().getBoots()};
+        ItemStack Helmet = armor[0];
+        ItemStack Chestplate = armor[1];
+        ItemStack Legging = armor[2];
+        ItemStack Boots = armor[3];
         switch (index){
             case 0:
                 clearArmor(player);
                 player.getInventory().setChestplate(armor[1]);
                 player.getInventory().setLeggings(armor[2]);
                 player.getInventory().setBoots(armor[3]);
-                Bukkit.getScheduler().runTaskLater(KitPlugin.getSingleton(), new Runnable() {
-                    @Override
-                    public void run() {
-                        clearArmor(player);
-                        player.getInventory().setArmorContents(armor);
-                    }
-                },200L);
                 break;
             case 1:
                 clearArmor(player);
                 player.getInventory().setHelmet(armor[0]);
                 player.getInventory().setLeggings(armor[2]);
                 player.getInventory().setBoots(armor[3]);
-                Bukkit.getScheduler().runTaskLater(KitPlugin.getSingleton(), new Runnable() {
-                    @Override
-                    public void run() {
-                        clearArmor(player);
-                        player.getInventory().setArmorContents(armor);
-                    }
-                },200L);
                 break;
             case 2:
                 clearArmor(player);
                 player.getInventory().setHelmet(armor[0]);
                 player.getInventory().setChestplate(armor[1]);
                 player.getInventory().setBoots(armor[3]);
-                Bukkit.getScheduler().runTaskLater(KitPlugin.getSingleton(), new Runnable() {
-                    @Override
-                    public void run() {
-                        player.getInventory().setArmorContents(armor);
-                    }
-                },200L);
                 break;
             case 3:
                 clearArmor(player);
                 player.getInventory().setChestplate(armor[1]);
                 player.getInventory().setLeggings(armor[2]);
                 player.getInventory().setHelmet(armor[0]);
-                Bukkit.getScheduler().runTaskLater(KitPlugin.getSingleton(), new Runnable() {
-                    @Override
-                    public void run() {
-                        clearArmor(player);
-                        player.getInventory().setArmorContents(armor);
-                    }
-                },200L);
                 break;
-
         }
+        Schedulers.sync().runLater(new Runnable() {
+            @Override
+            public void run() {
+                clearArmor(player);
+                player.getInventory().setHelmet(Helmet);
+                player.getInventory().setChestplate(Chestplate);
+                player.getInventory().setLeggings(Legging);
+                player.getInventory().setBoots(Boots);
+            }
+        },200L);
     }
-    public void clearArmor(Player player){
+    public static void clearArmor(Player player){
         player.getInventory().setHelmet(null);
         player.getInventory().setChestplate(null);
         player.getInventory().setLeggings(null);

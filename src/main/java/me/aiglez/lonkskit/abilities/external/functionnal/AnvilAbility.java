@@ -36,10 +36,10 @@ public class AnvilAbility extends FunctionalAbility {
                     }else if (a.getDamager() instanceof Projectile){
                         if (a.getDamager() instanceof AbstractArrow){
                             Arrow arrow = (Arrow) a.getDamager();
-                            arrow.setKnockbackStrength(0);
+                            arrow.setKnockbackStrength(-10);
                         }else{
                             Arrow arrow = (Arrow) a.getDamager();
-                            arrow.setKnockbackStrength(0);
+                            arrow.setKnockbackStrength(-10);
                             System.out.println("HEY RANGEWONK PLEASE TELL ME THIS WORD IN THE CHAT NIHAA");
                         }
                     }

@@ -13,6 +13,7 @@ import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_16_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_16_R2.entity.CraftEntity;
 
+import org.bukkit.craftbukkit.v1_16_R2.entity.CraftPlayer;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
@@ -78,19 +79,9 @@ public class BeastmasterAbility extends ItemStackAbility {
 
     }
 
+
     @Override
     public void handleListeners() {
-        Events.subscribe(EntityDamageByEntityEvent.class)
-                .filter(e -> e.getDamager() instanceof Player && e.getEntity() instanceof Player)
-                .filter(e -> ownersOfWolves.contains(e.getEntity()))
-                .handler(e->{
-                   if (ownersOfWolves.contains(e.getEntity())){
-                       Player player = (Player) e.getEntity();
-                       getwolf.get(player)[0].setAggressive(true);
-                       getwolf.get(player)[0].setGoalTarget((EntityLiving) e.getDamager());
-                   }
-
-                });
 
     }
 }
