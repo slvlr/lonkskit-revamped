@@ -202,6 +202,6 @@ public class KitFactoryImpl implements KitFactory {
             System.out.println("Potion effect type not found: " + split[0]);
             return Optional.empty();
         }
-        return Optional.of(new PotionEffect(type, Integer.MAX_VALUE, NumberUtils.toInt(split[1], 1)));
+        return Optional.of(new PotionEffect(type, Integer.MAX_VALUE, NumberUtils.toInt(split[1], 0) + 1));
     }
 }
