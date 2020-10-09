@@ -124,7 +124,7 @@ public class ItemStackParser {
                 }
                 builder.enchant(enchantment, level);
 
-            } else if(StringUtils.startsWithIgnoreCase("string", "color:")) {
+            } else if(StringUtils.startsWithIgnoreCase(string, "color:")) {
                 final String colorName = StringUtils.replace(string, "color:", "");
                 if(colorName == null || colorName.isEmpty() || builder == null) {
                     throwParseError(unparsed, "Either the BUILDER hasn't been instantiated yet (== Error in the material), or the color name is not defined!");
