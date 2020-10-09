@@ -8,6 +8,7 @@ import me.aiglez.lonkskit.abilities.FunctionalAbility;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
 import org.bukkit.Bukkit;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -30,9 +31,21 @@ public class FlamerAbility extends FunctionalAbility {
                 .filter(AbilityPredicates.humanHasAbility(this))
                 .handler(e -> {
                     Player player = (Player) e.getEntity();
-                    Location loc = player.getLocation().subtract(0,1,0);
-                    Block block = loc.getBlock();
-                    if (e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK
+                    Block loc = player.getLocation().getBlock();
+                    if (e.getCause() == EntityDamageEvent.DamageCause.LAVA || e.getCause() == EntityDamageEvent.DamageCause.HOT_FLOOR || e.getCause() == EntityDamageEvent.DamageCause.FIRE || e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK){
+                        e.setCancelled(true);
+                        if (!player.hasPotionEffect(PotionType.STRENGTH.getEffectType()))
+                            player.addPotionEffect(new PotionEffect(PotionType.STRENGTH.getEffectType(),200,1));
+                    }
+                    if (loc.getType() == Material.MAGMA_BLOCK || loc.getType() == Material.LAVA || loc.getType() == Material.LAVA_BUCKET || loc.getType() == Material.LEGACY_STATIONARY_LAVA    ){
+                        e.setCancelled(true);
+                        if (!player.hasPotionEffect(PotionType.STRENGTH.getEffectType()))
+                            player.addPotionEffect(new PotionEffect(PotionType.STRENGTH.getEffectType(),200,1));
+                    }
+                });
+    }
+}
+/*if (e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK
                             || e.getCause() == EntityDamageEvent.DamageCause.FIRE || e.getCause() == EntityDamageEvent.DamageCause.HOT_FLOOR
                             || block.getType() == Material.LAVA || block.getType() == Material.MAGMA_BLOCK || e.getCause() == EntityDamageEvent.DamageCause.LAVA);
                     {
@@ -43,9 +56,4 @@ public class FlamerAbility extends FunctionalAbility {
                             System.out.println("RANGEWONK");
                         }
                    }
-                    System.out.println("WORK");
-
-
-                });
-    }
-}
+                    System.out.println("WORK");*/

@@ -24,7 +24,7 @@ public class ElderAbility extends ItemStackAbility {
     public ElderAbility(ConfigurationNode configuration) {
         super("elder", configuration);
         this.item = ItemStackBuilder.of(Material.BLAZE_ROD)
-                .name("Staff")
+                .name("&bStaff")
                 .build();
     }
 
@@ -79,6 +79,7 @@ public class ElderAbility extends ItemStackAbility {
                 Bukkit.getScheduler().runTaskLater(KitPlugin.getSingleton(), new Runnable() {
                     @Override
                     public void run() {
+                        clearArmor(player);
                         player.getInventory().setArmorContents(armor);
                     }
                 },200L);
@@ -91,6 +92,7 @@ public class ElderAbility extends ItemStackAbility {
                 Bukkit.getScheduler().runTaskLater(KitPlugin.getSingleton(), new Runnable() {
                     @Override
                     public void run() {
+                        clearArmor(player);
                         player.getInventory().setArmorContents(armor);
                     }
                 },200L);
@@ -115,6 +117,7 @@ public class ElderAbility extends ItemStackAbility {
                 Bukkit.getScheduler().runTaskLater(KitPlugin.getSingleton(), new Runnable() {
                     @Override
                     public void run() {
+                        clearArmor(player);
                         player.getInventory().setArmorContents(armor);
                     }
                 },200L);

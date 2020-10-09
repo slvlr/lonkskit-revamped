@@ -1,12 +1,12 @@
 package me.aiglez.lonkskit.abilities.external.itembased;
 
 
-import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
 import net.minecraft.server.v1_16_R2.EntityCreature;
+import net.minecraft.server.v1_16_R2.EntityLiving;
 import net.minecraft.server.v1_16_R2.EntityTypes;
 import net.minecraft.server.v1_16_R2.WorldServer;
 import org.bukkit.Material;
@@ -28,7 +28,7 @@ import java.util.Map;
 
 public class BeastmasterAbility extends ItemStackAbility {
     ItemStack item;
-    Map<Player,Wolf[]> getwolf = new HashMap<Player, Wolf[]>();
+    Map<Player, BeastHelp[]> getwolf = new HashMap<Player, BeastHelp[]>();
     private List<Player> ownersOfWolves = new ArrayList<Player>();
     public BeastmasterAbility(ConfigurationNode configuration) {
         super("beastmaster", configuration);
@@ -58,12 +58,13 @@ public class BeastmasterAbility extends ItemStackAbility {
                             (EntityTypes<? extends EntityCreature>)((CraftEntity)wolf).getHandle().getEntityType();
                     BeastHelp pet = new BeastHelp(type,wolf.getLocation());
                     pet.setOwner(player);
-                    pet.setName(player.getDisplayName() + "WOLF");
+                    pet.setName(player.getName() + " WOLF");
+                    pet.setInvulnerable(false);
                     WorldServer world = ((CraftWorld)player.getWorld()).getHandle();
                     world.addEntity(pet);
                     wolf.remove();
                     ownersOfWolves.add(player);
-                    getwolf.put(player,new Wolf[]{(Wolf) pet});
+                    getwolf.put(player,new BeastHelp[]{pet});
                     return;
 
                 }
@@ -80,9 +81,14 @@ public class BeastmasterAbility extends ItemStackAbility {
     @Override
     public void handleListeners() {
         Events.subscribe(EntityDamageByEntityEvent.class)
+                .filter(e -> e.getDamager() instanceof Player && e.getEntity() instanceof Player)
                 .filter(e -> ownersOfWolves.contains(e.getEntity()))
                 .handler(e->{
-                   getwolf.get(e.getEntity())[0].attack(e.getDamager());
+                   if (ownersOfWolves.contains(e.getEntity())){
+                       Player player = (Player) e.getEntity();
+                       getwolf.get(player)[0].setAggressive(true);
+                       getwolf.get(player)[0].setGoalTarget((EntityLiving) e.getDamager());
+                   }
 
                 });
 

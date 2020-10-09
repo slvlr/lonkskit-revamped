@@ -20,10 +20,9 @@ public class TurtleAbility extends FunctionalAbility {
                 .filter(AbilityPredicates.humanHasAbility(this))
                 .filter(e -> e.getDamager() instanceof Player && e.getEntity() instanceof Player)
                 .handler(e -> {
-                    e.setCancelled(true);
                     Player player = (Player) e.getEntity();
-                    Double Health = player.getHealth();
-                    player.setHealth(Health);
+                    e.setDamage(0);
+                    player.damage(1);
                 });
 
     }

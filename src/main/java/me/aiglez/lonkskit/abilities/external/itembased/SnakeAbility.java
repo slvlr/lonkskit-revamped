@@ -2,6 +2,7 @@ package me.aiglez.lonkskit.abilities.external.itembased;
 
 import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
+import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
@@ -44,7 +45,7 @@ public class SnakeAbility extends ItemStackAbility {
     @Override
     public void handleListeners() {
         Events.subscribe(EntityDamageByEntityEvent.class)
-                .filter(AbilityPredicates.humanHasAbility(this))
+                .filter(e -> AbilityPredicates.HavetheKit(this,e))
                 .handler(e -> {
                     Player player = (Player) e.getEntity();
                     player.addPotionEffect(new PotionEffect(PotionEffectType.POISON,80,2));

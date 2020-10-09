@@ -47,7 +47,6 @@ public class GhostAbility extends ItemStackAbility {
         if (isItemStack(e.getPlayer().getInventory().getItemInMainHand())){
             if (!localPlayer.toBukkit().hasPotionEffect(PotionEffectType.INVISIBILITY)){
                 clearArmor(localPlayer.toBukkit());
-                localPlayer.toBukkit().getInventory().setItemInMainHand(null);
                 localPlayer.toBukkit().addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,300,3,true,false));
                 localPlayer.toBukkit().addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,300,2,true,false));
 
@@ -56,7 +55,6 @@ public class GhostAbility extends ItemStackAbility {
                 @Override
                 public void run() {
                     localPlayer.toBukkit().getInventory().setArmorContents(armor);
-                    localPlayer.toBukkit().getInventory().setItemInMainHand(itemInHand);
 
                 }
             },300L);

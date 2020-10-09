@@ -1,5 +1,6 @@
 package me.aiglez.lonkskit.abilities;
 
+import jdk.vm.ci.meta.Local;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.metadata.Metadata;
 import me.lucko.helper.metadata.MetadataKey;
@@ -38,6 +39,12 @@ public class AbilityPredicates {
             final LocalPlayer localPlayer = LocalPlayer.get(((Player) e.getEntity()).getKiller());
             return localPlayer.hasSelectedKit() && localPlayer.getNullableSelectedKit().hasAbility(ability);
         };
+    }
+    public static boolean HavetheKit(Ability ability,EntityDamageByEntityEvent e){
+        if(!(e.getEntity() instanceof Player)) return false;
+        final LocalPlayer player = LocalPlayer.get((Player) e.getDamager());
+        return player.hasSelectedKit() && player.getNullableSelectedKit().hasAbility(ability);
+
     }
     //IMAD END :)
 

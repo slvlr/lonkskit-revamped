@@ -8,16 +8,20 @@ import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.data.type.Fire;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class ShadowbladeAbility extends ItemStackAbility {
@@ -51,6 +55,7 @@ public class ShadowbladeAbility extends ItemStackAbility {
     public void handleListeners() {
         Events.subscribe(PlayerInteractEvent.class)
                 .filter(AbilityPredicates.playerHasAbility(this))
+                .filter(e -> e.getMaterial() == Material.IRON_SWORD)
                 .filter(e -> e.getAction() == Action.RIGHT_CLICK_AIR ||e.getAction() == Action.RIGHT_CLICK_BLOCK)
                 .handler(e -> {
                     e.setCancelled(true);
@@ -59,7 +64,19 @@ public class ShadowbladeAbility extends ItemStackAbility {
                         localPlayer.msg("&e(Sonic) &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
                         return;
                     }
-                    localPlayer.toBukkit().launchProjectile(Fireball.class);
+                    Fireball fireball = (Fireball) localPlayer.toBukkit().getWorld()
+                            .spawnEntity(localPlayer.toBukkit().getTargetBlock((Set<Material>) null, 1)
+                                    .getLocation(), EntityType.FIREBALL);
+                    fireball.setIsIncendiary(false);
+                    fireball.setBounce(false);
+                    fireball.setVelocity(localPlayer.toBukkit().getLocation().getDirection().normalize().multiply(5));
+                    fireball.setShooter(localPlayer.toBukkit());
                 });
+        Events.subscribe(EntityExplodeEvent.class)
+                .filter(q-> q.getEntity() instanceof Fireball)
+                .handler(e -> e.blockList().clear());
+        Events.subscribe(EntityDamageByEntityEvent.class)
+                .filter(e -> e.getDamager() instanceof Fireball)
+                .handler(e-> e.setDamage(e.getDamage() * 2));
     }
 }
