@@ -10,6 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.data.type.Fire;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Explosive;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -64,12 +65,10 @@ public class ShadowbladeAbility extends ItemStackAbility {
                         localPlayer.msg("&e(Sonic) &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
                         return;
                     }
-                    Fireball fireball = (Fireball) e.getPlayer().getWorld().spawnEntity(e.getPlayer().getEyeLocation(), EntityType.FIREBALL);
-                    fireball.setShooter(e.getPlayer());
-                    fireball.setVelocity(localPlayer.toBukkit().getVelocity().multiply(3));
+                    e.getPlayer().launchProjectile(Fireball.class);
                 });
         Events.subscribe(EntityExplodeEvent.class)
-                .filter(q-> q.getEntity() instanceof Fireball)
+                .filter(q-> q.getEntity() instanceof Fireball || q.getEntity() instanceof Explosive)
                 .handler(e -> e.blockList().clear());
         Events.subscribe(EntityDamageByEntityEvent.class)
                 .filter(e -> e.getDamager() instanceof Fireball)

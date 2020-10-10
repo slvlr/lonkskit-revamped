@@ -1,7 +1,9 @@
 package me.aiglez.lonkskit.abilities.external.itembased;
 
 
+import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
+import me.aiglez.lonkskit.abilities.external.itembased.helpers.BeastmasterWolfEntity;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
@@ -52,20 +54,11 @@ public class BeastmasterAbility extends ItemStackAbility {
             if (e.getAction() == Action.RIGHT_CLICK_AIR){
                 Player player = e.getPlayer();
                 if (!ownersOfWolves.contains(player)){
+                    WorldServer world = ((CraftWorld) player.getWorld()).getHandle();
+                    BeastmasterWolfEntity customWolf = new BeastmasterWolfEntity(player, WorldProvider.KP_WORLD);
+                    customWolf.setPosition(player.getLocation().getX(),player.getLocation().getY(),player.getLocation().getZ());
+                    world.addEntity(customWolf);
 
-
-                    Wolf wolf = (Wolf) e.getPlayer().getLocation().getWorld().spawnEntity(e.getPlayer().getLocation(), EntityType.WOLF);
-                    EntityTypes<? extends EntityCreature> type =
-                            (EntityTypes<? extends EntityCreature>)((CraftEntity)wolf).getHandle().getEntityType();
-                    BeastHelp pet = new BeastHelp(type,wolf.getLocation());
-                    pet.setOwner(player);
-                    pet.setName(player.getName() + " WOLF");
-                    pet.setInvulnerable(false);
-                    WorldServer world = ((CraftWorld)player.getWorld()).getHandle();
-                    world.addEntity(pet);
-                    wolf.remove();
-                    ownersOfWolves.add(player);
-                    getwolf.put(player,new BeastHelp[]{pet});
                     return;
 
                 }

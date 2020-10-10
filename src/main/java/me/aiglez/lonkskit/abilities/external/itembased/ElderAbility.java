@@ -70,7 +70,7 @@ public class ElderAbility extends ItemStackAbility {
 
     }
     public void work(Player player){
-        int index = RandomUtils.nextInt(5);
+        int index = RandomUtils.nextInt(4);
         ItemStack[] armor = {player.getInventory().getHelmet(),player.getInventory().getChestplate(),player.getInventory().getLeggings(),player.getInventory().getBoots()};
         ItemStack Helmet = armor[0];
         ItemStack Chestplate = armor[1];
@@ -105,11 +105,12 @@ public class ElderAbility extends ItemStackAbility {
         Schedulers.sync().runLater(new Runnable() {
             @Override
             public void run() {
+                ItemStack[] armor = {player.getInventory().getHelmet(),player.getInventory().getChestplate(),player.getInventory().getLeggings(),player.getInventory().getBoots()};
                 clearArmor(player);
-                player.getInventory().setHelmet(Helmet);
-                player.getInventory().setChestplate(Chestplate);
-                player.getInventory().setLeggings(Legging);
-                player.getInventory().setBoots(Boots);
+                player.getInventory().setHelmet(armor[0]);
+                player.getInventory().setChestplate(armor[1]);
+                player.getInventory().setLeggings(armor[2]);
+                player.getInventory().setBoots(armor[2]);
             }
         },200L);
     }

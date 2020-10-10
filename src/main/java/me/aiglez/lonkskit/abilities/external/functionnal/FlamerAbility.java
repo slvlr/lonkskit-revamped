@@ -14,6 +14,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
@@ -27,31 +28,22 @@ public class FlamerAbility extends FunctionalAbility {
 
     @Override
     public void handleListeners() {
-        Events.subscribe(EntityDamageEvent.class)
-                .filter(AbilityPredicates.humanHasAbility(this))
+        Events.subscribe(PlayerMoveEvent.class)
+                .filter(AbilityPredicates.playerHasAbility(this))
                 .handler(e -> {
-                    Player player = (Player) e.getEntity();
-                    Block loc = player.getLocation().getBlock();
-                    player.sendMessage(e.getCause().toString());
-                    player.sendMessage(e.getCause().name());
-                    //FIRST TRY
-                    if (e.getCause() == EntityDamageEvent.DamageCause.LAVA || e.getCause() == EntityDamageEvent.DamageCause.HOT_FLOOR || e.getCause() == EntityDamageEvent.DamageCause.FIRE || e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK){
-                        e.setCancelled(true);
-                        if (!player.hasPotionEffect(PotionType.STRENGTH.getEffectType())) {
-                            player.addPotionEffect(new PotionEffect(PotionType.STRENGTH.getEffectType(), 200, 1));
+                    boolean check = e.getPlayer().getLocation().getBlock().getType() == Material.LAVA || e.getPlayer().getLocation().getBlock().getType() == Material.FIRE
+                            || e.getPlayer().getLocation().getBlock().getType() == Material.MAGMA_BLOCK || e.getPlayer().getLocation().getBlock().getType() == Material.LAVA || e.getPlayer().getLocation().getBlock().getType() == Material.FIRE
+                            || e.getPlayer().getLocation().getBlock().getType() == Material.LEGACY_STATIONARY_LAVA;
+                        if (e.getPlayer().getLocation().getBlock().isLiquid()) {
+                            if (check){
+                                if (!e.getPlayer().hasPotionEffect(PotionType.STRENGTH.getEffectType())){
+                                    e.getPlayer().addPotionEffect(new PotionEffect(PotionType.STRENGTH.getEffectType(),Integer.MAX_VALUE,1));
+                            }
                         }
                     }
-                    //SECOND ONE
-                    if (e.getCause() == EntityDamageEvent.DamageCause.LAVA && e.getCause() == EntityDamageEvent.DamageCause.FIRE && e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK){
-                        e.setCancelled(true);
-                        if (!player.hasPotionEffect(PotionType.STRENGTH.getEffectType())) {
-                            player.addPotionEffect(new PotionEffect(PotionType.STRENGTH.getEffectType(), 200, 1));
-                        }
-                    }
-                    if (e.getCause() == EntityDamageEvent.DamageCause.HOT_FLOOR){
-                        e.setCancelled(true);
-                        if (!player.hasPotionEffect(PotionType.STRENGTH.getEffectType())) {
-                            player.addPotionEffect(new PotionEffect(PotionType.STRENGTH.getEffectType(), 200, 1));
+                    if (!check){
+                        if (e.getPlayer().hasPotionEffect(PotionType.STRENGTH.getEffectType())){
+                            e.getPlayer().removePotionEffect(PotionType.STRENGTH.getEffectType());
                         }
                     }
 

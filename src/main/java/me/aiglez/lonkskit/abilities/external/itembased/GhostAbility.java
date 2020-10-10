@@ -71,7 +71,7 @@ public class GhostAbility extends ItemStackAbility {
     public void handleListeners() {
 
     }
-    public void clearArmor(Player player){
+    public static void clearArmor(Player player){
         player.getInventory().setHelmet(null);
         player.getInventory().setChestplate(null);
         player.getInventory().setLeggings(null);

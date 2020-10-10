@@ -9,11 +9,13 @@ import me.lucko.helper.Events;
 import me.lucko.helper.Schedulers;
 import me.lucko.helper.config.ConfigurationNode;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -22,7 +24,7 @@ public class AnvilAbility extends FunctionalAbility {
     public AnvilAbility(ConfigurationNode configuration) {
         super("anvil", configuration);
     }
-
+    private int i;
 
     @Override
     public void handleListeners() {
@@ -35,17 +37,26 @@ public class AnvilAbility extends FunctionalAbility {
                         victim.damage(a.getDamage());
                     }else if (a.getDamager() instanceof Projectile){
                         if (a.getDamager() instanceof AbstractArrow){
-                            Arrow arrow = (Arrow) a.getDamager();
-                            arrow.setKnockbackStrength(-10);
+                            a.setCancelled(true);
+                            i++;
+                            victim.setHealth(victim.getHealth() - a.getDamage());
+                            a.getDamager().remove();
+                            victim.setArrowsInBody(i);
+                            victim.playSound(victim.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER,12F,1F);
                         }else{
-                            Arrow arrow = (Arrow) a.getDamager();
-                            arrow.setKnockbackStrength(-10);
-                            System.out.println("HEY RANGEWONK PLEASE TELL ME THIS WORD IN THE CHAT NIHAA");
+                        System.out.println("HEY RANGEWONK PLEASE TELL ME THIS WORD IN THE CHAT NIHAA");
                         }
                     }
 
 
                 });
+        Events.subscribe(PlayerDeathEvent.class)
+                .filter(AbilityPredicates.humanHasAbility(this))
+                .handler(event -> i = 0);
+        
+        
+        
+
 
 
     }

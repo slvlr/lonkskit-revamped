@@ -3,8 +3,8 @@ package me.aiglez.lonkskit.abilities.external.functionnal;
 import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.FunctionalAbility;
 import me.aiglez.lonkskit.abilities.external.itembased.ElderAbility;
+import me.aiglez.lonkskit.abilities.external.itembased.GhostAbility;
 import me.lucko.helper.Events;
-import me.lucko.helper.Schedulers;
 import me.lucko.helper.config.ConfigurationNode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -27,28 +27,28 @@ public class Casper extends FunctionalAbility {
                     Player player = e.getPlayer();
                     ItemStack item = player.getInventory().getItemInMainHand();
                     ItemStack[] armor = player.getInventory().getArmorContents();
-                    int a = 0;
                     if (player.isSneaking()){
-                        if (a == 0) {
-                            player.setInvisible(true);
-                            player.getInventory().setArmorContents(null);
+                        player.sendMessage("Sneaking");
+                        if (!player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+                            player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 423, true, false, true));
+                            GhostAbility.clearArmor(player);
                             player.teleport(player.getLocation().add(10, 0, 0));
-                            a = 4;
                         }
+
                     }
                     if (!player.isSneaking()){
-                        a = 0;
-                        if (a == 4){
-                            player.setInvisible(false);
-                            player.getInventory().setArmorContents(armor);
-                        }
+                        player.sendMessage("DISABLE SNEAKING");
+                            if (player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+                                player.removePotionEffect(PotionEffectType.INVISIBILITY);
+                                player.getInventory().setArmorContents(armor);
+                            }
 
                     }
 
                 });
         Events.subscribe(PlayerMoveEvent.class)
                 .filter(AbilityPredicates.playerHasAbility(this))
-                .filter(e -> e.getPlayer().hasPotionEffect(PotionEffectType.INVISIBILITY))
+                .filter(e -> e.getPlayer().hasPotionEffect(PotionEffectType.INVISIBILITY) && e.getPlayer().isSneaking())
                 .handler(e -> e.setCancelled(true));
         Events.subscribe(EntityDamageByEntityEvent.class)
                 .filter(e -> AbilityPredicates.HavetheKit(this,e))
@@ -57,10 +57,6 @@ public class Casper extends FunctionalAbility {
                 .handler(e -> e.setCancelled(true));
     }
 }
-/*When shifting casper turns completely invisible, his armor will be removed while he is invisible.
-Make his hand slot also invisible if possible. When shifting casper will not be able to move or deal damage to anyone.
- Although casper will be able to take damage if hit.
-When Casper crouches it will teleport them up to 4 blocks away from their current location,
- and when they stop crouching that is when they will come visible.
+/*
 */
 /**/

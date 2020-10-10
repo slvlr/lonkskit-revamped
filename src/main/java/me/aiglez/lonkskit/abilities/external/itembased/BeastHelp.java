@@ -21,7 +21,7 @@ public class BeastHelp extends EntityCreature {
         this.goalSelector.a(2,new PathfinderGoalLookAtPlayer(this,EntityHuman.class,8.0F));
         this.goalSelector.a(3,new PathfinderGoalRandomLookaround(this));
         this.goalSelector.a(1,new PathfinderGoalPet(this,1.0,25));
-
+        //wsadfsa
     }
     public void setOwner(Player player){
         this.setGoalTarget((EntityLiving)((CraftPlayer)player).getHandle(), EntityTargetEvent.TargetReason.CUSTOM,false);
