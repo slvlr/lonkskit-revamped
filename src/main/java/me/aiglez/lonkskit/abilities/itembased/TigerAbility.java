@@ -24,7 +24,8 @@ public class TigerAbility extends ItemStackAbility {
     public TigerAbility(ConfigurationNode configuration) {
         super("tiger", configuration);
         this.item = ItemStackBuilder.of(Material.GHAST_TEAR)
-                .name("&cClaw").build();
+                .name(configuration.getNode("item-name").getString("Tiger"))
+                .build();
     }
 
     public ItemStack getItemStack() { return this.item; }
@@ -39,11 +40,11 @@ public class TigerAbility extends ItemStackAbility {
             return;
         }
         localPlayer.metadata().put(MetadataProvider.PLAYER_DOUBLE_DAMAGE, ExpiringValue.of(true, 10L, TimeUnit.SECONDS));
-        localPlayer.toBukkit().chat("Feel the claw of the Tiger!");
+        localPlayer.toBukkit().chat(configuration.getNode("messages", "start").getString("Message Null: start"));
         Schedulers.async()
                 .runLater(() -> localPlayer.metadata().remove(MetadataProvider.PLAYER_DOUBLE_DAMAGE),
-                        Ticks.from(10L, TimeUnit.SECONDS))
-                .thenRunSync(() -> localPlayer.msg("&b[LonksKit] &fYou feel the tiger effect wear off."));
+                        Ticks.from(configuration.getNode("duration").getLong(10L), TimeUnit.SECONDS))
+                .thenRunSync(() -> localPlayer.msg(configuration.getNode("messages", "end").getString("Message Null: end")));
     }
 
     public void whenLeftClicked(PlayerInteractEvent e) {}
@@ -55,10 +56,10 @@ public class TigerAbility extends ItemStackAbility {
                     LocalPlayer localPlayer = LocalPlayer.get((Player)e.getDamager());
                     return (localPlayer.hasSelectedKit() && localPlayer.getNullableSelectedKit().hasAbility(this));
                 }).handler(e -> {
+
             LocalPlayer damager = LocalPlayer.get((Player)e.getDamager());
             if (damager.metadata().has(MetadataProvider.PLAYER_DOUBLE_DAMAGE)) {
-                damager.msg("&c(Tiger - Debug) &fYour damage is doubled!");
-                e.setDamage(e.getDamage() * 2.0D);
+                e.setDamage(e.getDamage() * configuration.getNode("multiply").getDouble(1D));
             }
         });
     }
