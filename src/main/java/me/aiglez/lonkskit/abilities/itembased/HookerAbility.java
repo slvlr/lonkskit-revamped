@@ -14,14 +14,14 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-public class FishermanAbility extends ItemStackAbility {
+public class HookerAbility extends ItemStackAbility {
 
     private final ItemStack item;
 
-    public FishermanAbility(ConfigurationNode configuration) {
-        super("fisherman", configuration);
+    public HookerAbility(ConfigurationNode configuration) {
+        super("hooker", configuration);
         this.item = ItemStackBuilder.of(Material.FISHING_ROD)
-                .name("&eRod &b(fisherman)")
+                .name("&eRod &e(hooker)")
                 .build();
     }
 
@@ -49,11 +49,11 @@ public class FishermanAbility extends ItemStackAbility {
                     final Location caughtLocation = caught.getLocation();
                     final Location playerLocation = localPlayer.getLocation();
 
-                    final Vector vector = playerLocation.subtract(caughtLocation).toVector().normalize().multiply(2);
+                    final Vector vector = caughtLocation.subtract(playerLocation).toVector().normalize().multiply(2);
 
-                    caught.setVelocity(vector);
+                    localPlayer.toBukkit().setVelocity(vector);
 
-                    localPlayer.msg("&3(Fisherman) Pushing {0} towards you", caught.getName());
+                    localPlayer.msg("&3(Hooker) Pushing you towards {0}", caught.getName());
                 });
     }
 

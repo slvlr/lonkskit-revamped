@@ -67,8 +67,8 @@ public class ChompAbility extends ItemStackAbility {
                 })
                 .filter(e -> isItemStack(((Player) e.getDamager()).getInventory().getItemInMainHand()))
                 .handler(e -> {
-                    LocalPlayer damager = LocalPlayer.get((Player) e.getDamager());
-                    LocalPlayer victim = LocalPlayer.get((Player) e.getEntity());
+                    final LocalPlayer damager = LocalPlayer.get((Player) e.getDamager());
+                    final LocalPlayer victim = LocalPlayer.get((Player) e.getEntity());
 
                     damager.toBukkit().addPotionEffects(negativeEffects);
 

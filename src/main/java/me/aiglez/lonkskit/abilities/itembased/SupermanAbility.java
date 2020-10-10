@@ -68,7 +68,7 @@ public class SupermanAbility extends ItemStackAbility {
                 .thenRunDelayedSync(() -> {
                     localPlayer.msg(configuration.getNode("messages", "end").getString("Message end Null"));
                     localPlayer.toBukkit().setAllowFlight(false);
-                }, 7, TimeUnit.SECONDS);
+                }, 1, TimeUnit.SECONDS);
 
 
     }

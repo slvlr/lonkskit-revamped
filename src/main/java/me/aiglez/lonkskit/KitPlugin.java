@@ -1,5 +1,7 @@
 package me.aiglez.lonkskit;
 
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
 import me.aiglez.lonkskit.abilities.factory.AbilityFactory;
 import me.aiglez.lonkskit.commands.CommandsRegistry;
 import me.aiglez.lonkskit.kits.KitFactory;
@@ -25,6 +27,13 @@ public final class KitPlugin extends ExtendedJavaPlugin implements Listener {
     private LocalPlayerFactory localPlayerFactory;
     private AbilityFactory abilityFactory;
     private ConfigurationNode conf;
+
+    private ProtocolManager protocolManager; // protocol lib hook
+
+    @Override
+    protected void load() {
+        this.protocolManager = ProtocolLibrary.getProtocolManager();
+    }
 
     @Override
     public void enable() {
@@ -63,6 +72,8 @@ public final class KitPlugin extends ExtendedJavaPlugin implements Listener {
     public LocalPlayerFactory getPlayerFactory() { return this.localPlayerFactory; }
 
     public AbilityFactory getAbilityFactory() { return this.abilityFactory; }
+
+    public ProtocolManager getProtocolManager() { return protocolManager; }
 
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent e) {

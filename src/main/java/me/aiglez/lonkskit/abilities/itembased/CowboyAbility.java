@@ -7,6 +7,7 @@ import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Events;
+import me.lucko.helper.Schedulers;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.metadata.Metadata;
 import me.lucko.helper.metadata.SoftValue;
@@ -87,25 +88,11 @@ public class CowboyAbility extends ItemStackAbility {
                     final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getExited());
                     localPlayer.msg("&6(Cowboy) &cYou can't dismount your horse! (Exit Event) &c(cancellable: {0})", e.isCancellable());
 
-                    e.setCancelled(true);
+                    Schedulers.sync()
+                            .runLater(() -> {
+                                e.getVehicle().addPassenger(e.getExited());
+                            }, 2L);
                 });
-
-
-        // listen to teleport event
-        /*
-        Events.subscribe(PlayerTeleportEvent.class)
-                .filter(AbilityPredicates.playerHasAbility(this))
-                .handler(e -> {
-                    final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
-                    if (localPlayer.toBukkit().getVehicle() != null && localPlayer.toBukkit().getVehicle() instanceof Horse){
-                        localPlayer.msg("&6(Cowboy) &cYou can't dismount your horse! &4(Teleport Event)");
-
-                        e.setCancelled(true);
-                    }
-                });
-        }
-
-         */
 
     }
 }

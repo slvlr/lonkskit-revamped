@@ -117,6 +117,18 @@ public class AbilityFactoryImpl implements AbilityFactory {
                 getFileByName("fisherman").orElseThrow(() -> new AbilityFileNotFoundException("fisherman"))
         );
         this.abilities.add(fisherman);
+
+        this.abilities.add(
+                new HookerAbility(getFileByName("hooker").orElseThrow(() -> new AbilityFileNotFoundException("hooker")))
+        );
+
+        this.abilities.add(
+                new TigerAbility(getFileByName("tiger").orElseThrow(() -> new AbilityFileNotFoundException("tiger")))
+        );
+
+        this.abilities.add(
+                new SpyAbility(getFileByName("spy").orElseThrow(() -> new AbilityFileNotFoundException("spy")))
+        );
         // Imad - start
         Ability monk = new MonkAbility(
                 getFileByName("monk").orElseThrow(() -> new AbilityFileNotFoundException("monk"))
