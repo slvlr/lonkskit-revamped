@@ -13,7 +13,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author AigleZ
@@ -48,20 +47,19 @@ public class JediAbility extends ItemStackAbility {
         }
 
         Location fromLocation = localPlayer.getLocation();
-
-        AtomicInteger pushed = new AtomicInteger();
-        WorldProvider.KP_WORLD.getNearbyEntities(localPlayer.getLocation(), 6, 6, 6).stream()
-                .forEach(entity -> {
-                    Location newLoc = entity.getLocation().subtract(fromLocation.toVector());
-                    Vector newV = newLoc.toVector().normalize().multiply(
+        WorldProvider.KP_WORLD.getNearbyPlayers(
+                localPlayer.toBukkit().getLocation(),
+                configuration.getNode("radius", "x-axis").getDouble(1D),
+                configuration.getNode("radius", "y-axis").getDouble(1D),
+                configuration.getNode("radius", "z-axis").getDouble(1D)
+        ).forEach(player -> {
+                    Location newLoc = player.getLocation().subtract(fromLocation.toVector());
+                    Vector newVector = newLoc.toVector().normalize().multiply(
                             configuration.getNode("strength").getDouble(3)
                     );
 
-                    entity.setVelocity(Various.makeFinite(newV));
-                    pushed.getAndIncrement();
+                    player.setVelocity(Various.makeFinite(newVector));
                 });
-
-        localPlayer.msg("&b(Debug - Jedi) &fPushed away entities [number: {0}]", pushed.get());
     }
 
     @Override
