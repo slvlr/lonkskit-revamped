@@ -5,9 +5,7 @@ import me.aiglez.lonkskit.abilities.Ability;
 import me.aiglez.lonkskit.abilities.external.functionnal.AnvilAbility;
 import me.aiglez.lonkskit.abilities.external.itembased.MonkAbility;
 import me.aiglez.lonkskit.abilities.external.itembased.ShadowbladeAbility;
-import me.aiglez.lonkskit.abilities.functional.SharkAbility;
-import me.aiglez.lonkskit.abilities.functional.ShooterAbility;
-import me.aiglez.lonkskit.abilities.functional.StompAbility;
+import me.aiglez.lonkskit.abilities.functional.*;
 import me.aiglez.lonkskit.abilities.itembased.*;
 import me.aiglez.lonkskit.exceptions.AbilityFileNotFoundException;
 import me.aiglez.lonkskit.exceptions.AbilityRegisterException;
@@ -128,6 +126,14 @@ public class AbilityFactoryImpl implements AbilityFactory {
 
         this.abilities.add(
                 new SpyAbility(getFileByName("spy").orElseThrow(() -> new AbilityFileNotFoundException("spy")))
+        );
+
+        this.abilities.add(
+                new HotheadAbility(getFileByName("hothead").orElseThrow(() -> new AbilityFileNotFoundException("hothead")))
+        );
+
+        this.abilities.add(
+                new HulkAbility(getFileByName("hulk").orElseThrow(() -> new AbilityFileNotFoundException("hulk")))
         );
         // Imad - start
         Ability monk = new MonkAbility(

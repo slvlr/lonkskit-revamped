@@ -123,9 +123,11 @@ public class MemoryLocalPlayer implements LocalPlayer {
             return false;
         }
         this.selectedKit = kit;
+        if(selectedKit == null) return true;
+
         Events.call(new KitSelectEvent(kit, this));
-        if(kit == null || toBukkit() == null) {
-            Logger.severe("Kit not found: " + (kit == null) + " // Player not found: " + (toBukkit() == null));
+        if(toBukkit() == null) {
+            Logger.severe("Player not found: " + (toBukkit() == null));
             return false;
         }
         final Player player = toBukkit();
