@@ -48,7 +48,7 @@ public class BlinkAbility extends ItemStackAbility {
         Location to = localPlayer.toBukkit().getEyeLocation();
 
         // TODO: safe zone check
-        while (to.distanceSquared(localPlayer.toBukkit().getEyeLocation()) <= range) {
+        while (distance(to, localPlayer.toBukkit().getEyeLocation()) <= range) {
             from = to;
             to = from.add(localPlayer.getLocation().getDirection().normalize().multiply(.5));
             if (isValid(to.getBlock().getType())) {
@@ -71,5 +71,14 @@ public class BlinkAbility extends ItemStackAbility {
 
     private boolean isValid(Material material) {
         return !material.isAir() && material != Material.GRASS && material != Material.TALL_GRASS;
+    }
+
+    private static double distance(Location to, Location pLoc) {
+        double x = Math.abs(to.getX() - pLoc.getX());
+        double y = Math.abs(to.getY() - pLoc.getY());
+        double z = Math.abs(to.getZ() - pLoc.getZ());
+        double diagonal = Math.sqrt(x * x + z * z);
+
+        return Math.abs(Math.sqrt(diagonal * diagonal + y * y));
     }
 }

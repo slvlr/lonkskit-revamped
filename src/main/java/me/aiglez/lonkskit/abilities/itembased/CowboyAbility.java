@@ -3,6 +3,7 @@ package me.aiglez.lonkskit.abilities.itembased;
 
 import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
+import me.aiglez.lonkskit.events.KitSelectEvent;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
@@ -14,11 +15,13 @@ import me.lucko.helper.metadata.SoftValue;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 /**
  * @author AigleZ
@@ -30,7 +33,7 @@ public class CowboyAbility extends ItemStackAbility {
 
     public CowboyAbility(ConfigurationNode configuration) {
         super("cowboy", configuration);
-        this.item = ItemStackBuilder.of(Material.SADDLE)
+        this.item = ItemStackBuilder.of(Material.LEAD)
                 .name("&eCowboy")
                 .build();
     }
@@ -45,20 +48,12 @@ public class CowboyAbility extends ItemStackAbility {
     public void whenRightClicked(PlayerInteractEvent e) {
         e.setCancelled(true);
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
-        if(localPlayer.toBukkit().isInsideVehicle()) {
-            localPlayer.msg("&6(Cowboy) &cYou are already inside a vehicle!");
-            return;
-        }
 
-        final Horse horse = (Horse) WorldProvider.KP_WORLD.spawnEntity(localPlayer.getLocation(), EntityType.HORSE);
-        horse.getInventory().setSaddle(new ItemStack(Material.SADDLE, 1));
-        horse.getInventory().setArmor(new ItemStack(Material.DIAMOND_HORSE_ARMOR, 1));
+        final Vector vector = localPlayer.getLocation().getDirection().multiply(2D);
+        vector.setY(vector.getY() * 1.5D);
 
-        horse.setTamed(true);
-        horse.setOwner(localPlayer.toBukkit());
-
-        horse.addPassenger(localPlayer.toBukkit());
-        Metadata.provideForEntity(horse).put(MetadataProvider.HORSE_PERSISTENT, SoftValue.of(true));
+        final Item lasso = WorldProvider.KP_WORLD.dropItemNaturally(localPlayer.getLocation().clone().add(0D, 1D, 0D), item);
+        lasso.setVelocity(vector);
     }
 
     @Override
@@ -66,6 +61,27 @@ public class CowboyAbility extends ItemStackAbility {
 
     @Override
     public void handleListeners() {
+        // spawn horse
+        Events.subscribe(KitSelectEvent.class)
+                .filter(e -> e.getKit() != null)
+                .filter(e -> e.getKit().hasAbility(this))
+                .handler(e -> {
+                    final LocalPlayer localPlayer = e.getLocalPlayer();
+                    if(localPlayer.toBukkit().isInsideVehicle()) {
+                        return;
+                    }
+
+                    final Horse horse = (Horse) WorldProvider.KP_WORLD.spawnEntity(localPlayer.getLocation(), EntityType.HORSE);
+                    horse.getInventory().setSaddle(new ItemStack(Material.SADDLE, 1));
+                    horse.getInventory().setArmor(new ItemStack(Material.DIAMOND_HORSE_ARMOR, 1));
+
+                    horse.setTamed(true);
+                    horse.setOwner(localPlayer.toBukkit());
+
+                    horse.addPassenger(localPlayer.toBukkit());
+                    Metadata.provideForEntity(horse).put(MetadataProvider.HORSE_PERSISTENT, SoftValue.of(true));
+                });
+
         // persistent horse
         Events.subscribe(EntityDamageEvent.class)
                 .filter(e -> e.getEntityType() == EntityType.HORSE)

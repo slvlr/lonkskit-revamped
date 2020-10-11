@@ -21,7 +21,7 @@ public class HookerAbility extends ItemStackAbility {
     public HookerAbility(ConfigurationNode configuration) {
         super("hooker", configuration);
         this.item = ItemStackBuilder.of(Material.FISHING_ROD)
-                .name("&eRod &e(hooker)")
+                .name(configuration.getNode("item-name").getString("Rod"))
                 .build();
     }
 
@@ -49,11 +49,11 @@ public class HookerAbility extends ItemStackAbility {
                     final Location caughtLocation = caught.getLocation();
                     final Location playerLocation = localPlayer.getLocation();
 
-                    final Vector vector = caughtLocation.subtract(playerLocation).toVector().normalize().multiply(2);
+                    final Vector vector = caughtLocation.subtract(playerLocation).toVector().normalize().multiply(
+                            configuration.getNode("speed").getDouble(2D)
+                    );
 
                     localPlayer.toBukkit().setVelocity(vector);
-
-                    localPlayer.msg("&3(Hooker) Pushing you towards {0}", caught.getName());
                 });
     }
 

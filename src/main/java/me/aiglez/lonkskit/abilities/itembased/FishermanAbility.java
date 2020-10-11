@@ -21,7 +21,7 @@ public class FishermanAbility extends ItemStackAbility {
     public FishermanAbility(ConfigurationNode configuration) {
         super("fisherman", configuration);
         this.item = ItemStackBuilder.of(Material.FISHING_ROD)
-                .name("&eRod &b(fisherman)")
+                .name(configuration.getNode("item-name").getString("Rod"))
                 .build();
     }
 
@@ -49,11 +49,11 @@ public class FishermanAbility extends ItemStackAbility {
                     final Location caughtLocation = caught.getLocation();
                     final Location playerLocation = localPlayer.getLocation();
 
-                    final Vector vector = playerLocation.subtract(caughtLocation).toVector().normalize().multiply(2);
+                    final Vector vector = playerLocation.subtract(caughtLocation).toVector().normalize().multiply(
+                            configuration.getNode("speed").getDouble(2D)
+                    );
 
                     caught.setVelocity(vector);
-
-                    localPlayer.msg("&3(Fisherman) Pushing {0} towards you", caught.getName());
                 });
     }
 
