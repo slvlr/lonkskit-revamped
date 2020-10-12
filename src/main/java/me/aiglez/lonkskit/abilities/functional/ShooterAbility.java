@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author AigleZ
@@ -43,12 +44,20 @@ public class ShooterAbility extends FunctionalAbility {
                         toRemove = 5 - map.size();
                     }
 
-                    for (int i = 0; i < toRemove; i++) {
-                        Schedulers.sync()
-                                .runLater(() -> {
-                                    launchArrows(localPlayer);
-                                }, configuration.getNode("delay-between-arrows").getLong(1L));
-                    }
+                    final long delay = configuration.getNode("delay-between-arrows").getLong(1L);
+                    localPlayer.msg("&e(Debug - Shooter) Delay (ticks): " + delay);
+                    AtomicInteger launched = new AtomicInteger(0);
+                    final int finalToRemove = toRemove;
+                    Schedulers.sync()
+                            .runRepeating(t -> {
+                                if(launched.intValue() == finalToRemove) {
+                                    t.stop();
+                                    return;
+                                }
+
+                                launchArrows(localPlayer);
+                                launched.incrementAndGet();
+                            }, 1L, delay);
                 });
     }
 

@@ -135,6 +135,14 @@ public class AbilityFactoryImpl implements AbilityFactory {
         this.abilities.add(
                 new HulkAbility(getFileByName("hulk").orElseThrow(() -> new AbilityFileNotFoundException("hulk")))
         );
+
+        this.abilities.add(
+                new FlingerAbility(getFileByName("flinger").orElseThrow(() -> new AbilityFileNotFoundException("flinger")))
+        );
+
+        this.abilities.add(
+                new KamikazeAbility(getFileByName("kamikaze").orElseThrow(() -> new AbilityFileNotFoundException("kamikaze")))
+        );
         // Imad - start
         Ability monk = new MonkAbility(
                 getFileByName("monk").orElseThrow(() -> new AbilityFileNotFoundException("monk"))
