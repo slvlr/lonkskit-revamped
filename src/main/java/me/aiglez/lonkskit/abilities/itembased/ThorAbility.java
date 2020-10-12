@@ -33,14 +33,14 @@ public class ThorAbility extends ItemStackAbility {
     public ThorAbility(ConfigurationNode configuration) {
         super("thor", configuration);
         this.item = ItemStackBuilder.of(Material.IRON_AXE)
-                .name("&bThor's Hammer")
+                .name(configuration.getNode("item-name").getString("Thor"))
                 .enchant(Enchantment.DAMAGE_ALL, 1)
                 .enchant(Enchantment.DURABILITY, 3)
                 .build();
     }
 
     @Override
-    public ItemStack getItemStack() { return item; }
+    public ItemStack getItemStack() { return this.item; }
 
     @Override
     public boolean isItemStack(ItemStack item) { return this.item.isSimilar(item); }
@@ -51,16 +51,14 @@ public class ThorAbility extends ItemStackAbility {
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
 
         if(!cooldown.test(localPlayer)){
-            localPlayer.msg("&3(Thor) &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
+            localPlayer.msg("&b[LonksKit] &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
             return;
         }
 
         final Block target = localPlayer.toBukkit().getTargetBlock(transparentMaterials, configuration.getNode("max-radius").getInt(100));
 
         localPlayer.metadata().put(MetadataProvider.PLAYER_NO_LIGHTING_DAMAGE, ExpiringValue.of(true, 3, TimeUnit.SECONDS));
-        //localPlayer.toBukkit().getWorld().strikeLightning(WorldProvider.KP_WORLD.getHighestBlockAt(target.getLocation()).getLocation());
         localPlayer.toBukkit().getWorld().strikeLightning(target.getLocation());
-
     }
 
     @Override

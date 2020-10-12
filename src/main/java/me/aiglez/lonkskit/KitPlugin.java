@@ -2,6 +2,8 @@ package me.aiglez.lonkskit;
 
 import me.aiglez.lonkskit.abilities.external.functionnal.helpers.CasperListener;
 import me.aiglez.lonkskit.abilities.external.functionnal.helpers.FlamerListener;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
 import me.aiglez.lonkskit.abilities.factory.AbilityFactory;
 import me.aiglez.lonkskit.commands.CommandsRegistry;
 import me.aiglez.lonkskit.kits.KitFactory;
@@ -12,27 +14,31 @@ import me.aiglez.lonkskit.players.LocalPlayerFactory;
 import me.aiglez.lonkskit.utils.Logger;
 import me.lucko.helper.config.ConfigFactory;
 import me.lucko.helper.config.ConfigurationNode;
+import me.lucko.helper.plugin.ExtendedJavaPlugin;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.java.JavaPluginLoader;
 
 import java.io.File;
 
-public final class KitPlugin extends JavaPlugin implements Listener {
+public final class KitPlugin extends ExtendedJavaPlugin implements Listener {
 
     private static KitPlugin singleton;
+
     private KitFactory kitFactory;
     private LocalPlayerFactory localPlayerFactory;
     private AbilityFactory abilityFactory;
     private ConfigurationNode conf;
 
-
+    private ProtocolManager protocolManager; // protocol lib hook
 
     @Override
-    public void onEnable() {
+    protected void load() {
+        this.protocolManager = ProtocolLibrary.getProtocolManager();
+    }
+
+    @Override
+    public void enable() {
         singleton = this;
         Logger.fine("Loading configuration files...");
         this.conf = ConfigFactory.yaml().load(new File(getDataFolder(), "config.yml"));
@@ -57,13 +63,10 @@ public final class KitPlugin extends JavaPlugin implements Listener {
     }
 
     @Override
-    public void onDisable() {
+    public void disable() {
         Logger.fine("Saving players...");
         localPlayerFactory.saveLocalPlayers();
     }
-
-    public void registerListener(Listener listener) { this.getServer().getPluginManager().registerEvents(listener, singleton); }
-
 
     public static KitPlugin getSingleton() { return singleton; }
 
@@ -73,9 +76,7 @@ public final class KitPlugin extends JavaPlugin implements Listener {
 
     public AbilityFactory getAbilityFactory() { return this.abilityFactory; }
 
-    public ConfigurationNode getConf() {
-        return conf;
-    }
+    public ProtocolManager getProtocolManager() { return protocolManager; }
 
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent e) {
@@ -85,14 +86,6 @@ public final class KitPlugin extends JavaPlugin implements Listener {
             localPlayer.openKitSelector();
             e.setCancelled(true);
         }
-    }
-
-    /*
-     For testing
-    */
-    public KitPlugin() { super(); }
-    protected KitPlugin(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
-        super(loader, description, dataFolder, file);
     }
 
 }

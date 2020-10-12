@@ -19,7 +19,7 @@ import org.bukkit.inventory.PlayerInventory;
 import java.util.Optional;
 import java.util.UUID;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "RedundantSuppression"})
 public interface LocalPlayer extends GsonSerializable, LocalMessager, LocalRenter {
 
     UUID getUniqueId();
@@ -58,17 +58,15 @@ public interface LocalPlayer extends GsonSerializable, LocalMessager, LocalRente
 
     void setSafeStatus(boolean status);
 
-    default boolean hasAccess(Kit kit) {
-        if(kit == null || !kit.enabled() || toBukkit() == null) return false;
-        return toBukkit().hasPermission("lonkskit." + kit.getBackendName());
-    }
+    void updateSafeStatus();
+
+    boolean hasAccess(Kit kit);
 
     void openKitSelector();
 
     default MetadataMap metadata() {
         return Metadata.provideForPlayer(getUniqueId());
     }
-
 
     static LocalPlayer get(Player player) {
         if(LonksKitProvider.getPlayerFactory() == null) throw new UnsupportedOperationException("The player factory isn't initialized yet!");
@@ -91,6 +89,7 @@ public interface LocalPlayer extends GsonSerializable, LocalMessager, LocalRente
         final JsonObject metrics = object.getAsJsonObject("metrics");
         final int metricsDeathsCount = metrics.has("deaths") ? metrics.get("deaths").getAsInt() : 0;
         final int metricsKillsCount = metrics.has("kills") ? metrics.get("kills").getAsInt() : 0;
+
         localPlayer.getMetrics().updateAll(metricsKillsCount, metricsDeathsCount);
 
         Preconditions.checkArgument(object.has("rents"));
