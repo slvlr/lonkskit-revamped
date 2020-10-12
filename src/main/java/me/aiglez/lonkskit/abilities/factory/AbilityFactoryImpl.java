@@ -2,6 +2,10 @@ package me.aiglez.lonkskit.abilities.factory;
 
 import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.abilities.Ability;
+import me.aiglez.lonkskit.abilities.external.functionnal.*;
+import me.aiglez.lonkskit.abilities.external.itembased.*;
+import me.aiglez.lonkskit.abilities.functionnal.SharkAbility;
+import me.aiglez.lonkskit.abilities.functionnal.StompAbility;
 import me.aiglez.lonkskit.abilities.external.functionnal.AnvilAbility;
 import me.aiglez.lonkskit.abilities.external.itembased.MonkAbility;
 import me.aiglez.lonkskit.abilities.external.itembased.ShadowbladeAbility;
@@ -11,6 +15,7 @@ import me.aiglez.lonkskit.exceptions.AbilityFileNotFoundException;
 import me.aiglez.lonkskit.exceptions.AbilityRegisterException;
 import me.lucko.helper.config.ConfigFactory;
 import me.lucko.helper.config.ConfigurationNode;
+import org.bukkit.Material;
 
 import java.io.File;
 import java.util.Collections;
@@ -38,6 +43,7 @@ public class AbilityFactoryImpl implements AbilityFactory {
     public void registerAbilities() {
         Ability thor = new ThorAbility(
                 getFileByName("thor").orElseThrow(() -> new AbilityFileNotFoundException("thor"))
+
         );
         this.abilities.add(thor);
 
@@ -51,12 +57,12 @@ public class AbilityFactoryImpl implements AbilityFactory {
         );
         this.abilities.add(switcher);
 
-        Ability portastomp = new PortastompAbility(
+        /*Ability portastomp = new PortastompAbility(
                 getFileByName("portastomp").orElseThrow(() -> new AbilityFileNotFoundException("portastomp"))
         );
-        this.abilities.add(portastomp);
+        this.abilities.add(portastomp);*/
 
-        Ability wizard = new WizardAbility(
+        /*Ability wizard = new WizardAbility(
                 getFileByName("wizard").orElseThrow(() -> new AbilityFileNotFoundException("wizard"))
         );
         this.abilities.add(wizard);
@@ -74,17 +80,17 @@ public class AbilityFactoryImpl implements AbilityFactory {
         Ability blink = new BlinkAbility(
                 getFileByName("blink").orElseThrow(() -> new AbilityFileNotFoundException("blink"))
         );
-        this.abilities.add(blink);
+        this.abilities.add(blink);*/
 
-        Ability kangaroo = new KangarooAbility(
+        /*Ability kangaroo = new KangarooAbility(
                 getFileByName("kangaroo").orElseThrow(() -> new AbilityFileNotFoundException("kangaroo"))
         );
         this.abilities.add(kangaroo);
-
-        Ability shark = new SharkAbility(
+*/
+        /*Ability shark = new SharkAbility(
                 getFileByName("shark").orElseThrow(() -> new AbilityFileNotFoundException("shark"))
         );
-        this.abilities.add(shark);
+        this.abilities.add(shark);*/
 
         Ability jedi = new JediAbility(
                 getFileByName("jedi").orElseThrow(() -> new AbilityFileNotFoundException("jedi"))
@@ -158,6 +164,69 @@ public class AbilityFactoryImpl implements AbilityFactory {
                 getFileByName("shadowblade").orElseThrow(() -> new AbilityFileNotFoundException("shadowblade"))
         );
         this.abilities.add(shadowblade);
+
+        Ability sonic = new SonicAbility(
+                getFileByName("sonic").orElseThrow(() -> new AbilityFileNotFoundException("sonic"))
+        );
+        this.abilities.add(sonic);
+
+        Ability ghost = new GhostAbility(
+                getFileByName("ghost").orElseThrow(() -> new AbilityFileNotFoundException("ghost"))
+        );
+        this.abilities.add(ghost);
+
+        Ability hyper = new HyperAbility(
+                getFileByName("hyper").orElseThrow(() -> new AbilityFileNotFoundException("hyper"))
+        );
+        this.abilities.add(hyper);
+
+        Ability berserker = new BerserkerAbility(
+                getFileByName("berserker").orElseThrow(() -> new AbilityFileNotFoundException("berserker"))
+        );
+        this.abilities.add(berserker);
+
+        Ability turtle = new TurtleAbility(
+                getFileByName("turtle").orElseThrow(() -> new AbilityFileNotFoundException("turtle"))
+        );
+        this.abilities.add(turtle);
+
+        Ability snake = new SnakeAbility(
+                getFileByName("snake").orElseThrow(() -> new AbilityFileNotFoundException("snake"))
+        );
+        this.abilities.add(snake);
+
+        Ability flamer = new FlamerAbility(
+                getFileByName("flamer").orElseThrow(() -> new AbilityFileNotFoundException("flamer"))
+        );
+
+        this.abilities.add(flamer);
+
+        Ability killer = new KillerAbility(
+                getFileByName("killer").orElseThrow(() -> new AbilityFileNotFoundException("killer"))
+        );
+
+        this.abilities.add(killer);
+
+        Ability elder = new ElderAbility(
+                getFileByName("elder").orElseThrow(() -> new AbilityFileNotFoundException("elder"))
+        );
+
+        this.abilities.add(elder);
+
+        Ability wolf = new WolfAbility(
+                getFileByName("wolf").orElseThrow(() -> new AbilityFileNotFoundException("wolf"))
+        );
+        this.abilities.add(wolf);
+
+        Ability spider = new SpiderDAbility(
+                getFileByName("spider").orElseThrow(() -> new AbilityFileNotFoundException("spider"))
+        );
+        this.abilities.add(spider);
+
+        Ability casper = new Casper(
+                getFileByName("casper").orElseThrow(() -> new AbilityFileNotFoundException("casper"))
+        );
+        this.abilities.add(casper);
 
         // Imad - end
     }

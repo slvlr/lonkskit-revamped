@@ -1,5 +1,7 @@
 package me.aiglez.lonkskit;
 
+import me.aiglez.lonkskit.abilities.external.functionnal.helpers.CasperListener;
+import me.aiglez.lonkskit.abilities.external.functionnal.helpers.FlamerListener;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import me.aiglez.lonkskit.abilities.factory.AbilityFactory;
@@ -52,7 +54,8 @@ public final class KitPlugin extends ExtendedJavaPlugin implements Listener {
         Logger.fine("Loading players...");
         this.localPlayerFactory = LocalPlayerFactory.makeInstance();
         this.localPlayerFactory.loadLocalPlayers();
-
+        getServer().getPluginManager().registerEvents(new FlamerListener(),this);
+        getServer().getPluginManager().registerEvents(new CasperListener(),this);
         getServer().getPluginManager().registerEvents(this, this);
         new AbilityListeners(this);
         new PlayerListeners(this);
