@@ -1,24 +1,15 @@
 package me.aiglez.lonkskit.abilities.external.functionnal;
 
-import me.aiglez.lonkskit.KitPlugin;
-import me.aiglez.lonkskit.abilities.Ability;
 import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.FunctionalAbility;
-import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.Events;
-import me.lucko.helper.Schedulers;
 import me.lucko.helper.config.ConfigurationNode;
-import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.AbstractArrow;
-import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
-
 public class AnvilAbility extends FunctionalAbility {
 
     public AnvilAbility(ConfigurationNode configuration) {
@@ -43,6 +34,7 @@ public class AnvilAbility extends FunctionalAbility {
                             a.getDamager().remove();
                             victim.setArrowsInBody(i);
                             victim.playSound(victim.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER,12F,1F);
+
                         }else{
                         System.out.println("HEY RANGEWONK PLEASE TELL ME THIS WORD IN THE CHAT NIHAA");
                         }

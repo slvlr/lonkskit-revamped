@@ -38,7 +38,6 @@ public class GhostAbility extends ItemStackAbility {
     public void whenRightClicked(PlayerInteractEvent e) {
         LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
         ItemStack[] armor = localPlayer.toBukkit().getInventory().getArmorContents();
-        ItemStack itemInHand = localPlayer.toBukkit().getInventory().getItemInHand();
         if (!cooldown.test(localPlayer)){
             localPlayer.msg("&e(Sonic) &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
             return;
@@ -50,13 +49,7 @@ public class GhostAbility extends ItemStackAbility {
                 localPlayer.toBukkit().addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,300,2,true,false));
 
             }
-            Bukkit.getScheduler().runTaskLater(KitPlugin.getSingleton(), new Runnable() {
-                @Override
-                public void run() {
-                    localPlayer.toBukkit().getInventory().setArmorContents(armor);
-
-                }
-            },300L);
+            Bukkit.getScheduler().runTaskLater(KitPlugin.getSingleton(), () -> localPlayer.toBukkit().getInventory().setArmorContents(armor),300L);
         }
 
 

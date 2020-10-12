@@ -4,8 +4,6 @@ import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
-import me.lucko.helper.Schedulers;
-import me.lucko.helper.config.ConfigFactory;
 import me.lucko.helper.config.ConfigurationNode;
 import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -13,15 +11,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.util.Vector;
 
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 public class SonicAbility extends ItemStackAbility {
@@ -73,7 +68,7 @@ public class SonicAbility extends ItemStackAbility {
     public void handleListeners() {
 
     }
-    //GET CONFIG
+
     public static FileConfiguration getConfig(String name) throws IOException, InvalidConfigurationException {
         final File abilityFile = new File(KitPlugin.getSingleton().getDataFolder() + File.separator + "abilities", name + ".yml");
         FileConfiguration config = new YamlConfiguration();
@@ -81,7 +76,3 @@ public class SonicAbility extends ItemStackAbility {
         return config;
     }
 }
-/*
-Sonic: Leather Helmet and leather legs: DYED BLUE
-Unbreaking III, Protection II. Iron body, Iron legs: Unbreaking III. Diamond sword: Unbreaking III. 1 Sugar. 34 soup.
-(When right clicking the sugar, the player gets Speed III for 15 seconds with a 30 second cooldown.)*/

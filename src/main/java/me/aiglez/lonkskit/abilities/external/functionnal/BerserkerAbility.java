@@ -8,6 +8,8 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionType;
 
+import java.util.Objects;
+
 public class BerserkerAbility extends FunctionalAbility {
 
     public BerserkerAbility(ConfigurationNode configuration) {
@@ -17,11 +19,12 @@ public class BerserkerAbility extends FunctionalAbility {
     @Override
     public void handleListeners() {
         Events.subscribe(PlayerDeathEvent.class)
+                .filter(e -> e.getEntity().getKiller() != null)
                 .filter(AbilityPredicates.isKillerhaveAbility(this))
                 .handler(e -> {
                     int duration = getConfiguration().getNode("duration").getInt() * 20;
                     assert PotionType.STRENGTH.getEffectType() != null;
-                    e.getEntity().getKiller().addPotionEffect(new PotionEffect(PotionType.STRENGTH.getEffectType(),duration,2));
+                    Objects.requireNonNull(e.getEntity().getKiller()).addPotionEffect(new PotionEffect(PotionType.STRENGTH.getEffectType(),duration,2));
 
                 });
     }

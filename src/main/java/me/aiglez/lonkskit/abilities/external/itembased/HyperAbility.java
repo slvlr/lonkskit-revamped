@@ -11,6 +11,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class HyperAbility extends ItemStackAbility {
@@ -41,9 +42,10 @@ public class HyperAbility extends ItemStackAbility {
         }
         if (!(localPlayer.toBukkit().hasPotionEffect(PotionEffectType.SPEED) &&
                 localPlayer.toBukkit().hasPotionEffect(PotionEffectType.REGENERATION) &&
-                localPlayer.toBukkit().hasPotionEffect(PotionType.STRENGTH.getEffectType()))){
+                localPlayer.toBukkit().hasPotionEffect(Objects.requireNonNull(PotionType.STRENGTH.getEffectType())))){
             localPlayer.toBukkit().addPotionEffect(new PotionEffect(PotionEffectType.SPEED,260,3));
             localPlayer.toBukkit().addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION,260,2));
+            assert PotionType.STRENGTH.getEffectType() != null;
             localPlayer.toBukkit().addPotionEffect(new PotionEffect(PotionType.STRENGTH.getEffectType(),260,1));
         }else
             localPlayer.msg("&e You have Already the Potion Effects");
