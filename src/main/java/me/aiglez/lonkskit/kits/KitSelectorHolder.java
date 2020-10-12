@@ -11,7 +11,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-@SuppressWarnings("unused")
 public class KitSelectorHolder {
 
     private final Material     material;

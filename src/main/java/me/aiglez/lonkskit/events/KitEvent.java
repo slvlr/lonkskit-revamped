@@ -2,17 +2,19 @@ package me.aiglez.lonkskit.events;
 
 import me.aiglez.lonkskit.kits.Kit;
 import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
+
+import javax.annotation.Nonnull;
 
 public abstract class KitEvent extends Event {
 
-    private static final HandlerList HANDLERS = new HandlerList();
     private final Kit kit;
 
-    public KitEvent(Kit kit) {
+    public KitEvent(@Nonnull Kit kit) {
+        super();
         this.kit = kit;
     }
 
+    @Nonnull
     public Kit getKit() { return kit; }
 
 }

@@ -123,11 +123,11 @@ public class MemoryLocalPlayer implements LocalPlayer {
             return false;
         }
         this.selectedKit = kit;
+        if(selectedKit == null) return true;
 
         Events.call(new KitSelectEvent(kit, this));
-
-        if(kit == null || toBukkit() == null) {
-            Logger.severe("Kit not found: " + (kit == null) + " // Player not found: " + (toBukkit() == null));
+        if(toBukkit() == null) {
+            Logger.severe("Player not found: " + (toBukkit() == null));
             return false;
         }
         final Player player = toBukkit();
@@ -179,6 +179,17 @@ public class MemoryLocalPlayer implements LocalPlayer {
 
     @Override
     public void setSafeStatus(boolean status) { this.safe = status; }
+
+    @Override
+    public void updateSafeStatus() {
+
+    }
+
+    @Override
+    public boolean hasAccess(Kit kit) {
+        if(kit == null || bukkit == null) return false;
+        return bukkit.hasPermission("lonkskit.kit" + kit.getBackendName());
+    }
 
     @Override
     public void openKitSelector() {

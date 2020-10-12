@@ -96,12 +96,21 @@ public class ItemStackParser {
 
             } else if(StringUtils.startsWithIgnoreCase(string, "data:")) {
                 final int data = NumberUtils.toInt(StringUtils.replace(string, "data:", ""), -11);
-                if(data == -11 || builder == null) {
+                if (data == -11 || builder == null) {
                     throwParseError(unparsed, "Either the BUILDER hasn't been instantiated yet (== Error in the material), or the data is not defined or not valid (must be a number)");
                     return Optional.empty();
                 }
                 builder.data(data);
 
+            } else if(StringUtils.startsWithIgnoreCase(string, "amount:")) {
+                final int amnt = NumberUtils.toInt(StringUtils.replace(string, "amount:", ""), 1);
+                if(amnt == -11 || builder == null) {
+                    throwParseError(unparsed, "Either the BUILDER hasn't been instantiated yet (== Error in the material)");
+                    return Optional.empty();
+                }
+                Logger.debug("Setting amount to > " + amnt);
+                builder.amount(amnt);
+                Logger.debug("New amount: " + builder.itemStack.getAmount());
             } else if(StringUtils.startsWithIgnoreCase(string, "enchant:")) {
                 final String[] enchantSplit = StringUtils.replace(string, "enchant:", "").split(":");
                 if(enchantSplit == null || enchantSplit.length < 2 || builder == null) {
@@ -117,7 +126,7 @@ public class ItemStackParser {
                 }
                 builder.enchant(enchantment, level);
 
-            } else if(StringUtils.startsWithIgnoreCase("string", "color:")) {
+            } else if(StringUtils.startsWithIgnoreCase(string, "color:")) {
                 final String colorName = StringUtils.replace(string, "color:", "");
                 if(colorName == null || colorName.isEmpty() || builder == null) {
                     throwParseError(unparsed, "Either the BUILDER hasn't been instantiated yet (== Error in the material), or the color name is not defined!");

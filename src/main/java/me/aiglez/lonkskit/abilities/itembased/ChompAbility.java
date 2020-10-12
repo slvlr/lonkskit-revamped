@@ -1,15 +1,13 @@
 package me.aiglez.lonkskit.abilities.itembased;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Sets;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
-import me.lucko.helper.random.RandomSelector;
 import me.lucko.helper.scheduler.Ticks;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -17,25 +15,30 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
  * @author AigleZ
- * @date 03/10/2020
+ * @date 05/10/2020
  */
-public class TrollAbility extends ItemStackAbility {
+public class ChompAbility extends ItemStackAbility {
 
     private final ItemStack item;
-    private final RandomSelector<PotionEffectType> potionEffectTypeRandomSelector = RandomSelector.uniform(ImmutableList.of(
-            PotionEffectType.POISON, PotionEffectType.BLINDNESS, PotionEffectType.SLOW_DIGGING
-    ));
+    private final double damage;
+    private final Set<PotionEffect> negativeEffects;
 
-    public TrollAbility(ConfigurationNode configuration) {
-        super("troll", configuration);
-        this.item = ItemStackBuilder.of(Material.WOODEN_HOE)
-                .name(configuration.getNode("item-name").getString("Trolololololo"))
-                .enchant(Enchantment.DURABILITY, 1)
+    public ChompAbility(ConfigurationNode configuration) {
+        super("chomp", configuration);
+        this.item = ItemStackBuilder.of(Material.CHEST)
+                .name(configuration.getNode("item-name").getString("Chomper"))
                 .build();
+        this.damage = configuration.getNode("damage").getDouble(5);
+
+        this.negativeEffects = Sets.newHashSet(
+                new PotionEffect(PotionEffectType.SLOW, (int) Ticks.from(6, TimeUnit.SECONDS), 1),
+                new PotionEffect(PotionEffectType.WEAKNESS, (int) Ticks.from(6, TimeUnit.SECONDS), 1)
+        );
     }
 
     @Override
@@ -44,12 +47,15 @@ public class TrollAbility extends ItemStackAbility {
     @Override
     public boolean isItemStack(ItemStack item) { return this.item.isSimilar(item); }
 
-    // --------------------------------------------------------------------------------------------
     @Override
-    public void whenRightClicked(PlayerInteractEvent e) { }
+    public void whenRightClicked(PlayerInteractEvent e) {
+        e.setCancelled(true);
+    }
 
     @Override
-    public void whenLeftClicked(PlayerInteractEvent e) { }
+    public void whenLeftClicked(PlayerInteractEvent e) {
+        e.setCancelled(true);
+    }
 
     @Override
     public void handleListeners() {
@@ -61,13 +67,13 @@ public class TrollAbility extends ItemStackAbility {
                 })
                 .filter(e -> isItemStack(((Player) e.getDamager()).getInventory().getItemInMainHand()))
                 .handler(e -> {
-                    LocalPlayer damager = LocalPlayer.get((Player) e.getDamager());
-                    LocalPlayer victim = LocalPlayer.get((Player) e.getEntity());
+                    final LocalPlayer damager = LocalPlayer.get((Player) e.getDamager());
+                    final LocalPlayer victim = LocalPlayer.get((Player) e.getEntity());
 
-                    victim.toBukkit().addPotionEffect(new PotionEffect(
-                            potionEffectTypeRandomSelector.pick(), (int) Ticks.from(4, TimeUnit.SECONDS), 1
-                    ));
-                    damager.msg(configuration.getNode("messages", "trolled").getString("Message trolled Null"), victim.getLastKnownName());
+                    damager.toBukkit().addPotionEffects(negativeEffects);
+
+                    e.setDamage(damage);
+                    damager.msg("(Debug - Chomp) &cYou have chomped {0} [damage: {1}]", victim.getLastKnownName(), damage);
                 });
     }
 }

@@ -1,5 +1,6 @@
 package me.aiglez.lonkskit.abilities.external.functionnal;
 
+import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.FunctionalAbility;
 import me.lucko.helper.Events;

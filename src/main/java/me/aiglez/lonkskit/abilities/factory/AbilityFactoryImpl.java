@@ -6,6 +6,10 @@ import me.aiglez.lonkskit.abilities.external.functionnal.*;
 import me.aiglez.lonkskit.abilities.external.itembased.*;
 import me.aiglez.lonkskit.abilities.functionnal.SharkAbility;
 import me.aiglez.lonkskit.abilities.functionnal.StompAbility;
+import me.aiglez.lonkskit.abilities.external.functionnal.AnvilAbility;
+import me.aiglez.lonkskit.abilities.external.itembased.MonkAbility;
+import me.aiglez.lonkskit.abilities.external.itembased.ShadowbladeAbility;
+import me.aiglez.lonkskit.abilities.functional.*;
 import me.aiglez.lonkskit.abilities.itembased.*;
 import me.aiglez.lonkskit.exceptions.AbilityFileNotFoundException;
 import me.aiglez.lonkskit.exceptions.AbilityRegisterException;
@@ -88,7 +92,63 @@ public class AbilityFactoryImpl implements AbilityFactory {
         );
         this.abilities.add(shark);*/
 
+        Ability jedi = new JediAbility(
+                getFileByName("jedi").orElseThrow(() -> new AbilityFileNotFoundException("jedi"))
+        );
+        this.abilities.add(jedi);
 
+        Ability chomp = new ChompAbility(
+                getFileByName("chomp").orElseThrow(() -> new AbilityFileNotFoundException("chomp"))
+        );
+        this.abilities.add(chomp);
+
+        Ability shooter = new ShooterAbility(
+                getFileByName("shooter").orElseThrow(() -> new AbilityFileNotFoundException("shooter"))
+        );
+        this.abilities.add(shooter);
+
+        Ability superman = new SupermanAbility(
+                getFileByName("superman").orElseThrow(() -> new AbilityFileNotFoundException("superman"))
+        );
+        this.abilities.add(superman);
+
+        Ability cowboy = new CowboyAbility(
+                getFileByName("cowboy").orElseThrow(() -> new AbilityFileNotFoundException("cowboy"))
+        );
+        this.abilities.add(cowboy);
+
+        Ability fisherman = new FishermanAbility(
+                getFileByName("fisherman").orElseThrow(() -> new AbilityFileNotFoundException("fisherman"))
+        );
+        this.abilities.add(fisherman);
+
+        this.abilities.add(
+                new HookerAbility(getFileByName("hooker").orElseThrow(() -> new AbilityFileNotFoundException("hooker")))
+        );
+
+        this.abilities.add(
+                new TigerAbility(getFileByName("tiger").orElseThrow(() -> new AbilityFileNotFoundException("tiger")))
+        );
+
+        this.abilities.add(
+                new SpyAbility(getFileByName("spy").orElseThrow(() -> new AbilityFileNotFoundException("spy")))
+        );
+
+        this.abilities.add(
+                new HotheadAbility(getFileByName("hothead").orElseThrow(() -> new AbilityFileNotFoundException("hothead")))
+        );
+
+        this.abilities.add(
+                new HulkAbility(getFileByName("hulk").orElseThrow(() -> new AbilityFileNotFoundException("hulk")))
+        );
+
+        this.abilities.add(
+                new FlingerAbility(getFileByName("flinger").orElseThrow(() -> new AbilityFileNotFoundException("flinger")))
+        );
+
+        this.abilities.add(
+                new KamikazeAbility(getFileByName("kamikaze").orElseThrow(() -> new AbilityFileNotFoundException("kamikaze")))
+        );
         // Imad - start
         Ability monk = new MonkAbility(
                 getFileByName("monk").orElseThrow(() -> new AbilityFileNotFoundException("monk"))
