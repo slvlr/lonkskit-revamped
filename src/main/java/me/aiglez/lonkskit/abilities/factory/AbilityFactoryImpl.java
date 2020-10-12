@@ -153,13 +153,15 @@ public class AbilityFactoryImpl implements AbilityFactory {
 
         this.abilities.add(elder);
 
-        Ability BeastMaster = new BeastmasterAbility(
-                getFileByName("beastmaster").orElseThrow(() -> new AbilityFileNotFoundException("beastmaster"))
+        Ability wolf = new WolfAbility(
+                getFileByName("wolf").orElseThrow(() -> new AbilityFileNotFoundException("wolf"))
         );
+        this.abilities.add(wolf);
 
-        this.abilities.add(BeastMaster);
-
-
+        Ability spider = new SpiderDAbility(
+                getFileByName("spider").orElseThrow(() -> new AbilityFileNotFoundException("spider"))
+        );
+        this.abilities.add(spider);
 
         Ability casper = new Casper(
                 getFileByName("casper").orElseThrow(() -> new AbilityFileNotFoundException("casper"))

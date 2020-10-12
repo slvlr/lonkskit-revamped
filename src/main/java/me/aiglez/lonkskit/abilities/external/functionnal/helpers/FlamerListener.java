@@ -7,10 +7,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionType;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Objects;
 
 public class FlamerListener implements Listener {
@@ -55,7 +55,13 @@ public class FlamerListener implements Listener {
     }
 
     private boolean refresh(Player player) {
-        return Arrays.stream(player.getInventory().getContents()).anyMatch(item -> Objects.requireNonNull(item.getItemMeta()).getDisplayName().contains("Molten Blade"));
+        for (ItemStack item : player.getInventory().getContents()) {
+            if (Objects.requireNonNull(item.getItemMeta()).hasDisplayName()) {
+                if (item.getItemMeta().getDisplayName().equals("Molten Blade")) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
-
 }

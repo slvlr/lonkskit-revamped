@@ -45,7 +45,7 @@ public class SnakeAbility extends ItemStackAbility {
     public void handleListeners() {
         Events.subscribe(EntityDamageByEntityEvent.class)
                 .filter(e -> e.getDamager() instanceof Player && e.getEntity() instanceof Player)
-                .filter(e -> AbilityPredicates.HavetheKit(this,e))
+                .filter(e -> AbilityPredicates.HastheKit(this,e))
                 .handler(e -> {
                     Player player = (Player) e.getEntity();
                     player.addPotionEffect(new PotionEffect(PotionEffectType.POISON,80,2));

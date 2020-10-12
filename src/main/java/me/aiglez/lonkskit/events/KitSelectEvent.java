@@ -26,7 +26,6 @@ public class KitSelectEvent extends KitEvent {
         Preconditions.checkNotNull(kit);
         this.localPlayer = localPlayer;
         if (kit.getBackendName().equalsIgnoreCase("disguise-pig")){
-            DisguiseAPI.disguiseToAll(localPlayer.toBukkit(),new MobDisguise(DisguiseType.PIG));
         }
         if (kit.getBackendName().equalsIgnoreCase("disguise-spider")){
             Events.subscribe(PlayerMoveEvent.class)
