@@ -1,5 +1,6 @@
 package me.aiglez.lonkskit.abilities.external.functionnal.helpers;
 
+import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.abilities.external.itembased.SonicAbility;
 import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -10,10 +11,15 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionType;
+
 import java.io.IOException;
 import java.util.Objects;
 
 public class FlamerListener implements Listener {
+
+    public FlamerListener(KitPlugin plugin) {
+        plugin.registerListener(this);
+    }
 
     @EventHandler
     private void onDamageEvent(EntityDamageEvent event) {

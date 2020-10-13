@@ -85,6 +85,9 @@ public class AbilityPredicates {
         };
     }
 
+    public static <T extends EntityEvent> Predicate<T> entityHasMetadata(MetadataKey<?> metadataKey) {
+        return e -> Metadata.provideForPlayer((Player) e.getEntity()).has(metadataKey);
+    }
     // -------------------------------------------- //
     // MISC
     // -------------------------------------------- //
