@@ -24,7 +24,8 @@ public abstract class FunctionalAbility implements Ability, Listener {
 
         final int cooldownSeconds = configuration.getNode("cooldown").getInt(0);
         cooldown = CooldownMap.create(Cooldown.of(cooldownSeconds, TimeUnit.SECONDS));
-        handleListeners();
+
+        registerListeners();
     }
 
     @Override
@@ -41,7 +42,6 @@ public abstract class FunctionalAbility implements Ability, Listener {
     public CooldownMap<LocalPlayer> getCooldown() {
         return this.cooldown;
     }
-
 
 
     @Override

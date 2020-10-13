@@ -63,7 +63,6 @@ public class CowboyAbility extends ItemStackAbility {
     public void handleListeners() {
         // spawn horse
         Events.subscribe(KitSelectEvent.class)
-                .filter(e -> e.getKit() != null)
                 .filter(e -> e.getKit().hasAbility(this))
                 .handler(e -> {
                     final LocalPlayer localPlayer = e.getLocalPlayer();

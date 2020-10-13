@@ -60,6 +60,9 @@ public class KitFactoryImpl implements KitFactory {
         return false;
     }
 
+    /*
+     * This code is complete mess, needs a refactor
+     */
     @Override
     public boolean loadKits() {
         final File kitsDir = new File(KitPlugin.getSingleton().getDataFolder() + File.separator + "kits");
@@ -155,9 +158,7 @@ public class KitFactoryImpl implements KitFactory {
         Set<Ability> abilities;
         try {
             abilities = Chain.start(node.getNode("abilities").getList(new TypeToken<String>() {}))
-                    .map(list -> list.stream().map(ability -> {
-                        return LonksKitProvider.getAbilityFactory().getAbility(ability);
-                    }).collect(Collectors.toSet()))
+                    .map(list -> list.stream().map(ability -> LonksKitProvider.getAbilityFactory().getAbility(ability)).collect(Collectors.toSet()))
                     .map(optionals -> optionals.stream().filter(Optional::isPresent).map(Optional::get).collect(Collectors.toSet()))
                     .orElseIfNull(Collections.emptySet()).endOrNull();
 
@@ -199,7 +200,6 @@ public class KitFactoryImpl implements KitFactory {
         }
         final PotionEffectType type = PotionEffectType.getByName(split[0]);
         if(type == null) {
-            System.out.println("Potion effect type not found: " + split[0]);
             return Optional.empty();
         }
         return Optional.of(new PotionEffect(type, Integer.MAX_VALUE, NumberUtils.toInt(split[1], 0) + 1));

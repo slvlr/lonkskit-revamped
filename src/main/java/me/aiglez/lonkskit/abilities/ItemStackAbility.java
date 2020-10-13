@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class ItemStackAbility implements Ability, Listener {
 
+    protected ItemStack item;
     protected final String name;
     protected final ConfigurationNode configuration;
     protected final CooldownMap<LocalPlayer> cooldown;
@@ -26,7 +27,8 @@ public abstract class ItemStackAbility implements Ability, Listener {
 
         final int cooldownSeconds = configuration.getNode("cooldown").getInt(0);
         this.cooldown = CooldownMap.create(Cooldown.of(cooldownSeconds, TimeUnit.SECONDS));
-        handleListeners();
+
+        registerListeners();
     }
 
     @Override
@@ -44,14 +46,22 @@ public abstract class ItemStackAbility implements Ability, Listener {
         return this.cooldown;
     }
 
+    public ItemStack getItemStack() { return this.item; }
 
-    public abstract ItemStack getItemStack();
+    public boolean isItemStack(ItemStack item) {
+        Preconditions.checkNotNull(item);
+        if(this.item == null) return false;
+        return this.item.isSimilar(item);
+    }
 
-    public abstract boolean isItemStack(ItemStack item);
-
-
+    /*
+     * Called when a player right-clicks on the itemstack.
+     */
     public abstract void whenRightClicked(PlayerInteractEvent e);
 
+    /*
+     * Called when a player left-clicks on the itemstack.
+     */
     public abstract void whenLeftClicked(PlayerInteractEvent e);
 
     @Override

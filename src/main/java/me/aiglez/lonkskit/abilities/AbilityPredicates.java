@@ -15,14 +15,14 @@ public class AbilityPredicates {
     // -------------------------------------------- //
     // ABILITIES
     // -------------------------------------------- //
-    public static <T extends PlayerEvent> Predicate<T> playerHasAbility(Ability ability) {
+    public static <T extends PlayerEvent> Predicate<T> hasAbility(Ability ability) {
         return e -> {
             final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
             return localPlayer.hasSelectedKit() && localPlayer.getNullableSelectedKit().hasAbility(ability);
         };
     }
 
-    public static <T extends EntityEvent> Predicate<T> humanHasAbility(Ability ability) {
+    public static <T extends EntityEvent> Predicate<T> possiblyHasAbility(Ability ability) {
         return e -> {
             if(!(e.getEntity() instanceof Player)) return false;
             final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getEntity());
@@ -57,11 +57,11 @@ public class AbilityPredicates {
     // -------------------------------------------- //
     // METADATA
     // -------------------------------------------- //
-    public static <T extends PlayerEvent> Predicate<T> playerHasMetadata(MetadataKey<?> metadataKey) {
+    public static <T extends PlayerEvent> Predicate<T> hasMetadata(MetadataKey<?> metadataKey) {
         return e -> Metadata.provideForPlayer(e.getPlayer()).has(metadataKey);
     }
 
-    public static <T extends EntityEvent> Predicate<T> humanHasMetadata(MetadataKey<?> metadataKey) {
+    public static <T extends EntityEvent> Predicate<T> possiblyHasMetadata(MetadataKey<?> metadataKey) {
         return e -> {
             if(!(e.getEntity() instanceof Player)) return false;
             return Metadata.provideForPlayer((Player) e.getEntity()).has(metadataKey);

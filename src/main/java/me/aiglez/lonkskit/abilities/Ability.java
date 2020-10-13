@@ -14,7 +14,9 @@ public interface Ability {
 
     CooldownMap<LocalPlayer> getCooldown();
 
-    void handleListeners();
+    void registerListeners();
+
+    void reloadConfiguration();
 
     static Ability get(String name) {
         Preconditions.checkNotNull(name, "ability name may not be null");
