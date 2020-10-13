@@ -13,27 +13,14 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 
 public class FlingerAbility extends ItemStackAbility {
-
-    private final ItemStack item;
 
     public FlingerAbility(ConfigurationNode configuration) {
         super("flinger", configuration);
         this.item = ItemStackBuilder.of(Material.WOODEN_HOE)
                 .name(configuration.getNode("item-name").getString("Flinger"))
                 .build();
-    }
-
-    @Override
-    public ItemStack getItemStack() {
-        return this.item;
-    }
-
-    @Override
-    public boolean isItemStack(ItemStack item) {
-        return this.item.isSimilar(item);
     }
 
     @Override
@@ -52,7 +39,7 @@ public class FlingerAbility extends ItemStackAbility {
     }
 
     @Override
-    public void handleListeners() {
+    public void registerListeners() {
         Events.subscribe(EntityDamageByEntityEvent.class)
                 .filter(e -> e.getDamager() instanceof Egg)
                 .filter(e -> Metadata.provideForEntity(e.getDamager()).has(MetadataProvider.EGG_FLINGER))

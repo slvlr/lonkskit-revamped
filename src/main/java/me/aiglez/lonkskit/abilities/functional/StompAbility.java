@@ -1,6 +1,5 @@
 package me.aiglez.lonkskit.abilities.functional;
 
-import me.aiglez.lonkskit.abilities.Ability;
 import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.FunctionalAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
@@ -17,17 +16,11 @@ public class StompAbility extends FunctionalAbility {
     }
 
     @Override
-    public void handleListeners() {
+    public void registerListeners() {
         Events.subscribe(EntityDamageEvent.class)
                 .filter(EventFilters.ignoreCancelled())
                 .filter(e -> e.getCause() == EntityDamageEvent.DamageCause.FALL)
-                .filter(e -> {
-                    if(AbilityPredicates.humanHasAbility(this).test(e)) return true;
-                    if(Ability.get("portastomp") != null){
-                        return AbilityPredicates.humanHasAbility(Ability.get("portastomp")).test(e);
-                    }
-                    return false;
-                })
+                .filter(AbilityPredicates.possiblyHasAbilities("stomp", "portastomp"))
                 .handler(e -> {
                     final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getEntity());
 

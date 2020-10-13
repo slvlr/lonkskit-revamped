@@ -9,11 +9,8 @@ import me.lucko.helper.config.ConfigurationNode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 
 public class WallBuilderAbility extends ItemStackAbility {
-
-    private final ItemStack item;
 
     public WallBuilderAbility(ConfigurationNode configuration) {
         super("wallbuilder", configuration);
@@ -21,12 +18,6 @@ public class WallBuilderAbility extends ItemStackAbility {
                 .name("&bWall")
                 .build();
     }
-
-    @Override
-    public ItemStack getItemStack() { return this.item; }
-
-    @Override
-    public boolean isItemStack(ItemStack item) { return this.item.isSimilar(item); }
 
     @Override
     public void whenRightClicked(PlayerInteractEvent e) {
@@ -50,7 +41,7 @@ public class WallBuilderAbility extends ItemStackAbility {
     }
 
     @Override
-    public void handleListeners() {
+    public void registerListeners() {
 
     }
 }

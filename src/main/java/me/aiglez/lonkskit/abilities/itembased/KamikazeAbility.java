@@ -7,11 +7,9 @@ import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.config.ConfigurationNode;
 import org.bukkit.Material;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 
 public class KamikazeAbility extends ItemStackAbility {
 
-    private final ItemStack item;
     private final static float TNT_POWER = 4F;
 
     public KamikazeAbility(ConfigurationNode configuration) {
@@ -19,16 +17,6 @@ public class KamikazeAbility extends ItemStackAbility {
         this.item = ItemStackBuilder.of(Material.GUNPOWDER)
                 .name(configuration.getNode("item-name").getString("Kamikaze"))
                 .build();
-    }
-
-    @Override
-    public ItemStack getItemStack() {
-        return this.item;
-    }
-
-    @Override
-    public boolean isItemStack(ItemStack item) {
-        return this.item.isSimilar(item);
     }
 
     @Override
@@ -53,7 +41,7 @@ public class KamikazeAbility extends ItemStackAbility {
     }
 
     @Override
-    public void handleListeners() {
+    public void registerListeners() {
 
     }
 }

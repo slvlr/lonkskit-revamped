@@ -43,6 +43,10 @@ public abstract class FunctionalAbility implements Ability, Listener {
         return this.cooldown;
     }
 
+    @Override
+    public void reloadConfiguration() {
+        // TODO: implement this
+    }
 
     @Override
     public String toString() {

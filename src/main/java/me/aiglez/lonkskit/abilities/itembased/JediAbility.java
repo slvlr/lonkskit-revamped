@@ -9,7 +9,6 @@ import me.lucko.helper.config.ConfigurationNode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import java.util.concurrent.TimeUnit;
@@ -20,20 +19,12 @@ import java.util.concurrent.TimeUnit;
  */
 public class JediAbility extends ItemStackAbility {
 
-    private final ItemStack item;
-
     public JediAbility(ConfigurationNode configuration) {
         super("jedi", configuration);
         this.item = ItemStackBuilder.of(Material.SUNFLOWER)
                 .name(configuration.getNode("item-name").getString("The Force"))
                 .build();
     }
-
-    @Override
-    public ItemStack getItemStack() { return this.item; }
-
-    @Override
-    public boolean isItemStack(ItemStack item) { return this.item.isSimilar(item); }
 
     // --------------------------------------------------------------------------------------------
     @Override
@@ -66,5 +57,5 @@ public class JediAbility extends ItemStackAbility {
     public void whenLeftClicked(PlayerInteractEvent e) { e.setCancelled(true); }
 
     @Override
-    public void handleListeners() { }
+    public void registerListeners() { }
 }

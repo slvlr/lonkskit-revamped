@@ -26,9 +26,9 @@ public class HulkAbility extends FunctionalAbility {
     }
 
     @Override
-    public void handleListeners() {
+    public void registerListeners() {
         Events.subscribe(PlayerInteractEntityEvent.class)
-                .filter(AbilityPredicates.playerHasAbility(this))
+                .filter(AbilityPredicates.hasAbility(this))
                 .handler(e -> {
                     final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
                     final Entity rightClicked = e.getRightClicked();
@@ -43,7 +43,7 @@ public class HulkAbility extends FunctionalAbility {
                 });
 
         Events.subscribe(PlayerInteractEvent.class)
-                .filter(AbilityPredicates.playerHasAbility(this))
+                .filter(AbilityPredicates.hasAbility(this))
                 .filter(e -> e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR)
                 .handler(e -> {
                     final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());

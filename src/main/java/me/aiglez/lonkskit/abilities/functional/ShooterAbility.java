@@ -27,9 +27,9 @@ public class ShooterAbility extends FunctionalAbility {
     }
 
     @Override
-    public void handleListeners() {
+    public void registerListeners() {
         Events.subscribe(PlayerInteractEvent.class)
-                .filter(AbilityPredicates.playerHasAbility(this))
+                .filter(AbilityPredicates.hasAbility(this))
                 .filter(e -> e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)
                 .filter(PlayerInteractEvent::hasItem)
                 .filter(e -> e.getItem().getType() == Material.ARROW)

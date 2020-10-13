@@ -16,7 +16,6 @@ import org.bukkit.craftbukkit.v1_16_R2.entity.CraftCreature;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
 import java.util.Set;
@@ -27,7 +26,6 @@ import java.util.Set;
  */
 public class NecromancerAbility extends ItemStackAbility {
 
-    private final ItemStack item;
     private final Map<LocalPlayer, Set<Monster>> helpers;
 
     public NecromancerAbility(ConfigurationNode configuration) {
@@ -37,12 +35,6 @@ public class NecromancerAbility extends ItemStackAbility {
                 .build();
         this.helpers = Maps.newHashMap();
     }
-
-    @Override
-    public ItemStack getItemStack() { return this.item; }
-
-    @Override
-    public boolean isItemStack(ItemStack item) { return this.item.isSimilar(item); }
 
     @Override
     public void whenRightClicked(PlayerInteractEvent e) {
@@ -68,7 +60,7 @@ public class NecromancerAbility extends ItemStackAbility {
     }
 
     @Override
-    public void handleListeners() {
+    public void registerListeners() {
         Events.subscribe(EntityDamageByEntityEvent.class)
                 .handler(e -> {
                     final Entity entityDamager = e.getDamager();

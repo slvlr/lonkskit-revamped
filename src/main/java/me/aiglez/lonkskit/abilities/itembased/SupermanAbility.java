@@ -7,13 +7,10 @@ import me.lucko.helper.Schedulers;
 import me.lucko.helper.config.ConfigurationNode;
 import org.bukkit.Material;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.concurrent.TimeUnit;
 
 public class SupermanAbility extends ItemStackAbility {
-
-    private final ItemStack item;
 
     public SupermanAbility(ConfigurationNode configuration) {
         super("superman", configuration);
@@ -21,12 +18,6 @@ public class SupermanAbility extends ItemStackAbility {
                 .name(configuration.getNode("item-name").getString("Fly"))
                 .build();
     }
-
-    @Override
-    public ItemStack getItemStack() { return this.item; }
-
-    @Override
-    public boolean isItemStack(ItemStack item) { return this.item.isSimilar(item); }
 
     @Override
     public void whenRightClicked(PlayerInteractEvent e) {
@@ -79,5 +70,5 @@ public class SupermanAbility extends ItemStackAbility {
     }
 
     @Override
-    public void handleListeners() { }
+    public void registerListeners() { }
 }

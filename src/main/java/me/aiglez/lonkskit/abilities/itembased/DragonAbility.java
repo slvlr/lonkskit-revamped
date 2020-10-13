@@ -15,7 +15,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import java.util.concurrent.TimeUnit;
@@ -26,20 +25,12 @@ import java.util.concurrent.TimeUnit;
  */
 public class DragonAbility extends ItemStackAbility {
 
-    private final ItemStack item;
-
     public DragonAbility(ConfigurationNode configuration) {
         super("dragon", configuration);
         this.item = ItemStackBuilder.of(Material.FEATHER)
                 .name(configuration.getNode("item-name").getString("Boost"))
                 .build();
     }
-
-    @Override
-    public ItemStack getItemStack() { return this.item; }
-
-    @Override
-    public boolean isItemStack(ItemStack item) { return this.item.isSimilar(item); }
 
     // --------------------------------------------------------------------------------------------
     @Override
@@ -80,11 +71,11 @@ public class DragonAbility extends ItemStackAbility {
     public void whenLeftClicked(PlayerInteractEvent e) { }
 
     @Override
-    public void handleListeners() {
+    public void registerListeners() {
         Events.subscribe(EntityDamageEvent.class)
                 .filter(e -> e.getCause() == EntityDamageEvent.DamageCause.FALL)
-                .filter(AbilityPredicates.humanHasAbility(this))
-                .filter(AbilityPredicates.humanHasMetadata(MetadataProvider.PLAYER_NO_FALL_DAMAGE))
+                .filter(AbilityPredicates.possiblyHasAbility(this))
+                .filter(AbilityPredicates.possiblyHasMetadata(MetadataProvider.PLAYER_NO_FALL_DAMAGE))
                 .handler(e -> {
                     final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getEntity());
                     localPlayer.metadata().remove(MetadataProvider.PLAYER_NO_FALL_DAMAGE);

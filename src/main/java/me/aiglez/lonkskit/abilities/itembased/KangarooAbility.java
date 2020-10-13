@@ -6,7 +6,6 @@ import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.config.ConfigurationNode;
 import org.bukkit.Material;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.concurrent.TimeUnit;
 
@@ -16,20 +15,12 @@ import java.util.concurrent.TimeUnit;
  */
 public class KangarooAbility extends ItemStackAbility {
 
-    private final ItemStack item;
-
     public KangarooAbility(ConfigurationNode configuration) {
         super("kangaroo", configuration);
         this.item = ItemStackBuilder.of(Material.EMERALD)
                 .name(configuration.getNode("item-name").getString("Jumper"))
                 .build();
     }
-
-    @Override
-    public ItemStack getItemStack() { return this.item; }
-
-    @Override
-    public boolean isItemStack(ItemStack item) { return this.item.isSimilar(item); }
 
     @Override
     public void whenRightClicked(PlayerInteractEvent e) {
@@ -41,10 +32,11 @@ public class KangarooAbility extends ItemStackAbility {
             return;
         }
 
-        localPlayer.toBukkit().setVelocity(localPlayer.getLocation().getDirection().multiply(
-                configuration.getNode("velocities", "right-click", "multiply").getDouble(1)
-        ).setY(
-                configuration.getNode("velocities", "right-click", "y-component").getDouble(1)
+        localPlayer.toBukkit().setVelocity(localPlayer.getLocation().getDirection()
+                .multiply(
+                        configuration.getNode("velocities", "right-click", "multiply").getDouble(1))
+                .setY(
+                        configuration.getNode("velocities", "right-click", "y-component").getDouble(1)
                 ));
     }
 
@@ -57,13 +49,15 @@ public class KangarooAbility extends ItemStackAbility {
             localPlayer.msg("&b[LonksKit] &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
             return;
         }
-        localPlayer.toBukkit().setVelocity(localPlayer.getLocation().getDirection().multiply(
-                configuration.getNode("velocities", "left-click", "multiply").getDouble(1)
-                ).setY(
-                configuration.getNode("velocities", "left-click", "y-component").getDouble(1)
+        localPlayer.toBukkit().setVelocity(localPlayer.getLocation().getDirection()
+                .multiply(
+                        configuration.getNode("velocities", "left-click", "multiply").getDouble(1)
+                )
+                .setY(
+                        configuration.getNode("velocities", "left-click", "y-component").getDouble(1)
                 ));
     }
 
     @Override
-    public void handleListeners() { }
+    public void registerListeners() { }
 }

@@ -7,7 +7,6 @@ import me.lucko.helper.config.ConfigurationNode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.concurrent.TimeUnit;
 
@@ -17,20 +16,12 @@ import java.util.concurrent.TimeUnit;
  */
 public class BlinkAbility extends ItemStackAbility {
 
-    private final ItemStack item;
-
     public BlinkAbility(ConfigurationNode configuration) {
         super("blink", configuration);
         this.item = ItemStackBuilder.of(Material.REDSTONE_TORCH)
                 .name(configuration.getNode("item-name").getString("Blinker"))
                 .build();
     }
-
-    @Override
-    public ItemStack getItemStack() { return this.item; }
-
-    @Override
-    public boolean isItemStack(ItemStack item) { return this.item.isSimilar(item); }
 
     // --------------------------------------------------------------------------------------------
     @Override
@@ -67,7 +58,7 @@ public class BlinkAbility extends ItemStackAbility {
     }
 
     @Override
-    public void handleListeners() { }
+    public void registerListeners() { }
 
     private boolean isValid(Material material) {
         return !material.isAir() && material != Material.GRASS && material != Material.TALL_GRASS;

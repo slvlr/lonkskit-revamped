@@ -11,7 +11,6 @@ import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Events;
 import me.lucko.helper.Schedulers;
 import me.lucko.helper.config.ConfigurationNode;
-import me.lucko.helper.event.filter.EventFilters;
 import me.lucko.helper.metadata.SoftValue;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -20,7 +19,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -31,20 +29,12 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class SpyAbility extends ItemStackAbility {
 
-    private final ItemStack item;
-
     public SpyAbility(ConfigurationNode configuration) {
         super("spy", configuration);
         this.item = ItemStackBuilder.of(Material.BOW)
                 .name("&eSpy")
                 .build();
     }
-
-    @Override
-    public ItemStack getItemStack() { return this.item; }
-
-    @Override
-    public boolean isItemStack(ItemStack item) { return this.item.isSimilar(item); }
 
     @Override
     public void whenRightClicked(PlayerInteractEvent e) {
@@ -57,9 +47,9 @@ public class SpyAbility extends ItemStackAbility {
     }
 
     @Override
-    public void handleListeners() {
+    public void registerListeners() {
         Events.subscribe(EntityShootBowEvent.class)
-                .filter(AbilityPredicates.humanHasAbility(this))
+                .filter(AbilityPredicates.possiblyHasAbility(this))
                 .filter(e -> isItemStack(e.getBow()))
                 .filter(e -> e.getProjectile() instanceof Arrow)
                 .handler(e -> {
@@ -104,8 +94,8 @@ public class SpyAbility extends ItemStackAbility {
                 });
 
         Events.subscribe(PlayerInteractEvent.class)
-                .filter(AbilityPredicates.playerHasAbility(this))
-                .filter(EventFilters.playerHasMetadata(MetadataProvider.SPY_PLAYER))
+                .filter(AbilityPredicates.hasAbility(this))
+                .filter(AbilityPredicates.hasMetadata(MetadataProvider.SPY_PLAYER))
                 .handler(e -> {
                     e.getPlayer().sendMessage("§6(Spy - Debug) §cYou can't interact while spying!");
                     e.setCancelled(true);

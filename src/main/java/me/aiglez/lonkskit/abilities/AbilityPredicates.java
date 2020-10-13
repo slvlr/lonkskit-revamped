@@ -29,6 +29,23 @@ public class AbilityPredicates {
             return localPlayer.hasSelectedKit() && localPlayer.getNullableSelectedKit().hasAbility(ability);
         };
     }
+
+    public static <T extends EntityEvent> Predicate<T> possiblyHasAbilities(String... abilitiesName) {
+        return e -> {
+            if(!(e.getEntity() instanceof Player)) return false;
+            final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getEntity());
+            if(localPlayer.hasSelectedKit()) return false;
+            for (final String abilityName : abilitiesName) {
+                final Ability ability = Ability.get(abilityName);
+                if(!localPlayer.getNullableSelectedKit().hasAbility(ability)) {
+                    return false;
+                }
+            }
+            return false;
+        };
+    }
+
+
     // IMAAAD START
     public static <T extends EntityEvent> Predicate<T> isKillerhaveAbility(Ability ability) {
         return e -> {

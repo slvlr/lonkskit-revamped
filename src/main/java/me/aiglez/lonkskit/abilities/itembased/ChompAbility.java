@@ -1,6 +1,7 @@
 package me.aiglez.lonkskit.abilities.itembased;
 
 import com.google.common.collect.Sets;
+import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
@@ -11,7 +12,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -23,8 +23,6 @@ import java.util.concurrent.TimeUnit;
  * @date 05/10/2020
  */
 public class ChompAbility extends ItemStackAbility {
-
-    private final ItemStack item;
     private final double damage;
     private final Set<PotionEffect> negativeEffects;
 
@@ -42,12 +40,6 @@ public class ChompAbility extends ItemStackAbility {
     }
 
     @Override
-    public ItemStack getItemStack() { return this.item; }
-
-    @Override
-    public boolean isItemStack(ItemStack item) { return this.item.isSimilar(item); }
-
-    @Override
     public void whenRightClicked(PlayerInteractEvent e) {
         e.setCancelled(true);
     }
@@ -58,13 +50,10 @@ public class ChompAbility extends ItemStackAbility {
     }
 
     @Override
-    public void handleListeners() {
+    public void registerListeners() {
         Events.subscribe(EntityDamageByEntityEvent.class)
                 .filter(e -> e.getDamager() instanceof Player && e.getEntity() instanceof Player)
-                .filter(e -> {
-                    final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getDamager());
-                    return localPlayer.hasSelectedKit() && localPlayer.getNullableSelectedKit().hasAbility(this);
-                })
+                .filter(AbilityPredicates.damagerHasAbility(this))
                 .filter(e -> isItemStack(((Player) e.getDamager()).getInventory().getItemInMainHand()))
                 .handler(e -> {
                     final LocalPlayer damager = LocalPlayer.get((Player) e.getDamager());

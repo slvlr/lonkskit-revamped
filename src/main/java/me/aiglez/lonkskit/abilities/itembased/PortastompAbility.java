@@ -7,7 +7,6 @@ import me.lucko.helper.Schedulers;
 import me.lucko.helper.config.ConfigurationNode;
 import org.bukkit.Material;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import java.util.concurrent.TimeUnit;
@@ -18,20 +17,12 @@ import java.util.concurrent.TimeUnit;
  */
 public class PortastompAbility extends ItemStackAbility {
 
-    private final ItemStack item;
-
     public PortastompAbility(ConfigurationNode configuration) {
         super("portastomp", configuration);
         this.item = ItemStackBuilder.of(Material.ENDER_EYE)
                 .name(configuration.getNode("item-name").getString("Stomper"))
                 .build();
     }
-
-    @Override
-    public ItemStack getItemStack() { return this.item; }
-
-    @Override
-    public boolean isItemStack(ItemStack item) { return this.item.isSimilar(item); }
 
     // --------------------------------------------------------------------------------------------
     @Override
@@ -52,5 +43,5 @@ public class PortastompAbility extends ItemStackAbility {
     }
 
     @Override
-    public void handleListeners() { }
+    public void registerListeners() { }
 }

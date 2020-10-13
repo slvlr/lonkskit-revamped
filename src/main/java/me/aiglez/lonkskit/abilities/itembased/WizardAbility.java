@@ -1,13 +1,13 @@
 package me.aiglez.lonkskit.abilities.itembased;
 
 import me.aiglez.lonkskit.WorldProvider;
+import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
-import me.lucko.helper.event.filter.EventFilters;
 import me.lucko.helper.metadata.Metadata;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -15,7 +15,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.concurrent.TimeUnit;
 
@@ -25,8 +24,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class WizardAbility extends ItemStackAbility {
 
-    private final ItemStack item;
-
     public WizardAbility(ConfigurationNode configuration) {
         super("wizard", configuration);
         this.item = ItemStackBuilder.of(Material.BLAZE_ROD)
@@ -34,13 +31,6 @@ public class WizardAbility extends ItemStackAbility {
                 .build();
     }
 
-    @Override
-    public ItemStack getItemStack() { return this.item; }
-
-    @Override
-    public boolean isItemStack(ItemStack item) { return this.item.isSimilar(item); }
-
-    // too slow
     // --------------------------------------------------------------------------------------------
     @Override
     public void whenRightClicked(PlayerInteractEvent e) {
@@ -61,10 +51,10 @@ public class WizardAbility extends ItemStackAbility {
     public void whenLeftClicked(PlayerInteractEvent e) { }
 
     @Override
-    public void handleListeners() {
+    public void registerListeners() {
         Events.subscribe(ProjectileHitEvent.class)
                 .filter(e -> e.getEntityType() == EntityType.SNOWBALL)
-                .filter(EventFilters.entityHasMetadata(MetadataProvider.SNOWBALL_EXPLODE))
+                .filter(AbilityPredicates.entityHasMetadata(MetadataProvider.SNOWBALL_EXPLODE))
                 .handler(e -> {
                     Location explosionLocation = null;
                     if(e.getHitEntity() == null) {

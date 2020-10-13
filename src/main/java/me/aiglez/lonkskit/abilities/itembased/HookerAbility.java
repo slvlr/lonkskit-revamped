@@ -11,12 +11,9 @@ import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 public class HookerAbility extends ItemStackAbility {
-
-    private final ItemStack item;
 
     public HookerAbility(ConfigurationNode configuration) {
         super("hooker", configuration);
@@ -26,21 +23,15 @@ public class HookerAbility extends ItemStackAbility {
     }
 
     @Override
-    public ItemStack getItemStack() { return this.item; }
-
-    @Override
-    public boolean isItemStack(ItemStack item) { return this.item.isSimilar(item); }
-
-    @Override
     public void whenRightClicked(PlayerInteractEvent e) { }
 
     @Override
     public void whenLeftClicked(PlayerInteractEvent e) { }
 
     @Override
-    public void handleListeners() {
+    public void registerListeners() {
         Events.subscribe(PlayerFishEvent.class)
-                .filter(AbilityPredicates.playerHasAbility(this))
+                .filter(AbilityPredicates.hasAbility(this))
                 .filter(e -> e.getCaught() != null)
                 .handler(e -> {
                     final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());

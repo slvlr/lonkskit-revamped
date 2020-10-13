@@ -13,7 +13,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.concurrent.TimeUnit;
 
@@ -22,8 +21,6 @@ import java.util.concurrent.TimeUnit;
  * @date 02/10/2020
  */
 public class SwitcherAbility extends ItemStackAbility {
-
-    private final ItemStack item;
     // TODO: add 4 snowballs when killing a player
 
     public SwitcherAbility(ConfigurationNode configuration) {
@@ -33,12 +30,6 @@ public class SwitcherAbility extends ItemStackAbility {
                 .amount(16)
                 .build();
     }
-
-    @Override
-    public ItemStack getItemStack() { return this.item; }
-
-    @Override
-    public boolean isItemStack(ItemStack item) { return this.item.isSimilar(item); }
 
     // --------------------------------------------------------------------------------------------
     @Override
@@ -56,7 +47,7 @@ public class SwitcherAbility extends ItemStackAbility {
     }
 
     @Override
-    public void handleListeners() {
+    public void registerListeners() {
         Events.subscribe(ProjectileHitEvent.class)
                 .filter(e -> e.getEntityType() == EntityType.SNOWBALL)
                 .handler(e -> {

@@ -46,6 +46,11 @@ public abstract class ItemStackAbility implements Ability, Listener {
         return this.cooldown;
     }
 
+    @Override
+    public void reloadConfiguration() {
+        // TODO: implement this
+    }
+
     public ItemStack getItemStack() { return this.item; }
 
     public boolean isItemStack(ItemStack item) {

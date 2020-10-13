@@ -16,7 +16,6 @@ import org.bukkit.entity.LightningStrike;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -27,7 +26,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class ThorAbility extends ItemStackAbility {
 
-    private final ItemStack item;
     private final Set<Material> transparentMaterials = Sets.newHashSet(Material.AIR, Material.CAVE_AIR, Material.VOID_AIR);
 
     public ThorAbility(ConfigurationNode configuration) {
@@ -38,12 +36,6 @@ public class ThorAbility extends ItemStackAbility {
                 .enchant(Enchantment.DURABILITY, 3)
                 .build();
     }
-
-    @Override
-    public ItemStack getItemStack() { return this.item; }
-
-    @Override
-    public boolean isItemStack(ItemStack item) { return this.item.isSimilar(item); }
 
     // --------------------------------------------------------------------------------------------
     public void whenRightClicked(PlayerInteractEvent e) {
@@ -65,10 +57,10 @@ public class ThorAbility extends ItemStackAbility {
     public void whenLeftClicked(PlayerInteractEvent e) { }
 
     @Override
-    public void handleListeners() {
+    public void registerListeners() {
         Events.subscribe(EntityDamageByEntityEvent.class)
                 .filter(e -> e.getCause() == EntityDamageEvent.DamageCause.LIGHTNING || e.getDamager() instanceof LightningStrike)
-                .filter(e -> AbilityPredicates.humanHasMetadata(MetadataProvider.PLAYER_NO_LIGHTING_DAMAGE).test(e))
+                .filter(AbilityPredicates.possiblyHasMetadata(MetadataProvider.PLAYER_NO_LIGHTING_DAMAGE))
                 .handler(e -> {
                     e.setDamage(0);
                     e.setCancelled(true);

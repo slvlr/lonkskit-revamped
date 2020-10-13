@@ -25,9 +25,9 @@ public class HotheadAbility extends FunctionalAbility {
     }
 
     @Override
-    public void handleListeners() {
+    public void registerListeners() {
         Events.subscribe(PlayerToggleSneakEvent.class)
-                .filter(AbilityPredicates.playerHasAbility(this))
+                .filter(AbilityPredicates.hasAbility(this))
                 .handler(e -> {
                     final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
 

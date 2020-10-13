@@ -28,11 +28,11 @@ public class SharkAbility extends FunctionalAbility {
     }
 
     @Override
-    public void handleListeners() {
+    public void registerListeners() {
         Events.subscribe(PlayerMoveEvent.class)
                 .filter(EventFilters.ignoreCancelled())
                 .filter(EventFilters.ignoreSameBlock())
-                .filter(AbilityPredicates.playerHasAbility(this))
+                .filter(AbilityPredicates.hasAbility(this))
                 .handler(e -> {
                     final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
                     if(isWater(localPlayer.getLocation()) || isWater(localPlayer.toBukkit().getEyeLocation())) {
@@ -44,7 +44,7 @@ public class SharkAbility extends FunctionalAbility {
         Events.subscribe(EntityDamageEvent.class)
                 .filter(e -> e.getEntity() instanceof Player)
                 .filter(e -> e.getCause() == EntityDamageEvent.DamageCause.DROWNING)
-                .filter(AbilityPredicates.humanHasAbility(this))
+                .filter(AbilityPredicates.possiblyHasAbility(this))
                 .handler(e -> {
                     e.setDamage(0);
                     e.setCancelled(true);

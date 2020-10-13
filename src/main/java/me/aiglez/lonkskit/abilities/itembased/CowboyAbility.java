@@ -29,20 +29,12 @@ import org.bukkit.util.Vector;
  */
 public class CowboyAbility extends ItemStackAbility {
 
-    private final ItemStack item;
-
     public CowboyAbility(ConfigurationNode configuration) {
         super("cowboy", configuration);
         this.item = ItemStackBuilder.of(Material.LEAD)
                 .name("&eCowboy")
                 .build();
     }
-
-    @Override
-    public ItemStack getItemStack() { return this.item; }
-
-    @Override
-    public boolean isItemStack(ItemStack item) { return this.item.isSimilar(item); }
 
     @Override
     public void whenRightClicked(PlayerInteractEvent e) {
@@ -60,7 +52,7 @@ public class CowboyAbility extends ItemStackAbility {
     public void whenLeftClicked(PlayerInteractEvent e) { }
 
     @Override
-    public void handleListeners() {
+    public void registerListeners() {
         // spawn horse
         Events.subscribe(KitSelectEvent.class)
                 .filter(e -> e.getKit().hasAbility(this))
