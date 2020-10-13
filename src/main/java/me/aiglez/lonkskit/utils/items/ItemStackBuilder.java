@@ -141,7 +141,8 @@ public final class ItemStackBuilder {
         return unflag(ALL_FLAGS);
     }
 
-    public ItemStackBuilder color(Color color) {
+    public ItemStackBuilder color(@Nullable Color color) {
+        if(color == null) return this;
         return transform(itemStack -> {
             Material type = itemStack.getType();
             if (type == Material.LEATHER_BOOTS || type == Material.LEATHER_CHESTPLATE || type == Material.LEATHER_HELMET || type == Material.LEATHER_LEGGINGS) {

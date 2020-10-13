@@ -132,9 +132,9 @@ public class ItemStackParser {
                     throwParseError(unparsed, "Either the BUILDER hasn't been instantiated yet (== Error in the material), or the color name is not defined!");
                     return Optional.empty();
                 }
-                Optional<Color> color = getColorByName(colorName);
-                if(color.isPresent()) {
-                    builder.color(color.get());
+                Color color = getColorByName(colorName);
+                if(color != null) {
+                    builder.color(color);
                 } else {
                     throwParseError(unparsed, "The color `" + colorName + "` is not valid!");
                 }
@@ -147,8 +147,8 @@ public class ItemStackParser {
         Logger.severe(error + "\n" + "Text to parse: " + unparsed);
     }
 
-    public static Optional<Color> getColorByName(final String name) {
-        return Optional.ofNullable(COLORS.get(name.toUpperCase()));
+    public static Color getColorByName(final String name) {
+        return COLORS.get(name.toUpperCase());
     }
 
     private ItemStackParser() {

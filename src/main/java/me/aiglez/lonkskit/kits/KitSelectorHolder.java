@@ -1,14 +1,17 @@
 package me.aiglez.lonkskit.kits;
 
 import com.google.common.reflect.TypeToken;
+import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
+import me.aiglez.lonkskit.utils.items.ItemStackParser;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.config.objectmapping.ObjectMappingException;
-import me.lucko.helper.item.ItemStackBuilder;
 import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class KitSelectorHolder {
@@ -18,13 +21,15 @@ public class KitSelectorHolder {
     private final boolean      display;
     private final int          slot;
     private final List<String> lore;
+    private final Color color;
 
-    public KitSelectorHolder(final Material material, final String displayName, final boolean display, final int slot, final List<String> lore) {
+    public KitSelectorHolder(final Material material, final String displayName, final boolean display, final int slot, final List<String> lore, @Nullable Color color) {
         this.material = material;
         this.displayName = displayName;
         this.display = display;
         this.slot = slot;
         this.lore = lore;
+        this.color = color;
     }
 
     public boolean display() { return display; }
@@ -41,6 +46,7 @@ public class KitSelectorHolder {
                             .lore("&7")
                             .lore("&7Access: §cNo Permission")
                             .lore("&7Click to rent this kit for &b" + kit.getRentCost() + " &7point(s), with &b" + kit.getUsesPerRent() + " &7use(s).")
+                            .color(color)
                             .build();
                 } else {
                     return ItemStackBuilder.of(material)
@@ -49,6 +55,7 @@ public class KitSelectorHolder {
                             .lore("&7")
                             .lore("&7Access: &cNo Permission")
                             .lore("&cThis kit cannot be rented !")
+                            .color(color)
                             .build();
                 }
 
@@ -59,6 +66,7 @@ public class KitSelectorHolder {
                         .lore("&7")
                         .lore("&7Access: &ePermanent")
                         .lore("&7Click to select this kit.")
+                        .color(color)
                         .build();
 
             case RENTED:
@@ -69,6 +77,7 @@ public class KitSelectorHolder {
                         .lore("&7Access: &aRented")
                         .lore("&7Click to select this kit.")
                         .lore("&7You have &b" + usesLeft + " &7use(s) left.")
+                        .color(color)
                         .build();
         }
         // what else ??
@@ -92,7 +101,8 @@ public class KitSelectorHolder {
                     node.getNode("display-name").getString("A Selector Display name"),
                     node.getNode("display").getBoolean(true),
                     node.getNode("slot").getInt(RandomUtils.nextInt(10)),
-                    node.getNode("lore").getList(new TypeToken<String>() {})
+                    node.getNode("lore").getList(new TypeToken<String>() {}),
+                    ItemStackParser.getColorByName(node.getNode("color").getString())
             );
         }
 
