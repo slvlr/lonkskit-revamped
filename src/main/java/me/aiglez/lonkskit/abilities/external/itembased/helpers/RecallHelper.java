@@ -19,10 +19,10 @@ public class RecallHelper {
         MinecraftServer server = ((CraftServer) Bukkit.getServer()).getServer();
         WorldServer worldServer = ((CraftWorld) Bukkit.getWorld(player.getWorld().getName())).getHandle();
         GameProfile profile = new GameProfile(UUID.randomUUID(),player.getName());
-        String[] name = setSkin(player);
-        profile.getProperties().put("textures",new Property("textures",name[0],name[1]));
         EntityPlayer npc = new EntityPlayer(server,worldServer,profile,new PlayerInteractManager(worldServer));
         npc.setLocation(player.getLocation().getX(),player.getLocation().getY(),player.getLocation().getZ(),player.getLocation().getYaw(),player.getLocation().getPitch());
+        String[] name = setSkin(player);
+        profile.getProperties().put("textures",new Property("textures",name[0],name[1]));
         addNPCPacket(npc);
         NPC.add(npc);
         return npc;

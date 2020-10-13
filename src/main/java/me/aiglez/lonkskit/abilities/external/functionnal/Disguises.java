@@ -7,8 +7,10 @@ import me.libraryaddict.disguise.DisguiseAPI;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import me.libraryaddict.disguise.disguisetypes.MobDisguise;
 import me.lucko.helper.Events;
+import me.lucko.helper.Schedulers;
 import me.lucko.helper.config.ConfigurationNode;
 import org.apache.commons.lang.math.RandomUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -17,10 +19,12 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -42,6 +46,20 @@ public class Disguises extends FunctionalAbility {
                     DisguiseAPI.undisguiseToAll(e.getLocalPlayer().toBukkit());
                     String backendName = e.getKit().getBackendName().toUpperCase();
                     kitsSelect(e.getLocalPlayer().toBukkit(),backendName,"SPIDER","PIG","WOLF","CREEPER","MOOSHROOM","SNOWM");
+                    if (e.getKit().getBackendName().contains("RECALL")){
+                        Schedulers.sync()
+                                .runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Arrays.stream(e.getLocalPlayer().toBukkit().getInventory().getContents())
+                                                .filter(a -> a.getType() == Material.PLAYER_HEAD).forEach(a -> {
+                                            SkullMeta meta = (SkullMeta) a.getItemMeta();
+                                            meta.setOwningPlayer(e.getLocalPlayer().toBukkit());
+                                            a.setItemMeta(meta);
+                                        });
+                                    }
+                                },5L);
+                    }
                 });
         //MOOSHROOM Ability
         Events.subscribe(PlayerMoveEvent.class)
@@ -49,6 +67,7 @@ public class Disguises extends FunctionalAbility {
                 .filter(e -> e.getTo().getBlock().getType() == Material.MYCELIUM || e.getFrom().getBlock().getType() == Material.MYCELIUM )
                 .handler(e -> {
                     random = RandomUtils.nextInt(5);
+                    e.getPlayer().sendMessage(String.valueOf(random));
                     if (random == 4){
                         e.getPlayer().setHealth(e.getPlayer().getHealth() + 2);
                         e.getPlayer().sendMessage("YOU RECEIVE 1 <3 ");
@@ -79,8 +98,10 @@ public class Disguises extends FunctionalAbility {
                 .filter(e -> e.getEntity() instanceof Snowball)
                 .handler(e ->{
                     Player victim = (Player) e.getHitEntity();
+                    assert victim != null;
                     victim.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,60,5));
                     victim.addPotionEffect(new PotionEffect(PotionEffectType.SLOW,60,4000));
+                    victim.damage(getConfiguration().getNode("damage").getDouble());
 
                 });
     }

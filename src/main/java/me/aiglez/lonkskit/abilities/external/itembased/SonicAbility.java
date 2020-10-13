@@ -17,6 +17,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class SonicAbility extends ItemStackAbility {
@@ -24,7 +25,9 @@ public class SonicAbility extends ItemStackAbility {
 
     public SonicAbility(ConfigurationNode configuration) {
         super("sonic", configuration);
-        this.item = ItemStackBuilder.of(Material.MINECART).build();
+        this.item = ItemStackBuilder.of(Material.MINECART)
+                .name(Objects.requireNonNull(getConfiguration().getNode("name").getString()))
+                .build();
     }
 
     @Override
@@ -48,13 +51,14 @@ public class SonicAbility extends ItemStackAbility {
         if (isItemStack(localPlayer.toBukkit().getInventory().getItemInMainHand())) {
             try {
                 int duration = getConfig("sonic").getInt("duration");
-                PotionEffect speed3 = new PotionEffect(PotionEffectType.SPEED, duration * 20, 3);
+                int level = getConfig("sonic").getInt("level");
+                PotionEffect speed3 = new PotionEffect(PotionEffectType.SPEED, duration * 20,level);
                 if (!localPlayer.toBukkit().hasPotionEffect(PotionEffectType.SPEED)) {
                     localPlayer.toBukkit().addPotionEffect(speed3);
                 } else
                     localPlayer.msg("&c You have Speed III Already !!");
             } catch (IOException | InvalidConfigurationException ioException) {
-                ioException.printStackTrace();
+                System.out.println("Can't access config file!!");
             }
         }
     }

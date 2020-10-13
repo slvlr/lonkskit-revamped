@@ -48,7 +48,9 @@ public class SnakeAbility extends ItemStackAbility {
                 .filter(e -> AbilityPredicates.HastheKit(this,e))
                 .handler(e -> {
                     Player player = (Player) e.getEntity();
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.POISON,80,2));
+                    int duration = getConfiguration().getNode("duration").getInt() * 20;
+                    int level = getConfiguration().getNode("level").getInt();
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.POISON,duration,level));
                 });
 
     }

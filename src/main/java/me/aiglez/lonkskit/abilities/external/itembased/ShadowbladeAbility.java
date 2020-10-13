@@ -63,6 +63,6 @@ public class ShadowbladeAbility extends ItemStackAbility {
                 .handler(e -> e.blockList().clear());
         Events.subscribe(EntityDamageByEntityEvent.class)
                 .filter(e -> e.getDamager() instanceof Fireball)
-                .handler(e-> e.setDamage(e.getDamage() * 2));
+                .handler(e-> e.setDamage(getConfiguration().getNode("damage").getDouble()));
     }
 }

@@ -18,6 +18,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.TimeUnit;
 
@@ -26,7 +27,7 @@ public class ElderAbility extends ItemStackAbility {
     public ElderAbility(ConfigurationNode configuration) {
         super("elder", configuration);
         this.item = ItemStackBuilder.of(Material.BLAZE_ROD)
-                .name("&bStaff")
+                .name(Objects.requireNonNull(getConfiguration().getNode("name").getString()))
                 .build();
     }
 

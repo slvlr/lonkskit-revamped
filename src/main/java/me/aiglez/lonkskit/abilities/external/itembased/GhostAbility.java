@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class GhostAbility extends ItemStackAbility {
@@ -20,7 +21,9 @@ public class GhostAbility extends ItemStackAbility {
    ItemStack item;
     public GhostAbility(ConfigurationNode configuration) {
         super("ghost",configuration);
-        this.item = ItemStackBuilder.of(Material.BEACON).build();
+        this.item = ItemStackBuilder.of(Material.BEACON)
+                .name(Objects.requireNonNull(getConfiguration().getNode("name").getString()))
+                .build();
     }
 
     @Override
@@ -39,14 +42,16 @@ public class GhostAbility extends ItemStackAbility {
         LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
         ItemStack[] armor = localPlayer.toBukkit().getInventory().getArmorContents();
         if (!cooldown.test(localPlayer)){
-            localPlayer.msg("&e(Sonic) &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
+            localPlayer.msg("&e(Ghost) &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
             return;
         }
+        int duration = getConfiguration().getNode("duration").getInt();
+        int level = getConfiguration().getNode("level").getInt();
         if (isItemStack(e.getPlayer().getInventory().getItemInMainHand())){
             if (!localPlayer.toBukkit().hasPotionEffect(PotionEffectType.INVISIBILITY)){
                 clearArmor(localPlayer.toBukkit());
-                localPlayer.toBukkit().addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,300,3,true,false));
-                localPlayer.toBukkit().addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,300,2,true,false));
+                localPlayer.toBukkit().addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,duration * 20,level,true,false));
+                localPlayer.toBukkit().addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,duration * 20,level,true,false));
 
             }
             Bukkit.getScheduler().runTaskLater(KitPlugin.getSingleton(), () -> localPlayer.toBukkit().getInventory().setArmorContents(armor),300L);

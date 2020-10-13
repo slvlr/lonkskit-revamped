@@ -15,11 +15,15 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class RecallAbility extends ItemStackAbility {
     private Map<Player, EntityPlayer> npcMap = new HashMap<Player, EntityPlayer>();
+    private Map<Player, Boolean> hasTeleport = new HashMap<Player, Boolean>();
+    private List<EntityPlayer> removedNPCS = new ArrayList<EntityPlayer>();
     ItemStack item;
     public RecallAbility(ConfigurationNode configuration) {
         super("recall", configuration);
@@ -41,26 +45,30 @@ public class RecallAbility extends ItemStackAbility {
     public void whenRightClicked(PlayerInteractEvent e) {
         if (!npcMap.containsKey(e.getPlayer())){
             npcMap.put(e.getPlayer(),RecallHelper.createNpc(e.getPlayer()));
+            hasTeleport.put(e.getPlayer(),true);
             long seconds = Long.parseLong(String.valueOf(getConfiguration().getNode("duration").getInt() * 20));
             Schedulers.sync().runLater(new Runnable() {
                 @Override
                 public void run() {
-                    RecallHelper.removeNPCPacket(  npcMap.get(e.getPlayer()));
+                    RecallHelper.removeNPCPacket(npcMap.get(e.getPlayer()));
+                    removedNPCS.add(npcMap.get(e.getPlayer()));
                     npcMap.remove(e.getPlayer(),npcMap.get(e.getPlayer()));
+
                 }
             },seconds);
-        }else {
-            e.getPlayer().teleport(new Location(
-                    Bukkit.getWorld(npcMap.get(e.getPlayer()).getWorld().getWorld().getName()),
-                    npcMap.get(e.getPlayer()).locX(),
-                    npcMap.get(e.getPlayer()).locY(),
-                    npcMap.get(e.getPlayer()).locZ()));
         }
     }
 
     @Override
     public void whenLeftClicked(PlayerInteractEvent e) {
-
+        if (npcMap.containsKey(e.getPlayer()) && hasTeleport.containsKey(e.getPlayer())){
+            if (hasTeleport.get(e.getPlayer())) {
+                e.getPlayer().teleport(new Location(Bukkit.getWorld(npcMap.get(e.getPlayer()).getWorld().getWorld().getName()), npcMap.get(e.getPlayer()).locX(), npcMap.get(e.getPlayer()).locY(), npcMap.get(e.getPlayer()).locZ()));
+                hasTeleport.replace(e.getPlayer(), false);
+            }else
+                e.getPlayer().sendMessage("You teleported before !");
+        }else
+            e.getPlayer().sendMessage("You dont have NPC !");
     }
 
     @Override
@@ -68,7 +76,12 @@ public class RecallAbility extends ItemStackAbility {
         Events.subscribe(PlayerJoinEvent.class)
                 .filter(e -> RecallHelper.getNPC() != null)
                 .filter(e -> !RecallHelper.getNPC().isEmpty())
-                .handler(e -> RecallHelper.addJoinPacket(e.getPlayer()));
+                .handler(e -> {
+                    RecallHelper.addJoinPacket(e.getPlayer());
+                    for (EntityPlayer npc : removedNPCS){
+                        RecallHelper.removeNPCPacket(npc);
+                    }
+                });
 
     }
 }

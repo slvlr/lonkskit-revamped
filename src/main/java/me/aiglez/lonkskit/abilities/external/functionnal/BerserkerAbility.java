@@ -23,8 +23,9 @@ public class BerserkerAbility extends FunctionalAbility {
                 .filter(AbilityPredicates.isKillerhaveAbility(this))
                 .handler(e -> {
                     int duration = getConfiguration().getNode("duration").getInt() * 20;
+                    int level = getConfiguration().getNode("level").getInt();
                     assert PotionType.STRENGTH.getEffectType() != null;
-                    Objects.requireNonNull(e.getEntity().getKiller()).addPotionEffect(new PotionEffect(PotionType.STRENGTH.getEffectType(),duration,2));
+                    Objects.requireNonNull(e.getEntity().getKiller()).addPotionEffect(new PotionEffect(PotionType.STRENGTH.getEffectType(),duration,level));
 
                 });
     }

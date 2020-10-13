@@ -23,6 +23,7 @@ public class KillerAbility extends FunctionalAbility {
                     Preconditions.checkNotNull(e.getEntity().getLocation().getWorld());
                     TNTPrimed tnt = (TNTPrimed) e.getEntity().getLocation().getWorld()
                             .spawnEntity(e.getEntity().getLocation(), EntityType.PRIMED_TNT);
+                    tnt.setYield(getConfiguration().getNode("yield").getFloat());
                     tnt.setFuseTicks(5);
 
                 });

@@ -19,7 +19,9 @@ public class HyperAbility extends ItemStackAbility {
 
     public HyperAbility(ConfigurationNode configuration) {
         super("hyper", configuration);
-        this.item = ItemStackBuilder.of(Material.SUGAR).build();
+        this.item = ItemStackBuilder.of(Material.SUGAR)
+                .name(Objects.requireNonNull(getConfiguration().getNode("name").getString()))
+                .build();
     }
 
     @Override
@@ -40,11 +42,14 @@ public class HyperAbility extends ItemStackAbility {
             localPlayer.msg("&e(Sonic) &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
             return;
         }
+        int duration = getConfiguration().getNode("duration").getInt() * 20;
+        int level = getConfiguration().getNode("level").getInt();
+        int level1 = getConfiguration().getNode("level2").getInt();
         if (!(localPlayer.toBukkit().hasPotionEffect(PotionEffectType.SPEED) &&
                 localPlayer.toBukkit().hasPotionEffect(PotionEffectType.REGENERATION) &&
                 localPlayer.toBukkit().hasPotionEffect(Objects.requireNonNull(PotionType.STRENGTH.getEffectType())))){
-            localPlayer.toBukkit().addPotionEffect(new PotionEffect(PotionEffectType.SPEED,260,3));
-            localPlayer.toBukkit().addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION,260,2));
+            localPlayer.toBukkit().addPotionEffect(new PotionEffect(PotionEffectType.SPEED,duration,level));
+            localPlayer.toBukkit().addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION,duration,level1));
             assert PotionType.STRENGTH.getEffectType() != null;
             localPlayer.toBukkit().addPotionEffect(new PotionEffect(PotionType.STRENGTH.getEffectType(),260,1));
         }else

@@ -11,6 +11,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.projectiles.ProjectileSource;
+
 public class AnvilAbility extends FunctionalAbility {
 
     public AnvilAbility(ConfigurationNode configuration) {
@@ -35,6 +37,10 @@ public class AnvilAbility extends FunctionalAbility {
                             a.getDamager().remove();
                             victim.setArrowsInBody(i);
                             victim.playSound(victim.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER,12F,1F);
+                            ProjectileSource source = ((AbstractArrow) a.getDamager()).getShooter();
+                            if (source instanceof Player){
+                                ((Player) source).playSound(((Player) source).getLocation(),Sound.ENTITY_ARROW_HIT_PLAYER,12F,1F);
+                            }
 
                         }else{
                         System.out.println("HEY RANGEWONK PLEASE TELL ME THIS WORD IN THE CHAT NIHAA");
