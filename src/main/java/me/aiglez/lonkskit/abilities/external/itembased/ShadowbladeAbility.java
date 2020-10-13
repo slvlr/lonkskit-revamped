@@ -53,7 +53,7 @@ public class ShadowbladeAbility extends ItemStackAbility {
                     e.setCancelled(true);
                     final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
                     if (!cooldown.test(localPlayer)) {
-                        localPlayer.msg("&e(Sonic) &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
+                        localPlayer.msg("&e(ShadowBlade) &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
                         return;
                     }
                     e.getPlayer().launchProjectile(Fireball.class);

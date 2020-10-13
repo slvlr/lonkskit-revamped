@@ -56,10 +56,8 @@ public class FlamerListener implements Listener {
 
     private boolean refresh(Player player) {
         for (ItemStack item : player.getInventory().getContents()) {
-            if (Objects.requireNonNull(item.getItemMeta()).hasDisplayName()) {
-                if (item.getItemMeta().getDisplayName().equals("Molten Blade")) {
-                    return true;
-                }
+                    if (item.getItemMeta().getDisplayName().contains("Molten Blade")) {
+                        return true;
             }
         }
         return false;

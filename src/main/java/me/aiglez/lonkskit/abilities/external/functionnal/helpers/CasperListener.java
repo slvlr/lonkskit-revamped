@@ -1,5 +1,8 @@
 package me.aiglez.lonkskit.abilities.external.functionnal.helpers;
 
+import me.aiglez.lonkskit.abilities.external.functionnal.Casper;
+import me.aiglez.lonkskit.events.KitSelectEvent;
+import me.libraryaddict.disguise.DisguiseAPI;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,8 +16,8 @@ import java.util.Objects;
 public class CasperListener implements Listener {
     @EventHandler
     private void onPlayerMove(PlayerMoveEvent event){
-        if (event.getPlayer().hasPotionEffect(PotionEffectType.INVISIBILITY) && !event.getPlayer().isSneaking()){
-            if (Objects.requireNonNull(event.getPlayer().getInventory().getHelmet()).getType() == Material.WHITE_WOOL){
+        if (event.getPlayer().hasPotionEffect(PotionEffectType.INVISIBILITY)){
+            if (Casper.hiddenPlayers.contains(event.getPlayer())){
                 event.setCancelled(true);
             }
         }
@@ -30,4 +33,6 @@ public class CasperListener implements Listener {
             }
         }
     }
+
+
 }

@@ -11,7 +11,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Casper extends FunctionalAbility {
+    public static List<Player> hiddenPlayers = new ArrayList<Player>();
     public Casper(ConfigurationNode configuration) {
         super("casper", configuration);
     }
@@ -27,19 +31,21 @@ public class Casper extends FunctionalAbility {
                     if (!player.isSneaking()){
                         player.sendMessage("Sneaking");
                         if (!player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+                            hiddenPlayers.add(player);
                             player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 423, true, false, true));
                             clearArmor(player);
-                            teleport(player,10,0);
+                            teleport(player,-10,0);
 
                         }
 
                     }
                     if (player.isSneaking()){
+                        hiddenPlayers.remove(player);
                         player.sendMessage("DISABLE SNEAKING");
-                            if (player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
-                                player.removePotionEffect(PotionEffectType.INVISIBILITY);
-                                setArmor(player,armor,item);
-                            }
+                        if (player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+                            player.removePotionEffect(PotionEffectType.INVISIBILITY);
+                            setArmor(player,armor,item);
+                        }
 
                     }
 
@@ -47,8 +53,8 @@ public class Casper extends FunctionalAbility {
 
     }
     private void teleport(Player player,int x,int z){
-        if (player.getLocation().add(x,0,z).getBlock().isEmpty() || player.getLocation().add(10,0,0).getBlock().getType() != Material.AIR
-                && player.getLocation().add(x,0,z).getBlock().getType() != Material.CAVE_AIR ){
+        if (player.getLocation().add(x,0,z).getBlock().isEmpty() || player.getLocation().add(x,0,z).getBlock().getType() == Material.AIR
+                && player.getLocation().add(x,0,z).getBlock().getType() == Material.CAVE_AIR ){
             player.teleport(player.getLocation().add(x, 0, z));
         }else{
             x -= 5;
