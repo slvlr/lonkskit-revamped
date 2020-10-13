@@ -15,12 +15,18 @@ import me.aiglez.lonkskit.utils.Logger;
 import me.lucko.helper.config.ConfigFactory;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.plugin.ExtendedJavaPlugin;
+import me.lucko.helper.plugin.ap.Plugin;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import java.io.File;
 
+@Plugin(
+        name = "LonksKit", version = "1.0.9",
+        authors = "AigleZ",
+        hardDepends = {"ProtocolLib", "Helper"}
+)
 public final class KitPlugin extends ExtendedJavaPlugin implements Listener {
 
     private static KitPlugin singleton;
