@@ -2,8 +2,6 @@ package me.aiglez.lonkskit.abilities.factory;
 
 import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.abilities.Ability;
-import me.aiglez.lonkskit.abilities.external.functionnal.*;
-import me.aiglez.lonkskit.abilities.external.itembased.*;
 import me.aiglez.lonkskit.abilities.functional.*;
 import me.aiglez.lonkskit.abilities.itembased.*;
 import me.aiglez.lonkskit.exceptions.AbilityFileNotFoundException;
@@ -68,6 +66,7 @@ public class AbilityFactoryImpl implements AbilityFactory {
 
         registerAbility("wallbuilder", new WallBuilderAbility(getFileByName("wallbuilder")));
 
+        /*
         Logger.debug("Loading Imad's abilities...");
         registerAbility("monk", new MonkAbility(getFileByName("monk")));
         registerAbility("anvil", new AnvilAbility(getFileByName("anvil")));
@@ -88,6 +87,7 @@ public class AbilityFactoryImpl implements AbilityFactory {
         registerAbility("wolf", new WolfAbility(getFileByName("wolf")));
         registerAbility("spider", new SpiderDAbility(getFileByName("spider")));
         registerAbility("casper", new Casper(getFileByName("casper")));
+         */
 
         Logger.fine(ChatColor.GREEN + "Registered a total of " + abilities.size() + " abilities.");
     }
