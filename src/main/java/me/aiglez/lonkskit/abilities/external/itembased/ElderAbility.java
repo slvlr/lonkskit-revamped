@@ -27,7 +27,7 @@ public class ElderAbility extends ItemStackAbility {
     public ElderAbility(ConfigurationNode configuration) {
         super("elder", configuration);
         this.item = ItemStackBuilder.of(Material.BLAZE_ROD)
-                .name(Objects.requireNonNull(getConfiguration().getNode("name").getString()))
+                .name(Objects.requireNonNull(getConfiguration().getNode("item-name").getString()))
                 .build();
     }
 

@@ -28,6 +28,7 @@ public class BerserkerAbility extends FunctionalAbility {
                     Objects.requireNonNull(e.getEntity().getKiller()).addPotionEffect(new PotionEffect(PotionType.STRENGTH.getEffectType(),duration,level));
 
                 });
+
     }
 
 }

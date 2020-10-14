@@ -20,7 +20,7 @@ public class HyperAbility extends ItemStackAbility {
     public HyperAbility(ConfigurationNode configuration) {
         super("hyper", configuration);
         this.item = ItemStackBuilder.of(Material.SUGAR)
-                .name(Objects.requireNonNull(getConfiguration().getNode("name").getString()))
+                .name(Objects.requireNonNull(getConfiguration().getNode("item-name").getString()))
                 .build();
     }
 

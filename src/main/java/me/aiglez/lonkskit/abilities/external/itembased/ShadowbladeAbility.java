@@ -14,6 +14,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class ShadowbladeAbility extends ItemStackAbility {
@@ -22,7 +24,9 @@ public class ShadowbladeAbility extends ItemStackAbility {
 
     public ShadowbladeAbility(ConfigurationNode configuration) {
         super("shadowblade", configuration);
-        this.item = ItemStackBuilder.of(Material.IRON_SWORD).build();
+        this.item = ItemStackBuilder.of(Material.IRON_SWORD)
+                .name(getConfiguration().getNode("item-name").getString() == null ? Material.IRON_SWORD.name() : Objects.requireNonNull(getConfiguration().getNode("item-name").getString()))
+                .build();
     }
 
     @Override

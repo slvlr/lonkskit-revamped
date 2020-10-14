@@ -26,7 +26,7 @@ public class SonicAbility extends ItemStackAbility {
     public SonicAbility(ConfigurationNode configuration) {
         super("sonic", configuration);
         this.item = ItemStackBuilder.of(Material.MINECART)
-                .name(Objects.requireNonNull(getConfiguration().getNode("name").getString()))
+                .name(Objects.requireNonNull(getConfiguration().getNode("item-name").getString()))
                 .build();
     }
 

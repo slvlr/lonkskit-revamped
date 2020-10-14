@@ -24,7 +24,7 @@ public class MonkAbility extends ItemStackAbility {
     public MonkAbility(ConfigurationNode configuration) {
         super("monk", configuration);
         this.item = ItemStackBuilder.of(Material.BLAZE_ROD)
-                .name(Objects.requireNonNull(getConfiguration().getNode("name").getString()))
+                .name(Objects.requireNonNull(getConfiguration().getNode("item-name").getString()))
                 .build();
     }
 

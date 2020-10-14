@@ -22,7 +22,7 @@ public class GhostAbility extends ItemStackAbility {
     public GhostAbility(ConfigurationNode configuration) {
         super("ghost",configuration);
         this.item = ItemStackBuilder.of(Material.BEACON)
-                .name(Objects.requireNonNull(getConfiguration().getNode("name").getString()))
+                .name(Objects.requireNonNull(getConfiguration().getNode("item-name").getString()))
                 .build();
     }
 

@@ -20,8 +20,9 @@ public class TurtleAbility extends FunctionalAbility {
                 .handler(e -> {
                     Player player = (Player) e.getEntity();
                     if (player.isSneaking()){
+                        int damage = getConfiguration().getNode("damage").getInt();
                         e.setDamage(0);
-                        player.setHealth(player.getHealth() - 1);
+                        player.setHealth(player.getHealth() - damage);
                     }
                 });
 

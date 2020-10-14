@@ -13,11 +13,15 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.Objects;
+
 public class SnakeAbility extends ItemStackAbility {
     ItemStack item;
     public SnakeAbility(ConfigurationNode configuration) {
         super("snake", configuration);
-        this.item = ItemStackBuilder.of(Material.IRON_SWORD).build();
+        this.item = ItemStackBuilder.of(Material.IRON_SWORD)
+                .name(getConfiguration().getNode("item-name").getString() == null ? Material.IRON_SWORD.name() : Objects.requireNonNull(getConfiguration().getNode("item-name").getString()))
+                .build();
     }
 
     @Override
