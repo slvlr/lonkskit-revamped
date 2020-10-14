@@ -30,7 +30,7 @@ public class WallBuilderAbility extends ItemStackAbility {
             return;
         }
 
-        Schedulers.async().run(() -> {
+        Schedulers.sync().run(() -> {
             localPlayer.msg("&6(WallBuilder - Debug) &aBuild result: " + ConstructHelper.buildWallAt(clickedBlock.getLocation()));
         });
     }

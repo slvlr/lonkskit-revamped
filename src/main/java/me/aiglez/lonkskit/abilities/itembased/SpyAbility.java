@@ -1,8 +1,5 @@
 package me.aiglez.lonkskit.abilities.itembased;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.PacketContainer;
-import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
@@ -15,12 +12,10 @@ import me.lucko.helper.metadata.SoftValue;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -69,7 +64,7 @@ public class SpyAbility extends ItemStackAbility {
                     final AtomicInteger passed = new AtomicInteger(0);
                     Schedulers.sync()
                             .runRepeating(t -> {
-                                if(localPlayer.toBukkit().isOnGround() && passed.intValue() > 20) {
+                                if(localPlayer.getLocation().subtract(0D, 1D, 0D).getBlock().getType().isSolid() && passed.intValue() > 20) {
                                     localPlayer.toBukkit().setNoDamageTicks(0);
                                     localPlayer.toBukkit().setFallDistance(0);
 
@@ -78,6 +73,7 @@ public class SpyAbility extends ItemStackAbility {
                                     localPlayer.toBukkit().setGameMode(GameMode.SURVIVAL);
                                     localPlayer.toBukkit().teleport(localPlayer.getLocation().subtract(0D, 1D, 0D));
 
+                                    localPlayer.msg("&6(Spy - Debug) &cYou are no longer spying (// you have landed)");
                                     t.stop();
                                     return;
                                 }
@@ -100,19 +96,6 @@ public class SpyAbility extends ItemStackAbility {
                     e.getPlayer().sendMessage("§6(Spy - Debug) §cYou can't interact while spying!");
                     e.setCancelled(true);
                 });
-    }
-
-    private void sendCameraPacket(LocalPlayer localPlayer, Entity arrow) {
-        final PacketContainer camera = new PacketContainer(PacketType.Play.Server.CAMERA);
-        camera.getIntegers().write(0, arrow.getEntityId());
-
-        try {
-            KitPlugin.getSingleton().getProtocolManager().sendServerPacket(localPlayer.toBukkit(), camera);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(
-                    "Cannot send packet " + camera, e);
-        }
-
     }
 
 

@@ -2,8 +2,6 @@ package me.aiglez.lonkskit;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import me.aiglez.lonkskit.abilities.external.functionnal.helpers.CasperListener;
-import me.aiglez.lonkskit.abilities.external.functionnal.helpers.FlamerListener;
 import me.aiglez.lonkskit.abilities.factory.AbilityFactory;
 import me.aiglez.lonkskit.commands.CommandsRegistry;
 import me.aiglez.lonkskit.kits.KitFactory;
@@ -25,7 +23,7 @@ import java.io.File;
 @Plugin(
         name = "LonksKit", version = "1.0.9",
         authors = "AigleZ",
-        hardDepends = {"ProtocolLib", "Helper"}
+        hardDepends = {"ProtocolLib", "helper"}
 )
 public final class KitPlugin extends ExtendedJavaPlugin implements Listener {
 
@@ -64,8 +62,6 @@ public final class KitPlugin extends ExtendedJavaPlugin implements Listener {
         Logger.fine("Registering listeners and commands...");
         new AbilityListeners(this);
         new PlayerListeners(this);
-        new FlamerListener(this);
-        new CasperListener(this);
 
         getServer().getPluginManager().registerEvents(this, this);
 
