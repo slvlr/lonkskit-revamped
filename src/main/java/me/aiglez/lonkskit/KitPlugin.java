@@ -18,11 +18,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
-import java.io.File;
-
 @Plugin(
         name = "LonksKit", version = "1.0.9",
-        authors = "AigleZ",
+        authors = "AigleZ", apiVersion = "1.16",
         hardDepends = {"ProtocolLib", "helper"}
 )
 public final class KitPlugin extends ExtendedJavaPlugin implements Listener {
@@ -45,7 +43,7 @@ public final class KitPlugin extends ExtendedJavaPlugin implements Listener {
     public void enable() {
         singleton = this;
         Logger.fine("Loading configuration files...");
-        this.conf = ConfigFactory.yaml().load(new File(getDataFolder(), "config.yml"));
+        this.conf = ConfigFactory.yaml().load(getBundledFile("config.yml"));
 
         Logger.fine("Loading abilities...");
         this.abilityFactory = AbilityFactory.make();

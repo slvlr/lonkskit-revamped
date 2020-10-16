@@ -11,8 +11,8 @@ import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 
 public class KitSelectorHolder {
 
@@ -21,15 +21,15 @@ public class KitSelectorHolder {
     private final boolean      display;
     private final int          slot;
     private final List<String> lore;
-    private final Color color;
+    private Color color;
 
-    public KitSelectorHolder(final Material material, final String displayName, final boolean display, final int slot, final List<String> lore, @Nullable Color color) {
+    public KitSelectorHolder(final Material material, final String displayName, final boolean display, final int slot, final List<String> lore, Optional<Color> color) {
         this.material = material;
         this.displayName = displayName;
         this.display = display;
         this.slot = slot;
         this.lore = lore;
-        this.color = color;
+        color.ifPresent(value -> this.color = value);
     }
 
     public boolean display() { return display; }

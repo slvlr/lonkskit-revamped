@@ -10,8 +10,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public class KamikazeAbility extends ItemStackAbility {
 
-    private final static float TNT_POWER = 4F;
-
     public KamikazeAbility(ConfigurationNode configuration) {
         super("kamikaze", configuration);
         this.item = ItemStackBuilder.of(Material.GUNPOWDER)
@@ -24,15 +22,24 @@ public class KamikazeAbility extends ItemStackAbility {
         e.setCancelled(true);
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
 
-        localPlayer.toBukkit().damage(999); // we kill the player :(  (#suicide)
-        localPlayer.msg("&4(Kamikaze - Debug) &cYou have exploded!");
         WorldProvider.KP_WORLD.createExplosion(
                 localPlayer.getLocation(),
-                TNT_POWER,
+                0F,
                 false,
                 false,
                 localPlayer.toBukkit()
         );
+        final double damage = localPlayer.toBukkit().getHealth();
+        localPlayer.msg("&4(Kamikaze - Debug) &cYou have exploded!");
+
+        // damage
+        localPlayer.toBukkit().damage(999);
+        WorldProvider.KP_WORLD.getNearbyLivingEntities(localPlayer.getLocation(), 5D, 5D, 5D)
+                .forEach(entity -> {
+                    entity.damage(damage);
+                });
+        // damage
+
     }
 
     @Override
@@ -41,7 +48,5 @@ public class KamikazeAbility extends ItemStackAbility {
     }
 
     @Override
-    public void registerListeners() {
-
-    }
+    public void registerListeners() { }
 }

@@ -15,13 +15,11 @@ import me.lucko.helper.metadata.SoftValue;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
 
 /**
  * @author AigleZ
@@ -39,13 +37,6 @@ public class CowboyAbility extends ItemStackAbility {
     @Override
     public void whenRightClicked(PlayerInteractEvent e) {
         e.setCancelled(true);
-        final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
-
-        final Vector vector = localPlayer.getLocation().getDirection().multiply(2D);
-        vector.setY(vector.getY() * 1.5D);
-
-        final Item lasso = WorldProvider.KP_WORLD.dropItemNaturally(localPlayer.getLocation().clone().add(0D, 1D, 0D), item);
-        lasso.setVelocity(vector);
     }
 
     @Override

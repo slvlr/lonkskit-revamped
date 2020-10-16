@@ -18,6 +18,10 @@ public interface Ability {
 
     void reloadConfiguration();
 
+    void applyEffects(LocalPlayer localPlayer);
+
+    void removeEffects(LocalPlayer localPlayer);
+
     static Ability get(String name) {
         Preconditions.checkNotNull(name, "ability name may not be null");
         return LonksKitProvider.getAbilityFactory().getAbility(name).orElseThrow(() -> new NullPointerException("ability with name " + name + " not found:"));

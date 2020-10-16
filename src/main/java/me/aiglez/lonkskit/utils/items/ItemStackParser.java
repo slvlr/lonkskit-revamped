@@ -19,28 +19,25 @@ import java.util.Optional;
 
 public class ItemStackParser {
 
-    private static final Map<String, Color> COLORS;
-    static {
-        COLORS = new HashMap<String, Color>(){{
-            put("WHITE", Color.WHITE);
-            put("SILVER", Color.SILVER);
-            put("GRAY", Color.GRAY);
-            put("BLACK", Color.BLACK);
-            put("RED", Color.RED);
-            put("MAROON", Color.MAROON);
-            put("YELLOW", Color.YELLOW);
-            put("OLIVE", Color.OLIVE);
-            put("LIME", Color.LIME);
-            put("GREEN", Color.GREEN);
-            put("AQUA", Color.AQUA);
-            put("TEAL", Color.TEAL);
-            put("BLUE", Color.BLUE);
-            put("NAVY", Color.NAVY);
-            put("FUCHSIA", Color.FUCHSIA);
-            put("PURPLE", Color.PURPLE);
-            put("ORANGE", Color.ORANGE);
-        }};
-    }
+    private static final Map<String, Color> COLORS = new HashMap<String, Color>() {{
+        put("WHITE", Color.WHITE);
+        put("SILVER", Color.SILVER);
+        put("GRAY", Color.GRAY);
+        put("BLACK", Color.BLACK);
+        put("RED", Color.RED);
+        put("MAROON", Color.MAROON);
+        put("YELLOW", Color.YELLOW);
+        put("OLIVE", Color.OLIVE);
+        put("LIME", Color.LIME);
+        put("GREEN", Color.GREEN);
+        put("AQUA", Color.AQUA);
+        put("TEAL", Color.TEAL);
+        put("BLUE", Color.BLUE);
+        put("NAVY", Color.NAVY);
+        put("FUCHSIA", Color.FUCHSIA);
+        put("PURPLE", Color.PURPLE);
+        put("ORANGE", Color.ORANGE);
+    }};
 
     public static Optional<ItemStack> parseByString(final String unparsed) {
         if(unparsed == null || unparsed.isEmpty()) return Optional.empty();
@@ -132,9 +129,9 @@ public class ItemStackParser {
                     throwParseError(unparsed, "Either the BUILDER hasn't been instantiated yet (== Error in the material), or the color name is not defined!");
                     return Optional.empty();
                 }
-                Color color = getColorByName(colorName);
-                if(color != null) {
-                    builder.color(color);
+                Optional<Color> color = getColorByName(colorName);
+                if(color.isPresent()) {
+                    builder.color(color.get());
                 } else {
                     throwParseError(unparsed, "The color `" + colorName + "` is not valid!");
                 }
@@ -147,8 +144,11 @@ public class ItemStackParser {
         Logger.severe(error + "\n" + "Text to parse: " + unparsed);
     }
 
-    public static Color getColorByName(final String name) {
-        return COLORS.get(name.toUpperCase());
+    public static Optional<Color> getColorByName(final String name) {
+        if(name == null || name.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(COLORS.get(name.toUpperCase()));
     }
 
     private ItemStackParser() {

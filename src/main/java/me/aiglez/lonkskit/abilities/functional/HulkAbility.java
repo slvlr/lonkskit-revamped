@@ -5,7 +5,6 @@ import me.aiglez.lonkskit.abilities.FunctionalAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.lucko.helper.Events;
-import me.lucko.helper.Schedulers;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.event.filter.EventFilters;
 import org.bukkit.entity.Entity;
@@ -34,6 +33,19 @@ public class HulkAbility extends FunctionalAbility {
                     final Entity rightClicked = e.getRightClicked();
 
                     if(!localPlayer.toBukkit().getPassengers().isEmpty()) {
+                        final Entity passenger = localPlayer.toBukkit().getPassengers().get(0);
+                        if(passenger == null) return;
+
+                        if(passenger.getUniqueId().equals(rightClicked.getUniqueId())) {
+                            localPlayer.toBukkit().eject();
+
+                            final Vector vector = localPlayer.getLocation().getDirection().multiply(1.5D);
+                            passenger.setVelocity(vector);
+
+                            localPlayer.msg("&a(Hulk - Debug) &fYou have &cejected &a{0} (&6interact entity)", passenger.getName());
+                            return;
+                        }
+
                         localPlayer.msg("&a(Hulk - Debug) &cYou have already picked-up an entity!");
                         return;
                     }
@@ -53,15 +65,12 @@ public class HulkAbility extends FunctionalAbility {
                     }
 
                     final Entity pickedUp = localPlayer.toBukkit().getPassengers().get(0);
-                    Schedulers.sync()
-                            .runLater(() -> {
-                                localPlayer.toBukkit().eject();
+                    localPlayer.toBukkit().eject();
 
-                                final Vector vector = localPlayer.getLocation().getDirection().multiply(1.5D);
-                                pickedUp.setVelocity(vector);
+                    final Vector vector = localPlayer.getLocation().getDirection().multiply(1.5D);
+                    pickedUp.setVelocity(vector);
 
-                                localPlayer.msg("&a(Hulk - Debug) &fYou have &cejected &a{0}", pickedUp.getName());
-                            }, 4L);
+                    localPlayer.msg("&a(Hulk - Debug) &fYou have &cejected &a{0}", pickedUp.getName());
                 });
 
         Events.subscribe(PlayerToggleSneakEvent.class)
