@@ -33,7 +33,7 @@ public final class ItemStackBuilder {
             ItemFlag.HIDE_DESTROYS, ItemFlag.HIDE_PLACED_ON
     };
 
-    public final ItemStack itemStack;
+    private final ItemStack itemStack;
 
     public static ItemStackBuilder of(Material material) {
         return new ItemStackBuilder(new ItemStack(material));

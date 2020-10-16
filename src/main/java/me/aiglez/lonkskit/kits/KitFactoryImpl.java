@@ -7,16 +7,15 @@ import me.aiglez.lonkskit.LonksKitProvider;
 import me.aiglez.lonkskit.abilities.Ability;
 import me.aiglez.lonkskit.data.MemoryKit;
 import me.aiglez.lonkskit.utils.Logger;
+import me.aiglez.lonkskit.utils.PotionEffectBuilder;
 import me.aiglez.lonkskit.utils.items.ItemStackParser;
 import me.lucko.helper.config.ConfigFactory;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.config.objectmapping.ObjectMappingException;
 import me.lucko.helper.function.chain.Chain;
-import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import java.io.File;
 import java.util.*;
@@ -86,19 +85,10 @@ public class KitFactoryImpl implements KitFactory {
             }
         }
 
-        Logger.debug("Ordering kits by slots...");
         for (final Kit kit : kits) {
-            if(!kit.enabled()) {
-                Logger.debug("> " + kit.getBackendName() + " : disabled skipping it");
+            if(!kit.enabled() || !kit.getSelectorHolder().display()) {
                 continue;
             }
-
-            if(!kit.getSelectorHolder().display()) {
-                Logger.debug("> " + kit.getBackendName() + " : 'display' is false, skipping it");
-                continue;
-            }
-
-            Logger.debug("> " + kit.getBackendName() + " | slot: " + kit.getSelectorHolder().slot());
             orderedKits.add(kit);
         }
         Logger.fine("Loaded " + kits.size() + " kit(s) (" + (kits.size() - getEnabledKits().size()) + " disabled)");
@@ -143,19 +133,17 @@ public class KitFactoryImpl implements KitFactory {
         final int rentCost = node.getNode("rent", "cost").getInt(0);
         final int usesPerRent = node.getNode("rent", "uses").getInt(0);
 
-        Set<PotionEffect> potionEffects;
+        Set<PotionEffect> potionEffects = null;
         try {
             potionEffects = Chain.start(node.getNode("potion-effects").getList(new TypeToken<String>() {}))
-                    .map(list -> list.stream().map(this::tryParsingPotionEffect).collect(Collectors.toSet()))
-                    .map(optionals -> optionals.stream().filter(Optional::isPresent).map(Optional::get).collect(Collectors.toSet()))
+                    .map(list -> list.stream().map(unparsed -> PotionEffectBuilder.parse(unparsed).build()).filter(Objects::nonNull).collect(Collectors.toSet()))
                     .orElseIfNull(Collections.emptySet()).endOrNull();
 
         } catch (ObjectMappingException e) {
             Logger.severe("Couldn't map an object (LIST) // " + e.getMessage());
-            potionEffects = null;
         }
 
-        Set<Ability> abilities;
+        Set<Ability> abilities = null;
         try {
             abilities = Chain.start(node.getNode("abilities").getList(new TypeToken<String>() {}))
                     .map(list -> list.stream().map(ability -> LonksKitProvider.getAbilityFactory().getAbility(ability)).collect(Collectors.toSet()))
@@ -164,7 +152,6 @@ public class KitFactoryImpl implements KitFactory {
 
         } catch (ObjectMappingException e) {
             Logger.severe("Couldn't map an object (LIST) // " + e.getMessage());
-            abilities = null;
         }
 
         KitSelectorHolder kitSelectorHolder;
@@ -190,18 +177,5 @@ public class KitFactoryImpl implements KitFactory {
 
         if(newKit != null) newKit.setEnabled(enabled);
         return Optional.of(newKit);
-    }
-
-    private Optional<PotionEffect> tryParsingPotionEffect(String from) {
-        if(from == null || from.isEmpty()) return Optional.empty();
-        final String[] split = from.split(":");
-        if(split == null || split.length < 2) {
-            return Optional.empty();
-        }
-        final PotionEffectType type = PotionEffectType.getByName(split[0]);
-        if(type == null) {
-            return Optional.empty();
-        }
-        return Optional.of(new PotionEffect(type, Integer.MAX_VALUE, NumberUtils.toInt(split[1], 0) + 1));
     }
 }

@@ -49,6 +49,16 @@ public abstract class FunctionalAbility implements Ability, Listener {
     }
 
     @Override
+    public void applyEffects(LocalPlayer localPlayer) {
+
+    }
+
+    @Override
+    public void removeEffects(LocalPlayer localPlayer) {
+
+    }
+
+    @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .append("name", name)

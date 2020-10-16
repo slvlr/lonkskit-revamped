@@ -46,7 +46,6 @@ public class ItemStackParser {
             final Optional<Ability> ability = LonksKitProvider.getAbilityFactory().getAbility(abilityName);
             if(ability.isPresent()) {
                 if(ability.get() instanceof ItemStackAbility) {
-                    Logger.debug("Found ability item " + abilityName);
                     return Optional.of(((ItemStackAbility) ability.get()).getItemStack());
                 }
                 Logger.severe("The ability (" + abilityName + ") is not item based !");
@@ -105,9 +104,7 @@ public class ItemStackParser {
                     throwParseError(unparsed, "Either the BUILDER hasn't been instantiated yet (== Error in the material)");
                     return Optional.empty();
                 }
-                Logger.debug("Setting amount to > " + amnt);
                 builder.amount(amnt);
-                Logger.debug("New amount: " + builder.itemStack.getAmount());
             } else if(StringUtils.startsWithIgnoreCase(string, "enchant:")) {
                 final String[] enchantSplit = StringUtils.replace(string, "enchant:", "").split(":");
                 if(enchantSplit == null || enchantSplit.length < 2 || builder == null) {

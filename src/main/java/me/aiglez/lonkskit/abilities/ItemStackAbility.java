@@ -70,6 +70,16 @@ public abstract class ItemStackAbility implements Ability, Listener {
     public abstract void whenLeftClicked(PlayerInteractEvent e);
 
     @Override
+    public void applyEffects(LocalPlayer localPlayer) {
+
+    }
+
+    @Override
+    public void removeEffects(LocalPlayer localPlayer) {
+
+    }
+
+    @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .append("name", name)
