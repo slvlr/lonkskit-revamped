@@ -2,6 +2,7 @@ package me.aiglez.lonkskit.data;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.google.gson.JsonElement;
 import me.aiglez.lonkskit.events.KitSelectEvent;
 import me.aiglez.lonkskit.kits.Kit;
@@ -22,9 +23,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -40,6 +39,8 @@ public class MemoryLocalPlayer implements LocalPlayer {
     private Player bukkit;
     private Kit selectedKit;
     private boolean safe, atArena;
+
+    private Set<Location> demomanTraps;
 
     public MemoryLocalPlayer(Player player) {
         this.uniqueId = player.getUniqueId();
@@ -258,5 +259,16 @@ public class MemoryLocalPlayer implements LocalPlayer {
                         ).build()
                 )
                 .build();
+    }
+
+    @Override
+    public Set<Location> getTraps() {
+        if(demomanTraps == null) demomanTraps = Sets.newHashSet();
+        return Collections.unmodifiableSet(demomanTraps);
+    }
+
+    @Override
+    public boolean hasTraps() {
+        return !demomanTraps.isEmpty();
     }
 }

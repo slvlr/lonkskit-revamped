@@ -1,22 +1,30 @@
 package me.aiglez.lonkskit.abilities;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Maps;
 import com.google.common.reflect.TypeToken;
 import me.aiglez.lonkskit.exceptions.AbilityRegisterException;
 import me.aiglez.lonkskit.players.LocalPlayer;
+import me.aiglez.lonkskit.utils.Logger;
 import me.aiglez.lonkskit.utils.PotionEffectBuilder;
+import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.config.objectmapping.ObjectMappingException;
 import me.lucko.helper.cooldown.Cooldown;
 import me.lucko.helper.cooldown.CooldownMap;
 import me.lucko.helper.function.chain.Chain;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.math.NumberUtils;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -24,7 +32,8 @@ import java.util.stream.Collectors;
 
 public abstract class ItemStackAbility implements Ability, Listener {
 
-    protected ItemStack item;
+    private final ItemStack item;
+
     protected final String name;
     protected final ConfigurationNode configuration;
     protected final CooldownMap<LocalPlayer> cooldown;
@@ -46,6 +55,39 @@ public abstract class ItemStackAbility implements Ability, Listener {
         } catch (ObjectMappingException e) {
             throw new AbilityRegisterException(name, "Couldn't map an object (LIST) // " + e.getMessage());
         }
+
+        try {
+            final Map<Enchantment, Integer> enchants = Maps.newHashMap();
+
+            configuration.getNode("item", "enchantments").getList(new TypeToken<String>() {}).forEach(unparsed -> {
+
+                final String[] enchantSplit = unparsed.split(":");
+                if(enchantSplit == null || enchantSplit.length < 2) {
+                    return;
+                }
+
+                final Enchantment enchantment = Enchantment.getByKey(NamespacedKey.minecraft(enchantSplit[0].toLowerCase()));
+                final int level = NumberUtils.toInt(enchantSplit[1], 1);
+                if (enchantment == null) {
+                    Logger.severe("Couldn't find any enchantement with name `" + enchantSplit[0] + "`");
+                    return;
+                }
+                enchants.put(enchantment, level);
+
+            });
+
+            this.item = ItemStackBuilder.of(Material.matchMaterial(configuration.getNode("item", "material").getString("STONE")))
+                    .name(configuration.getNode("item", "name").getString("Name"))
+                    .lore(configuration.getNode("item", "lore").getList(new TypeToken<String>() {}))
+                    .apply(builder -> {
+                        enchants.forEach(builder::enchant);
+                    })
+                    .build();
+        } catch (ObjectMappingException e) {
+            throw new AbilityRegisterException(name, "Couldn't map an object (LIST) // " + e.getMessage());
+        }
+        
+
 
         registerListeners();
     }

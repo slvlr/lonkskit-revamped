@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import me.aiglez.lonkskit.LonksKitProvider;
+import me.aiglez.lonkskit.abilities.helpers.DemomanUser;
 import me.aiglez.lonkskit.data.MemoryLocalPlayer;
 import me.aiglez.lonkskit.kits.Kit;
 import me.aiglez.lonkskit.utils.Logger;
@@ -20,7 +21,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @SuppressWarnings({"unused", "RedundantSuppression"})
-public interface LocalPlayer extends GsonSerializable, LocalMessager, LocalRenter {
+public interface LocalPlayer extends GsonSerializable, LocalMessager, LocalRenter, DemomanUser {
 
     UUID getUniqueId();
 
