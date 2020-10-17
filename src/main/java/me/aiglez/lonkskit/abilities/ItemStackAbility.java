@@ -79,9 +79,8 @@ public abstract class ItemStackAbility implements Ability, Listener {
             this.item = ItemStackBuilder.of(Material.matchMaterial(configuration.getNode("item", "material").getString("STONE")))
                     .name(configuration.getNode("item", "name").getString("Name"))
                     .lore(configuration.getNode("item", "lore").getList(new TypeToken<String>() {}))
-                    .apply(builder -> {
-                        enchants.forEach(builder::enchant);
-                    })
+                    .amount(configuration.getNode("item", "amount").getInt(1))
+                    .apply(builder -> enchants.forEach(builder::enchant))
                     .build();
         } catch (ObjectMappingException e) {
             throw new AbilityRegisterException(name, "Couldn't map an object (LIST) // " + e.getMessage());

@@ -3,12 +3,9 @@ package me.aiglez.lonkskit.abilities.itembased;
 import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
-import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.random.RandomSelector;
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -24,11 +21,6 @@ public class TrollAbility extends ItemStackAbility {
 
     public TrollAbility(ConfigurationNode configuration) {
         super("troll", configuration);
-        this.item = ItemStackBuilder.of(Material.WOODEN_HOE)
-                .name(configuration.getNode("item-name").getString("Trolololololo"))
-                .enchant(Enchantment.DURABILITY, 1)
-                .build();
-
         try {
             this.potionEffectRandomSelector = RandomSelector.uniform(potionEffects);
         } catch (IllegalArgumentException e) {

@@ -2,11 +2,9 @@ package me.aiglez.lonkskit.abilities.itembased;
 
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
-import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -25,10 +23,6 @@ public class SwitcherAbility extends ItemStackAbility {
 
     public SwitcherAbility(ConfigurationNode configuration) {
         super("switcher", configuration);
-        this.item = ItemStackBuilder.of(Material.SNOWBALL)
-                .name(configuration.getNode("item-name").getString("Switcher"))
-                .amount(16)
-                .build();
     }
 
     // --------------------------------------------------------------------------------------------

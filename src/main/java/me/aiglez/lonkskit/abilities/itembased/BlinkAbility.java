@@ -2,7 +2,6 @@ package me.aiglez.lonkskit.abilities.itembased;
 
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
-import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.config.ConfigurationNode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,9 +17,6 @@ public class BlinkAbility extends ItemStackAbility {
 
     public BlinkAbility(ConfigurationNode configuration) {
         super("blink", configuration);
-        this.item = ItemStackBuilder.of(Material.REDSTONE_TORCH)
-                .name(configuration.getNode("item-name").getString("Blinker"))
-                .build();
     }
 
     // --------------------------------------------------------------------------------------------
@@ -51,7 +47,7 @@ public class BlinkAbility extends ItemStackAbility {
             }
         }
         localPlayer.toBukkit().teleport(to.add(0, 1, 0));
-        localPlayer.msg(configuration.getNode("messages", "blinked").getString("Blinked Message Null"));
+        localPlayer.msg(configuration.getNode("messages", "blinked"));
     }
 
     @Override

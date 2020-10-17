@@ -5,13 +5,11 @@ import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.MetadataProvider;
-import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.metadata.ExpiringValue;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LightningStrike;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -30,11 +28,6 @@ public class ThorAbility extends ItemStackAbility {
 
     public ThorAbility(ConfigurationNode configuration) {
         super("thor", configuration);
-        this.item = ItemStackBuilder.of(Material.IRON_AXE)
-                .name(configuration.getNode("item-name").getString("Thor"))
-                .enchant(Enchantment.DAMAGE_ALL, 1)
-                .enchant(Enchantment.DURABILITY, 3)
-                .build();
     }
 
     // --------------------------------------------------------------------------------------------

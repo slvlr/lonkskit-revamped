@@ -6,12 +6,10 @@ import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.MetadataProvider;
-import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.metadata.Metadata;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_16_R2.entity.CraftCreature;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -30,9 +28,6 @@ public class NecromancerAbility extends ItemStackAbility {
 
     public NecromancerAbility(ConfigurationNode configuration) {
         super("necromancer", configuration);
-        this.item = ItemStackBuilder.of(Material.BONE)
-                .name(configuration.getNode("item-name").getString("Scepter"))
-                .build();
         this.helpers = Maps.newHashMap();
     }
 

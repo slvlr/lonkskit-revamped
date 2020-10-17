@@ -3,11 +3,9 @@ package me.aiglez.lonkskit.abilities.itembased;
 import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
-import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -17,9 +15,6 @@ public class HookerAbility extends ItemStackAbility {
 
     public HookerAbility(ConfigurationNode configuration) {
         super("hooker", configuration);
-        this.item = ItemStackBuilder.of(Material.FISHING_ROD)
-                .name(configuration.getNode("item-name").getString("Rod"))
-                .build();
     }
 
     @Override

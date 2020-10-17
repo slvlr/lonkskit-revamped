@@ -4,13 +4,11 @@ import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.MetadataProvider;
-import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Events;
 import me.lucko.helper.Schedulers;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.metadata.SoftValue;
 import org.bukkit.GameMode;
-import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityShootBowEvent;
@@ -26,9 +24,6 @@ public class SpyAbility extends ItemStackAbility {
 
     public SpyAbility(ConfigurationNode configuration) {
         super("spy", configuration);
-        this.item = ItemStackBuilder.of(Material.BOW)
-                .name("&eSpy")
-                .build();
     }
 
     @Override

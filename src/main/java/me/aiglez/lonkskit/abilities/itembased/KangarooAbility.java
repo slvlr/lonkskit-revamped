@@ -2,9 +2,7 @@ package me.aiglez.lonkskit.abilities.itembased;
 
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
-import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.config.ConfigurationNode;
-import org.bukkit.Material;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.concurrent.TimeUnit;
@@ -17,9 +15,6 @@ public class KangarooAbility extends ItemStackAbility {
 
     public KangarooAbility(ConfigurationNode configuration) {
         super("kangaroo", configuration);
-        this.item = ItemStackBuilder.of(Material.EMERALD)
-                .name(configuration.getNode("item-name").getString("Jumper"))
-                .build();
     }
 
     @Override

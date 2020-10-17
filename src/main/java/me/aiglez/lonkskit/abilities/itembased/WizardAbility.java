@@ -5,12 +5,10 @@ import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.MetadataProvider;
-import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.metadata.Metadata;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.entity.ProjectileHitEvent;
@@ -26,9 +24,6 @@ public class WizardAbility extends ItemStackAbility {
 
     public WizardAbility(ConfigurationNode configuration) {
         super("wizard", configuration);
-        this.item = ItemStackBuilder.of(Material.BLAZE_ROD)
-                .name(configuration.getNode("item-name").getString("Wizard"))
-                .build();
     }
 
     // --------------------------------------------------------------------------------------------

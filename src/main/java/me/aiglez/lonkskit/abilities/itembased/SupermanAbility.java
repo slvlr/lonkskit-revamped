@@ -2,10 +2,8 @@ package me.aiglez.lonkskit.abilities.itembased;
 
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
-import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Schedulers;
 import me.lucko.helper.config.ConfigurationNode;
-import org.bukkit.Material;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.concurrent.TimeUnit;
@@ -14,9 +12,6 @@ public class SupermanAbility extends ItemStackAbility {
 
     public SupermanAbility(ConfigurationNode configuration) {
         super("superman", configuration);
-        this.item = ItemStackBuilder.of(Material.FEATHER)
-                .name(configuration.getNode("item-name").getString("Fly"))
-                .build();
     }
 
     @Override

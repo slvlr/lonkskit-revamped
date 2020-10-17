@@ -6,7 +6,6 @@ import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.events.KitSelectEvent;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.MetadataProvider;
-import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Events;
 import me.lucko.helper.Schedulers;
 import me.lucko.helper.config.ConfigurationNode;
@@ -29,9 +28,6 @@ public class CowboyAbility extends ItemStackAbility {
 
     public CowboyAbility(ConfigurationNode configuration) {
         super("cowboy", configuration);
-        this.item = ItemStackBuilder.of(Material.LEAD)
-                .name("&eCowboy")
-                .build();
     }
 
     @Override

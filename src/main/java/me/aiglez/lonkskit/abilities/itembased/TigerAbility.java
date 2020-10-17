@@ -4,13 +4,11 @@ import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.MetadataProvider;
-import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Events;
 import me.lucko.helper.Schedulers;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.metadata.ExpiringValue;
 import me.lucko.helper.scheduler.Ticks;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -21,9 +19,6 @@ public class TigerAbility extends ItemStackAbility {
 
     public TigerAbility(ConfigurationNode configuration) {
         super("tiger", configuration);
-        this.item = ItemStackBuilder.of(Material.GHAST_TEAR)
-                .name(configuration.getNode("item-name").getString("Tiger"))
-                .build();
     }
 
     public void whenRightClicked(PlayerInteractEvent e) {

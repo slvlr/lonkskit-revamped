@@ -2,10 +2,8 @@ package me.aiglez.lonkskit.abilities.itembased;
 
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
-import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Schedulers;
 import me.lucko.helper.config.ConfigurationNode;
-import org.bukkit.Material;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
@@ -19,9 +17,6 @@ public class PortastompAbility extends ItemStackAbility {
 
     public PortastompAbility(ConfigurationNode configuration) {
         super("portastomp", configuration);
-        this.item = ItemStackBuilder.of(Material.ENDER_EYE)
-                .name(configuration.getNode("item-name").getString("Stomper"))
-                .build();
     }
 
     // --------------------------------------------------------------------------------------------

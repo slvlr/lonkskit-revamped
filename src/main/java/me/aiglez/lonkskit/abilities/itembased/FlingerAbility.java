@@ -3,11 +3,9 @@ package me.aiglez.lonkskit.abilities.itembased;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.MetadataProvider;
-import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.metadata.Metadata;
-import org.bukkit.Material;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -18,9 +16,6 @@ public class FlingerAbility extends ItemStackAbility {
 
     public FlingerAbility(ConfigurationNode configuration) {
         super("flinger", configuration);
-        this.item = ItemStackBuilder.of(Material.WOODEN_HOE)
-                .name(configuration.getNode("item-name").getString("Flinger"))
-                .build();
     }
 
     @Override

@@ -3,10 +3,8 @@ package me.aiglez.lonkskit.abilities.itembased;
 import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
-import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -20,9 +18,6 @@ public class ChompAbility extends ItemStackAbility {
 
     public ChompAbility(ConfigurationNode configuration) {
         super("chomp", configuration);
-        this.item = ItemStackBuilder.of(Material.CHEST)
-                .name(configuration.getNode("item-name").getString("Chomper"))
-                .build();
         this.damage = configuration.getNode("damage").getDouble(5);
     }
 

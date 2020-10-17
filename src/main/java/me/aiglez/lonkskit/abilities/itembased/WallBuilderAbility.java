@@ -3,10 +3,8 @@ package me.aiglez.lonkskit.abilities.itembased;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.abilities.helpers.ConstructHelper;
 import me.aiglez.lonkskit.players.LocalPlayer;
-import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Schedulers;
 import me.lucko.helper.config.ConfigurationNode;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -14,9 +12,6 @@ public class WallBuilderAbility extends ItemStackAbility {
 
     public WallBuilderAbility(ConfigurationNode configuration) {
         super("wallbuilder", configuration);
-        this.item = ItemStackBuilder.of(Material.BRICK)
-                .name("&bWall")
-                .build();
     }
 
     @Override

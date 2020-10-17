@@ -5,13 +5,11 @@ import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.MetadataProvider;
-import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Events;
 import me.lucko.helper.Schedulers;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.metadata.ExpiringValue;
 import org.bukkit.Effect;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -27,9 +25,6 @@ public class DragonAbility extends ItemStackAbility {
 
     public DragonAbility(ConfigurationNode configuration) {
         super("dragon", configuration);
-        this.item = ItemStackBuilder.of(Material.FEATHER)
-                .name(configuration.getNode("item-name").getString("Boost"))
-                .build();
     }
 
     // --------------------------------------------------------------------------------------------

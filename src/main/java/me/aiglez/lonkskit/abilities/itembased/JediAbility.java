@@ -4,10 +4,8 @@ import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.Various;
-import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.config.ConfigurationNode;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
@@ -21,9 +19,6 @@ public class JediAbility extends ItemStackAbility {
 
     public JediAbility(ConfigurationNode configuration) {
         super("jedi", configuration);
-        this.item = ItemStackBuilder.of(Material.SUNFLOWER)
-                .name(configuration.getNode("item-name").getString("The Force"))
-                .build();
     }
 
     // --------------------------------------------------------------------------------------------
