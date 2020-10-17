@@ -51,6 +51,8 @@ public class SpyAbility extends ItemStackAbility {
                     final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getEntity());
                     final Arrow arrow = (Arrow) e.getProjectile();
 
+                    applyEffects(localPlayer);
+
                     // spectator - start
                     arrow.remove();
 

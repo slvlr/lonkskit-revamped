@@ -31,6 +31,7 @@ public class FlingerAbility extends ItemStackAbility {
         final Egg egg = localPlayer.toBukkit().launchProjectile(Egg.class);
         egg.setShooter(localPlayer.toBukkit());
         Metadata.provideForEntity(egg).put(MetadataProvider.EGG_FLINGER, true);
+        applyEffects(localPlayer);
     }
 
     @Override

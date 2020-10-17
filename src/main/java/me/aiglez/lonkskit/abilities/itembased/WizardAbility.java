@@ -42,6 +42,8 @@ public class WizardAbility extends ItemStackAbility {
             return;
         }
 
+        applyEffects(localPlayer);
+
         final Snowball snowball = localPlayer.toBukkit().launchProjectile(Snowball.class);
         snowball.setShooter(localPlayer.toBukkit());
         Metadata.provideForEntity(snowball).put(MetadataProvider.SNOWBALL_EXPLODE, true);

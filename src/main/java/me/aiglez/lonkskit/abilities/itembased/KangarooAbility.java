@@ -32,6 +32,8 @@ public class KangarooAbility extends ItemStackAbility {
             return;
         }
 
+        applyEffects(localPlayer);
+
         localPlayer.toBukkit().setVelocity(localPlayer.getLocation().getDirection()
                 .multiply(
                         configuration.getNode("velocities", "right-click", "multiply").getDouble(1))

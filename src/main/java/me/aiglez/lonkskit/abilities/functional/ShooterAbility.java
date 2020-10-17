@@ -37,6 +37,8 @@ public class ShooterAbility extends FunctionalAbility {
                     final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
                     final PlayerInventory inventory = localPlayer.toBukkit().getInventory();
 
+                    applyEffects(localPlayer);
+
                     final HashMap<Integer, ItemStack> map = inventory.removeItem(new ItemStack(Material.ARROW, 5));
                     int toRemove = 5;
                     if(!map.isEmpty()) {

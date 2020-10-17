@@ -47,6 +47,8 @@ public class ThorAbility extends ItemStackAbility {
             return;
         }
 
+        applyEffects(localPlayer);
+
         final Block target = localPlayer.toBukkit().getTargetBlock(transparentMaterials, configuration.getNode("max-radius").getInt(100));
 
         localPlayer.metadata().put(MetadataProvider.PLAYER_NO_LIGHTING_DAMAGE, ExpiringValue.of(true, 3, TimeUnit.SECONDS));

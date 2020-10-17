@@ -37,6 +37,8 @@ public class HookerAbility extends ItemStackAbility {
                     final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
                     final Entity caught = e.getCaught();
 
+                    applyEffects(localPlayer);
+
                     final Location caughtLocation = caught.getLocation();
                     final Location playerLocation = localPlayer.getLocation();
 

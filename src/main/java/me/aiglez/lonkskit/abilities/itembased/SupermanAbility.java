@@ -37,6 +37,8 @@ public class SupermanAbility extends ItemStackAbility {
         // wait 1 second  > send no remaining time warn
         // end
 
+        applyEffects(localPlayer);
+
         Schedulers.sync()
                 .run(() -> {
                     localPlayer.msg(configuration.getNode("messages", "start").getString("Message start Null"));

@@ -1,6 +1,5 @@
 package me.aiglez.lonkskit.abilities.itembased;
 
-import com.google.common.collect.ImmutableList;
 import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
@@ -8,16 +7,12 @@ import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.random.RandomSelector;
-import me.lucko.helper.scheduler.Ticks;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author AigleZ
@@ -25,9 +20,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class TrollAbility extends ItemStackAbility {
 
-    private final RandomSelector<PotionEffectType> potionEffectTypeRandomSelector = RandomSelector.uniform(ImmutableList.of(
-            PotionEffectType.POISON, PotionEffectType.BLINDNESS, PotionEffectType.SLOW_DIGGING
-    ));
+    private final RandomSelector<PotionEffect> potionEffectRandomSelector;
 
     public TrollAbility(ConfigurationNode configuration) {
         super("troll", configuration);
@@ -35,6 +28,13 @@ public class TrollAbility extends ItemStackAbility {
                 .name(configuration.getNode("item-name").getString("Trolololololo"))
                 .enchant(Enchantment.DURABILITY, 1)
                 .build();
+
+        try {
+            this.potionEffectRandomSelector = RandomSelector.uniform(potionEffects);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalStateException("Troll Ability: You must specify potion effects.");
+        }
+
     }
 
     // --------------------------------------------------------------------------------------------
@@ -54,9 +54,8 @@ public class TrollAbility extends ItemStackAbility {
                     LocalPlayer damager = LocalPlayer.get((Player) e.getDamager());
                     LocalPlayer victim = LocalPlayer.get((Player) e.getEntity());
 
-                    victim.toBukkit().addPotionEffect(new PotionEffect(
-                            potionEffectTypeRandomSelector.pick(), (int) Ticks.from(4, TimeUnit.SECONDS), 1
-                    ));
+                    victim.toBukkit().addPotionEffect(potionEffectRandomSelector.pick());
+
                     damager.msg(configuration.getNode("messages", "trolled").getString("Message trolled Null"), victim.getLastKnownName());
                 });
     }

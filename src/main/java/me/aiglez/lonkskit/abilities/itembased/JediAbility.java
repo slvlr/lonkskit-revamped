@@ -37,6 +37,8 @@ public class JediAbility extends ItemStackAbility {
             return;
         }
 
+        applyEffects(localPlayer);
+
         Location fromLocation = localPlayer.getLocation();
         WorldProvider.KP_WORLD.getNearbyPlayers(
                 localPlayer.toBukkit().getLocation(),

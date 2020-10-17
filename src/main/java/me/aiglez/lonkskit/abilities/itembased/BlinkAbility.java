@@ -34,6 +34,8 @@ public class BlinkAbility extends ItemStackAbility {
             return;
         }
 
+        applyEffects(localPlayer);
+
         int range = configuration.getNode("range").getInt(50);
         Location from = localPlayer.toBukkit().getEyeLocation();
         Location to = localPlayer.toBukkit().getEyeLocation();

@@ -24,16 +24,17 @@ public class StompAbility extends FunctionalAbility {
                 .handler(e -> {
                     final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getEntity());
 
+                    applyEffects(localPlayer);
                     localPlayer.toBukkit().getWorld().getNearbyPlayers(
                             localPlayer.toBukkit().getLocation(),
                             configuration.getNode("radius", "x-axis").getDouble(1D),
                             configuration.getNode("radius", "y-axis").getDouble(1D),
                             configuration.getNode("radius", "z-axis").getDouble(1D)
                     ).forEach(player -> {
-
                         final LocalPlayer under = LocalPlayer.get(player);
                         if(!localPlayer.toBukkit().hasLineOfSight(under.toBukkit())) return;
                         if(!(under.getUniqueId().equals(localPlayer.getUniqueId()))) {
+
                             double damage;
                             if(under.toBukkit().isSneaking()) { // is player sneaking
                                 damage = Math.min(e.getFinalDamage(), configuration.getNode("max-damage", "target-sneaking").getDouble(4.5D));

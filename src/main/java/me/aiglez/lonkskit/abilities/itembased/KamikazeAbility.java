@@ -22,6 +22,8 @@ public class KamikazeAbility extends ItemStackAbility {
         e.setCancelled(true);
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
 
+        applyEffects(localPlayer);
+
         WorldProvider.KP_WORLD.createExplosion(
                 localPlayer.getLocation(),
                 0F,

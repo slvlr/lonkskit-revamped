@@ -6,12 +6,8 @@ import me.aiglez.lonkskit.abilities.FunctionalAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
-import me.lucko.helper.scheduler.Ticks;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -31,7 +27,7 @@ public class HotheadAbility extends FunctionalAbility {
                 .handler(e -> {
                     final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
 
-                    localPlayer.toBukkit().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, (int) Ticks.from(2, TimeUnit.SECONDS), 1));
+                    applyEffects(localPlayer);
 
                     final AtomicInteger burned = new AtomicInteger(0);
                     WorldProvider.KP_WORLD.getNearbyEntities(localPlayer.getLocation(), 4, 4, 4)

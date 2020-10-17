@@ -42,6 +42,7 @@ public class DragonAbility extends ItemStackAbility {
             return;
         }
 
+        applyEffects(localPlayer);
         localPlayer.metadata().put(MetadataProvider.PLAYER_NO_FALL_DAMAGE, ExpiringValue.of(true, 10, TimeUnit.SECONDS));
 
         final Vector vec = localPlayer.toBukkit().getLocation().getDirection().multiply(

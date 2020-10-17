@@ -34,6 +34,9 @@ public class PortastompAbility extends ItemStackAbility {
             localPlayer.msg("&b[LonksKit] &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
             return;
         }
+
+        applyEffects(localPlayer);
+
         Schedulers.sync().runLater(() -> localPlayer.toBukkit().setVelocity(new Vector(0, configuration.getNode("velocities", "y-component").getDouble(1), 0)), 2L);
     }
 

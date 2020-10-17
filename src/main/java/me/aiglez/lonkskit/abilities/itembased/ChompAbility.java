@@ -1,22 +1,15 @@
 package me.aiglez.lonkskit.abilities.itembased;
 
-import com.google.common.collect.Sets;
 import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
-import me.lucko.helper.scheduler.Ticks;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author AigleZ
@@ -24,7 +17,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class ChompAbility extends ItemStackAbility {
     private final double damage;
-    private final Set<PotionEffect> negativeEffects;
 
     public ChompAbility(ConfigurationNode configuration) {
         super("chomp", configuration);
@@ -32,11 +24,6 @@ public class ChompAbility extends ItemStackAbility {
                 .name(configuration.getNode("item-name").getString("Chomper"))
                 .build();
         this.damage = configuration.getNode("damage").getDouble(5);
-
-        this.negativeEffects = Sets.newHashSet(
-                new PotionEffect(PotionEffectType.SLOW, (int) Ticks.from(6, TimeUnit.SECONDS), 1),
-                new PotionEffect(PotionEffectType.WEAKNESS, (int) Ticks.from(6, TimeUnit.SECONDS), 1)
-        );
     }
 
     @Override
@@ -59,7 +46,7 @@ public class ChompAbility extends ItemStackAbility {
                     final LocalPlayer damager = LocalPlayer.get((Player) e.getDamager());
                     final LocalPlayer victim = LocalPlayer.get((Player) e.getEntity());
 
-                    damager.toBukkit().addPotionEffects(negativeEffects);
+                    applyEffects(damager);
 
                     e.setDamage(damage);
                     damager.msg("(Debug - Chomp) &cYou have chomped {0} [damage: {1}]", victim.getLastKnownName(), damage);

@@ -33,6 +33,9 @@ public class TigerAbility extends ItemStackAbility {
             localPlayer.msg("&b[LonksKit] &cPlease wait, {0} second(s) left", this.cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
             return;
         }
+
+        applyEffects(localPlayer);
+
         localPlayer.metadata().put(MetadataProvider.PLAYER_DOUBLE_DAMAGE, ExpiringValue.of(true, 10L, TimeUnit.SECONDS));
         localPlayer.toBukkit().chat(configuration.getNode("messages", "start").getString("Message Null: start"));
         Schedulers.async()

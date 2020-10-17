@@ -36,6 +36,8 @@ public class HulkAbility extends FunctionalAbility {
                         final Entity passenger = localPlayer.toBukkit().getPassengers().get(0);
                         if(passenger == null) return;
 
+                        applyEffects(localPlayer);
+
                         if(passenger.getUniqueId().equals(rightClicked.getUniqueId())) {
                             localPlayer.toBukkit().eject();
 

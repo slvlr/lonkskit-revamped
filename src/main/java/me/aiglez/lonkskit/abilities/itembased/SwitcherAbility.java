@@ -39,6 +39,8 @@ public class SwitcherAbility extends ItemStackAbility {
             localPlayer.msg("&b[LonksKit] &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
             e.setCancelled(true);
         }
+
+        applyEffects(localPlayer);
     }
 
     @Override
