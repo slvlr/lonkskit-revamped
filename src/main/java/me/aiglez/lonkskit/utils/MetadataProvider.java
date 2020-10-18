@@ -12,12 +12,13 @@ public class MetadataProvider {
     public static final MetadataKey<Boolean> PLAYER_NO_LIGHTING_DAMAGE = MetadataKey.createBooleanKey("no-lightning-damage");
     public static final MetadataKey<Boolean> PLAYER_DOUBLE_DAMAGE = MetadataKey.createBooleanKey("double-damage");
     public static final MetadataKey<Boolean> SPY_PLAYER = MetadataKey.createBooleanKey("spy-player");
+    public static final MetadataKey<Boolean> LEAVE_HORSE = MetadataKey.createBooleanKey("spy-player");
 
     /**
      * Entities MetadataProvider
      */
     public static final MetadataKey<Boolean> SNOWBALL_EXPLODE = MetadataKey.createBooleanKey("snowball-explode");
-    public static final MetadataKey<Boolean> HORSE_PERSISTENT = MetadataKey.createBooleanKey("persistent-horse");
+    public static final MetadataKey<LocalPlayer> HORSE_PERSISTENT = MetadataKey.create("persistent-horse", LocalPlayer.class);
     public static final MetadataKey<LocalPlayer> NECROMANCER_ENTITY = MetadataKey.create("necromancer-entity", LocalPlayer.class);
     public static final MetadataKey<Boolean> SPY_ARROW = MetadataKey.createBooleanKey("spy-arrow");
     public static final MetadataKey<Boolean> HULK_PICKED_UP = MetadataKey.createBooleanKey("hulk-pic");

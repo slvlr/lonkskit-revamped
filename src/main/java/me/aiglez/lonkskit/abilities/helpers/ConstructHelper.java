@@ -1,6 +1,7 @@
 package me.aiglez.lonkskit.abilities.helpers;
 
 import me.aiglez.lonkskit.WorldProvider;
+import me.aiglez.lonkskit.utils.Logger;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -20,17 +21,22 @@ public class ConstructHelper {
     public static boolean buildWallAt(Location location) {
         Block start = location.getBlock();
         Block end = WorldProvider.KP_WORLD.getBlockAt(
-                start.getX() + WALL_WIDE,
-                start.getY() + WALL_TALL,
-                start.getZ()
+                start.getX() + 1,
+                start.getY() + 1,
+                start.getZ() + 1
         );
 
         final BlockIterator it = getBlocksBetween(start.getLocation(), end.getLocation());
+
+        int placed = 0;
         while (it.hasNext()) {
             final Block block = it.next();;
-
             block.setType(WALL_MATERIAL);
+
+            placed++;
         }
+
+        Logger.debug("[Construct] Placed {0} block(s)", placed);
 
         return true;
     }
@@ -40,8 +46,8 @@ public class ConstructHelper {
     }
 
     public static BlockIterator getBlocksBetween(Location start, Location end) {
-        final Vector v = start.toVector().subtract(end.toVector());
+        final Vector direction = end.toVector().subtract(start.toVector());
 
-        return new BlockIterator(WorldProvider.KP_WORLD, end.toVector(), v, 0, 0);
+        return new BlockIterator(WorldProvider.KP_WORLD, start.toVector(), direction, 0, 50);
     }
 }

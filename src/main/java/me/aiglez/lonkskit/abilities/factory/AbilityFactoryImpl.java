@@ -2,7 +2,10 @@ package me.aiglez.lonkskit.abilities.factory;
 
 import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.abilities.Ability;
+import me.aiglez.lonkskit.abilities.itembased.CowboyAbility;
+import me.aiglez.lonkskit.abilities.itembased.SpyAbility;
 import me.aiglez.lonkskit.abilities.itembased.ThorAbility;
+import me.aiglez.lonkskit.abilities.itembased.WallBuilderAbility;
 import me.aiglez.lonkskit.exceptions.AbilityFileNotFoundException;
 import me.aiglez.lonkskit.exceptions.AbilityRegisterException;
 import me.aiglez.lonkskit.utils.Logger;
@@ -35,6 +38,9 @@ public class AbilityFactoryImpl implements AbilityFactory {
     @Override
     public void registerAbilities() {
         registerAbility("thor", new ThorAbility(getFileByName("thor")));
+        registerAbility("cowboy", new CowboyAbility(getFileByName("cowboy")));
+        registerAbility("spy", new SpyAbility(getFileByName("spy")));
+        registerAbility("wallbuilder", new WallBuilderAbility(getFileByName("wallbuilder")));
         /*
         registerAbility("dragon", new DragonAbility(getFileByName("dragon")));
         registerAbility("switcher", new SwitcherAbility(getFileByName("switcher")));
@@ -55,16 +61,12 @@ public class AbilityFactoryImpl implements AbilityFactory {
         registerAbility("spy", new SpyAbility(getFileByName("spy")));
 
         // BETA
-        registerAbility("cowboy", new CowboyAbility(getFileByName("cowboy")));
-        registerAbility("spy", new SpyAbility(getFileByName("spy")));
+
         registerAbility("hothead", new HotheadAbility(getFileByName("hothead")));
         registerAbility("hulk", new HulkAbility(getFileByName("hulk")));
         registerAbility("flinger", new FlingerAbility(getFileByName("flinger")));
         registerAbility("hothead", new HotheadAbility(getFileByName("hothead")));
         registerAbility("kamikaze", new KamikazeAbility(getFileByName("kamikaze")));
-
-
-        registerAbility("wallbuilder", new WallBuilderAbility(getFileByName("wallbuilder")));
 
         /*
         Logger.debug("Loading Imad's abilities...");

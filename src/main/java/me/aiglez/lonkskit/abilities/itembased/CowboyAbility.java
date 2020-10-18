@@ -2,6 +2,7 @@ package me.aiglez.lonkskit.abilities.itembased;
 
 
 import me.aiglez.lonkskit.WorldProvider;
+import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.events.KitSelectEvent;
 import me.aiglez.lonkskit.players.LocalPlayer;
@@ -16,6 +17,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.inventory.ItemStack;
@@ -57,7 +59,7 @@ public class CowboyAbility extends ItemStackAbility {
                     horse.setOwner(localPlayer.toBukkit());
 
                     horse.addPassenger(localPlayer.toBukkit());
-                    Metadata.provideForEntity(horse).put(MetadataProvider.HORSE_PERSISTENT, SoftValue.of(true));
+                    Metadata.provideForEntity(horse).put(MetadataProvider.HORSE_PERSISTENT, SoftValue.of(localPlayer));
                 });
 
         // persistent horse
@@ -69,7 +71,7 @@ public class CowboyAbility extends ItemStackAbility {
                     e.setCancelled(true);
                 });
 
-        // block player from dismounting an entity
+        // block player from dismounting the horse
         Events.subscribe(VehicleExitEvent.class)
                 .filter(e -> e.getExited() instanceof Player)
                 .filter(e -> {
@@ -80,13 +82,37 @@ public class CowboyAbility extends ItemStackAbility {
                 .filter(e -> Metadata.provideForEntity(e.getVehicle()).has(MetadataProvider.HORSE_PERSISTENT))
                 .handler(e -> {
                     final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getExited());
-                    localPlayer.msg("&6(Cowboy) &cYou can't dismount your horse! (Exit Event) &c(cancellable: {0})", e.isCancellable());
+                    if(localPlayer.metadata().has(MetadataProvider.LEAVE_HORSE)) {
+                        return;
+                    }
 
+                    localPlayer.msg("&6(Cowboy) &cYou can't dismount your horse! (Exit Event)");
+
+                    // we remount him back, because of spigot's 1.16+ issue with mounting
                     Schedulers.sync()
-                            .runLater(() -> {
-                                e.getVehicle().addPassenger(e.getExited());
-                            }, 2L);
+                            .runLater(() -> e.getVehicle().addPassenger(e.getExited()), 2L);
                 });
 
+        // kill player's horse when he dies.
+        Events.subscribe(EntityDeathEvent.class)
+                .filter(AbilityPredicates.possiblyHasAbility(this))
+                .handler(e -> {
+                    final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getEntity());
+
+                    localPlayer.metadata().put(MetadataProvider.LEAVE_HORSE, SoftValue.of(true));
+                    localPlayer.toBukkit().leaveVehicle();
+
+                    WorldProvider.KP_WORLD.getNearbyEntitiesByType(Horse.class, localPlayer.getLocation(), 5, 5, 5)
+                            .forEach(horse -> {
+                                if(Metadata.provideForEntity(horse).has(MetadataProvider.HORSE_PERSISTENT)) {
+                                    final LocalPlayer owner = Metadata.provideForEntity(horse).getOrNull(MetadataProvider.HORSE_PERSISTENT);
+                                    if(localPlayer.getUniqueId().equals(owner.getUniqueId())) {
+                                        horse.damage(999);
+                                        horse.remove();
+                                        localPlayer.msg("&6(Cowboy) &cSince you died, your horse died too.");
+                                    }
+                                }
+                            });
+                });
     }
 }

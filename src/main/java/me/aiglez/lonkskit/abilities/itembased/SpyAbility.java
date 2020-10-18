@@ -1,6 +1,5 @@
 package me.aiglez.lonkskit.abilities.itembased;
 
-import com.destroystokyo.paper.event.player.PlayerStopSpectatingEntityEvent;
 import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
@@ -55,11 +54,15 @@ public class SpyAbility extends ItemStackAbility {
                     localPlayer.metadata().put(MetadataProvider.SPY_PLAYER, SoftValue.of(true));
                     localPlayer.toBukkit().setGameMode(GameMode.SPECTATOR);
                     localPlayer.toBukkit().setSpectatorTarget(arrow);
+
+                    Logger.debug("[Spy] Spectator target: {0}", (localPlayer.toBukkit().getSpectatorTarget() == null ? "Not Found" : localPlayer.toBukkit().getSpectatorTarget().getName()));
+
                     // spectator - end
 
                     localPlayer.msg("&6(Spy - Debug) &eYou are now spying on " + arrow.getName());
                 });
 
+        /*
         Events.subscribe(PlayerInteractEvent.class)
                 .filter(AbilityPredicates.hasAbility(this))
                 .filter(AbilityPredicates.hasMetadata(MetadataProvider.SPY_PLAYER))
@@ -73,8 +76,10 @@ public class SpyAbility extends ItemStackAbility {
                 .filter(AbilityPredicates.hasMetadata(MetadataProvider.SPY_PLAYER))
                 .handler(e -> {
                     e.getPlayer().sendMessage("§6(Spy - Debug) §cWait until the arrow lands!");
-                    e.setCancelled(true);
+                    //e.setCancelled(true);
                 });
+
+         */
 
         Events.subscribe(ProjectileHitEvent.class)
                 .filter(e -> e.getEntity() instanceof Arrow)
