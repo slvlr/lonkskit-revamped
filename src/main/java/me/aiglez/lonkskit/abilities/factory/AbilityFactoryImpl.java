@@ -2,8 +2,7 @@ package me.aiglez.lonkskit.abilities.factory;
 
 import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.abilities.Ability;
-import me.aiglez.lonkskit.abilities.functional.*;
-import me.aiglez.lonkskit.abilities.itembased.*;
+import me.aiglez.lonkskit.abilities.itembased.ThorAbility;
 import me.aiglez.lonkskit.exceptions.AbilityFileNotFoundException;
 import me.aiglez.lonkskit.exceptions.AbilityRegisterException;
 import me.aiglez.lonkskit.utils.Logger;
@@ -36,6 +35,7 @@ public class AbilityFactoryImpl implements AbilityFactory {
     @Override
     public void registerAbilities() {
         registerAbility("thor", new ThorAbility(getFileByName("thor")));
+        /*
         registerAbility("dragon", new DragonAbility(getFileByName("dragon")));
         registerAbility("switcher", new SwitcherAbility(getFileByName("switcher")));
         registerAbility("portastomp", new PortastompAbility(getFileByName("portastomp")));
@@ -88,6 +88,7 @@ public class AbilityFactoryImpl implements AbilityFactory {
         registerAbility("spider", new SpiderDAbility(getFileByName("spider")));
         registerAbility("casper", new Casper(getFileByName("casper")));
          */
+
 
         Logger.fine(ChatColor.GREEN + "Registered a total of " + abilities.size() + " abilities.");
     }

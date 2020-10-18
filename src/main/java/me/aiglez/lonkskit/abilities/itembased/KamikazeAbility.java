@@ -3,6 +3,7 @@ package me.aiglez.lonkskit.abilities.itembased;
 import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
+import me.aiglez.lonkskit.utils.Various;
 import me.lucko.helper.config.ConfigurationNode;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -27,13 +28,13 @@ public class KamikazeAbility extends ItemStackAbility {
                 localPlayer.toBukkit()
         );
         final double damage = localPlayer.toBukkit().getHealth();
-        localPlayer.msg("&4(Kamikaze - Debug) &cYou have exploded!");
+        localPlayer.msg("&4(Kamikaze - Debug) &cYou have exploded! (HP left: {0})", damage);
 
         // damage
         localPlayer.toBukkit().damage(999);
-        WorldProvider.KP_WORLD.getNearbyLivingEntities(localPlayer.getLocation(), 5D, 5D, 5D)
-                .forEach(entity -> {
-                    entity.damage(damage);
+        WorldProvider.KP_WORLD.getNearbyPlayers(localPlayer.getLocation(), 5D, 5D, 5D)
+                .forEach(player -> {
+                    Various.damage(LocalPlayer.get(player), damage, true);
                 });
         // damage
 

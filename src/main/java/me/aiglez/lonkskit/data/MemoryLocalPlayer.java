@@ -19,6 +19,7 @@ import me.lucko.helper.text3.Text;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -270,5 +271,10 @@ public class MemoryLocalPlayer implements LocalPlayer {
     @Override
     public boolean hasTraps() {
         return !demomanTraps.isEmpty();
+    }
+
+    @Override
+    public void placeTrap(Block block) {
+
     }
 }

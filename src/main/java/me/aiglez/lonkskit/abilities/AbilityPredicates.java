@@ -34,7 +34,7 @@ public class AbilityPredicates {
         return e -> {
             if(!(e.getEntity() instanceof Player)) return false;
             final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getEntity());
-            if(localPlayer.hasSelectedKit()) return false;
+            if(!localPlayer.hasSelectedKit()) return false;
             for (final String abilityName : abilitiesName) {
                 final Ability ability = Ability.get(abilityName);
                 if(!localPlayer.getNullableSelectedKit().hasAbility(ability)) {
