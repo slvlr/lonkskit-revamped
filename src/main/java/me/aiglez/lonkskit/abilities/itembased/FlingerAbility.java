@@ -1,5 +1,6 @@
 package me.aiglez.lonkskit.abilities.itembased;
 
+import com.destroystokyo.paper.event.entity.ThrownEggHatchEvent;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.MetadataProvider;
@@ -64,6 +65,10 @@ public class FlingerAbility extends ItemStackAbility {
 
                     damager.remove();
                 });
+
+        Events.subscribe(ThrownEggHatchEvent.class)
+                .filter(e -> Metadata.provideForEntity(e.getEgg()).has(MetadataProvider.EGG_FLINGER))
+                .handler(e -> e.setHatching(false));
     }
 
 }
