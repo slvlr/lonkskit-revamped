@@ -1,24 +1,33 @@
 package me.aiglez.lonkskit.utils;
 
+import me.aiglez.lonkskit.players.messages.Replaceable;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 public class Logger {
 
-    public static void severe(String message) {
-        Bukkit.getConsoleSender().sendMessage( ChatColor.RED + "[LonksKit - SEVERE] " + ChatColor.RESET + message);
+    public static void severe(String message, Object... replacements) {
+        Bukkit.getConsoleSender().sendMessage(
+                ChatColor.RED + "[LonksKit - SEVERE] " + ChatColor.RESET + Replaceable.handle(message, replacements)
+        );
     }
 
-    public static void fine(String message) {
-        Bukkit.getConsoleSender().sendMessage( ChatColor.GREEN + "[LonksKit - FINE] " + ChatColor.RESET + message);
+    public static void fine(String message, Object... replacements) {
+        Bukkit.getConsoleSender().sendMessage(
+                ChatColor.GREEN + "[LonksKit - FINE] " + ChatColor.RESET + Replaceable.handle(message, replacements)
+        );
     }
 
-    public static void debug(String message) {
-        Bukkit.getConsoleSender().sendMessage( ChatColor.AQUA + "[LonksKit - DEBUG] " + ChatColor.RESET + message);
+    public static void debug(String message, Object... replacements) {
+        Bukkit.getConsoleSender().sendMessage(
+                ChatColor.AQUA + "[LonksKit - DEBUG] " + ChatColor.RESET + Replaceable.handle(message, replacements)
+        );
     }
 
-    public static void warn(String message) {
-        Bukkit.getConsoleSender().sendMessage( ChatColor.YELLOW + "[LonksKit - WARN] " + ChatColor.RESET + message);
+    public static void warn(String message, Object... replacements) {
+        Bukkit.getConsoleSender().sendMessage(
+                ChatColor.YELLOW + "[LonksKit - WARN] " + ChatColor.RESET + Replaceable.handle(message, replacements)
+        );
     }
 
     private Logger() {
