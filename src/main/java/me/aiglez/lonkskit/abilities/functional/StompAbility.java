@@ -4,15 +4,18 @@ import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.FunctionalAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.Events;
-import me.lucko.helper.config.ConfigurationNode;
+import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.event.filter.EventFilters;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 
+import java.io.IOException;
+
+
 public class StompAbility extends FunctionalAbility {
 
-    public StompAbility(ConfigurationNode configuration) {
-        super("stomp", configuration);
+    public StompAbility(YAMLConfigurationLoader configurationLoader) throws IOException {
+        super("stomp", configurationLoader);
     }
 
     @Override

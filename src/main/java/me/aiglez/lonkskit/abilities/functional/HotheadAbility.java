@@ -5,9 +5,10 @@ import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.FunctionalAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.Events;
-import me.lucko.helper.config.ConfigurationNode;
+import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 
+import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -16,8 +17,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class HotheadAbility extends FunctionalAbility {
 
-    public HotheadAbility( ConfigurationNode configuration) {
-        super("hothead", configuration);
+    public HotheadAbility(YAMLConfigurationLoader configurationLoader) throws IOException {
+        super("hothead", configurationLoader);
     }
 
     @Override

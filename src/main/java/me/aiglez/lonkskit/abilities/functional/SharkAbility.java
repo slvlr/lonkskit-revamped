@@ -4,7 +4,7 @@ import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.FunctionalAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.Events;
-import me.lucko.helper.config.ConfigurationNode;
+import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.event.filter.EventFilters;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -12,14 +12,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
+import java.io.IOException;
+
 /**
  * @author AigleZ
  * @date 04/10/2020
  */
+
 public class SharkAbility extends FunctionalAbility {
 
-    public SharkAbility(ConfigurationNode configuration) {
-        super("shark", configuration);
+    public SharkAbility(YAMLConfigurationLoader configurationLoader) throws IOException {
+        super("shark", configurationLoader);
     }
 
     @Override

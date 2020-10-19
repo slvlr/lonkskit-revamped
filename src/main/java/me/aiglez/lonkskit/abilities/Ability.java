@@ -6,6 +6,8 @@ import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.cooldown.CooldownMap;
 
+import java.io.IOException;
+
 public interface Ability {
 
     String getName();
@@ -16,7 +18,7 @@ public interface Ability {
 
     void registerListeners();
 
-    void reloadConfiguration();
+    void reloadConfiguration() throws IOException;
 
     void applyEffects(LocalPlayer localPlayer);
 

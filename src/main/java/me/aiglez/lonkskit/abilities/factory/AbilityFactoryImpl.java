@@ -2,16 +2,20 @@ package me.aiglez.lonkskit.abilities.factory;
 
 import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.abilities.Ability;
-import me.aiglez.lonkskit.abilities.functional.*;
-import me.aiglez.lonkskit.abilities.itembased.*;
+import me.aiglez.lonkskit.abilities.functional.HotheadAbility;
+import me.aiglez.lonkskit.abilities.functional.HulkAbility;
+import me.aiglez.lonkskit.abilities.functional.SharkAbility;
+import me.aiglez.lonkskit.abilities.functional.ShooterAbility;
 import me.aiglez.lonkskit.exceptions.AbilityFileNotFoundException;
 import me.aiglez.lonkskit.exceptions.AbilityRegisterException;
 import me.aiglez.lonkskit.utils.Logger;
 import me.lucko.helper.config.ConfigFactory;
 import me.lucko.helper.config.ConfigurationNode;
+import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import org.bukkit.ChatColor;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
@@ -36,36 +40,13 @@ public class AbilityFactoryImpl implements AbilityFactory {
     @Override
     public void registerAbilities() {
         try {
-            registerAbility("thor", new ThorAbility(getFileByName("thor")));
-            registerAbility("cowboy", new CowboyAbility(getFileByName("cowboy")));
-            registerAbility("spy", new SpyAbility(getFileByName("spy")));
-            registerAbility("wallbuilder", new WallBuilderAbility(getFileByName("wallbuilder")));
+            Logger.debug("[Abilities] registering functional abilities...");
+            registerAbility("hothead", new HotheadAbility(yamlConfigurationLoader("hothead")));
+            registerAbility("hulk", new HulkAbility(yamlConfigurationLoader("hulk")));
+            registerAbility("shark", new SharkAbility(yamlConfigurationLoader("shark")));
+            registerAbility("shooter", new ShooterAbility(yamlConfigurationLoader("shooter")));
+            registerAbility("shark", new SharkAbility(yamlConfigurationLoader("shark")));
 
-            registerAbility("dragon", new DragonAbility(getFileByName("dragon")));
-            registerAbility("switcher", new SwitcherAbility(getFileByName("switcher")));
-            registerAbility("portastomp", new PortastompAbility(getFileByName("portastomp")));
-            registerAbility("wizard", new WizardAbility(getFileByName("wizard")));
-            registerAbility("stomp", new StompAbility(getFileByName("stomp")));
-            registerAbility("troll", new TrollAbility(getFileByName("troll")));
-            registerAbility("blink", new BlinkAbility(getFileByName("blink")));
-            registerAbility("kangaroo", new KangarooAbility(getFileByName("kangaroo")));
-            registerAbility("shark", new SharkAbility(getFileByName("shark")));
-            registerAbility("jedi", new JediAbility(getFileByName("jedi")));
-            registerAbility("chomp", new ChompAbility(getFileByName("chomp")));
-            registerAbility("shooter", new ShooterAbility(getFileByName("shooter")));
-            registerAbility("superman", new SupermanAbility(getFileByName("superman")));
-            registerAbility("fisherman", new FishermanAbility(getFileByName("fisherman")));
-            registerAbility("hooker", new HookerAbility(getFileByName("hooker")));
-            registerAbility("tiger", new TigerAbility(getFileByName("tiger")));
-            registerAbility("spy", new SpyAbility(getFileByName("spy")));
-
-            // BETA
-
-            registerAbility("hothead", new HotheadAbility(getFileByName("hothead")));
-            registerAbility("hulk", new HulkAbility(getFileByName("hulk")));
-            registerAbility("flinger", new FlingerAbility(getFileByName("flinger")));
-            registerAbility("hothead", new HotheadAbility(getFileByName("hothead")));
-            registerAbility("kamikaze", new KamikazeAbility(getFileByName("kamikaze")));
 
             /*
             Logger.debug("Loading Imad's abilities...");
@@ -90,7 +71,7 @@ public class AbilityFactoryImpl implements AbilityFactory {
             registerAbility("casper", new Casper(getFileByName("casper")));
              */
 
-        } catch (AbilityRegisterException | AbilityFileNotFoundException e) {
+        } catch (AbilityRegisterException | AbilityFileNotFoundException | IOException e) {
             e.printStackTrace();
         }
 
@@ -113,5 +94,13 @@ public class AbilityFactoryImpl implements AbilityFactory {
             throw new AbilityFileNotFoundException(name);
         }
         return ConfigFactory.yaml().load(abilityFile);
+    }
+
+    private YAMLConfigurationLoader yamlConfigurationLoader(String name) {
+        final File file = new File(KitPlugin.getSingleton().getDataFolder() + File.separator + "abilities", name + ".yml");
+        if(!file.exists()) {
+            throw new AbilityFileNotFoundException(name);
+        }
+        return ConfigFactory.yaml().loader(file);
     }
 }

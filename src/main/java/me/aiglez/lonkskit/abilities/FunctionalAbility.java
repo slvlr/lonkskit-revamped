@@ -4,42 +4,53 @@ import com.google.common.base.Preconditions;
 import com.google.common.reflect.TypeToken;
 import me.aiglez.lonkskit.exceptions.AbilityRegisterException;
 import me.aiglez.lonkskit.players.LocalPlayer;
+import me.aiglez.lonkskit.utils.Logger;
 import me.aiglez.lonkskit.utils.PotionEffectBuilder;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.config.objectmapping.ObjectMappingException;
+import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.cooldown.Cooldown;
 import me.lucko.helper.cooldown.CooldownMap;
 import me.lucko.helper.function.chain.Chain;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.bukkit.event.Listener;
 import org.bukkit.potion.PotionEffect;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public abstract class FunctionalAbility implements Ability, Listener {
+public abstract class FunctionalAbility implements Ability {
 
     protected final String name;
-    protected final ConfigurationNode configuration;
     protected final CooldownMap<LocalPlayer> cooldown;
     protected final Set<PotionEffect> potionEffects;
 
-    protected FunctionalAbility(String name, ConfigurationNode configuration) {
+    private final YAMLConfigurationLoader configurationLoader;
+    protected ConfigurationNode configuration;
+
+    protected FunctionalAbility(String name, YAMLConfigurationLoader configurationLoader) throws IOException {
         Preconditions.checkNotNull(name);
-        Preconditions.checkNotNull(configuration);
+        Preconditions.checkNotNull(configurationLoader);
         this.name = name;
-        this.configuration = configuration;
+        this.configurationLoader = configurationLoader;
+
+        if(configurationLoader.canLoad()) {
+            this.configuration = configurationLoader.load();
+        } else {
+            throw new AbilityRegisterException(name, "Can't load ability's file");
+        }
 
         final int cooldownSeconds = configuration.getNode("cooldown").getInt(0);
         this.cooldown = CooldownMap.create(Cooldown.of(cooldownSeconds, TimeUnit.SECONDS));
 
         try {
             this.potionEffects = Chain.start(configuration.getNode("potion-effects").getList(new TypeToken<String>() {}))
-                    .map(list -> list.stream().map(unparsed -> PotionEffectBuilder.parse(unparsed).build()).filter(Objects::nonNull).collect(Collectors.toSet()))
-                    .orElseIfNull(Collections.emptySet()).endOrNull();
+                    .map(list -> list.stream().map(unparsed -> PotionEffectBuilder.parse(unparsed).build()).filter(Objects::nonNull)
+                            .collect(Collectors.toSet()))
+                    .end().orElse(Collections.emptySet());
         } catch (ObjectMappingException e) {
             throw new AbilityRegisterException(name, "Couldn't map an object (LIST) // " + e.getMessage());
         }
@@ -63,8 +74,13 @@ public abstract class FunctionalAbility implements Ability, Listener {
     }
 
     @Override
-    public void reloadConfiguration() {
-        // TODO: implement this
+    public void reloadConfiguration() throws IOException {
+        Logger.debug("[{0}] Reloading configuration ...", this.name);
+        if(!this.configurationLoader.canLoad()) {
+            Logger.debug("[{0}] Couldn't reload the configuration ...", this.name);
+            return;
+        }
+        this.configuration = this.configurationLoader.load();
     }
 
     @Override

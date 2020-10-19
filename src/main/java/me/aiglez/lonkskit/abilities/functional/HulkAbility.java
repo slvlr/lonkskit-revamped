@@ -5,7 +5,7 @@ import me.aiglez.lonkskit.abilities.FunctionalAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.lucko.helper.Events;
-import me.lucko.helper.config.ConfigurationNode;
+import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.event.filter.EventFilters;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.block.Action;
@@ -14,14 +14,17 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.util.Vector;
 
+import java.io.IOException;
+
 /**
  * @author AigleZ
  * @date 11/10/2020
  */
+
 public class HulkAbility extends FunctionalAbility {
 
-    public HulkAbility( ConfigurationNode configuration) {
-        super("hulk", configuration);
+    public HulkAbility(YAMLConfigurationLoader configurationLoader) throws IOException {
+        super("hulk", configurationLoader);
     }
 
     @Override

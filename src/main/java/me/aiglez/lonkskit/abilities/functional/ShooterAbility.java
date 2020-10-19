@@ -5,7 +5,7 @@ import me.aiglez.lonkskit.abilities.FunctionalAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.Events;
 import me.lucko.helper.Schedulers;
-import me.lucko.helper.config.ConfigurationNode;
+import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.event.block.Action;
@@ -13,6 +13,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -20,10 +21,12 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author AigleZ
  * @date 05/10/2020
  */
+
 public class ShooterAbility extends FunctionalAbility {
 
-    public ShooterAbility(ConfigurationNode configuration) {
-        super("shooter", configuration);
+
+    public ShooterAbility(YAMLConfigurationLoader configurationLoader) throws IOException {
+        super("shooter", configurationLoader);
     }
 
     @Override
