@@ -6,6 +6,7 @@ import me.aiglez.lonkskit.abilities.functional.HotheadAbility;
 import me.aiglez.lonkskit.abilities.functional.HulkAbility;
 import me.aiglez.lonkskit.abilities.functional.SharkAbility;
 import me.aiglez.lonkskit.abilities.functional.ShooterAbility;
+import me.aiglez.lonkskit.abilities.functional.johan.AnvilAbility;
 import me.aiglez.lonkskit.exceptions.AbilityFileNotFoundException;
 import me.aiglez.lonkskit.exceptions.AbilityRegisterException;
 import me.aiglez.lonkskit.utils.Logger;
@@ -39,6 +40,7 @@ public class AbilityFactoryImpl implements AbilityFactory {
 
     @Override
     public void registerAbilities() {
+        int aiglez = 0, imad = 0;
         try {
             Logger.debug("[Abilities] registering functional abilities...");
             registerAbility("hothead", new HotheadAbility(yamlConfigurationLoader("hothead")));
@@ -46,7 +48,12 @@ public class AbilityFactoryImpl implements AbilityFactory {
             registerAbility("shark", new SharkAbility(yamlConfigurationLoader("shark")));
             registerAbility("shooter", new ShooterAbility(yamlConfigurationLoader("shooter")));
             registerAbility("shark", new SharkAbility(yamlConfigurationLoader("shark")));
+            aiglez += 5;
 
+            // Johan - start
+            registerAbility("anvil", new AnvilAbility(yamlConfigurationLoader("anvil")));
+            imad++;
+            // Johan - end
 
             /*
             Logger.debug("Loading Imad's abilities...");
