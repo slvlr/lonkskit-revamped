@@ -3,7 +3,6 @@ package me.aiglez.lonkskit.abilities.itembased;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.abilities.helpers.ConstructHelper;
 import me.aiglez.lonkskit.players.LocalPlayer;
-import me.lucko.helper.Schedulers;
 import me.lucko.helper.config.ConfigurationNode;
 import org.bukkit.block.Block;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -21,11 +20,17 @@ public class WallBuilderAbility extends ItemStackAbility {
         final Block clickedBlock = e.getClickedBlock();
 
         if(clickedBlock == null) {
-            localPlayer.msg("&6(WallBuilder - Debug) &cYou must click on a block");
+            localPlayer.msg("&a(WallBuilder - Debug) &cYou must click on a block");
             return;
         }
 
-        Schedulers.sync().run(() -> localPlayer.msg("&6(WallBuilder - Debug) &aBuild result: " + ConstructHelper.buildWallAt(clickedBlock.getLocation())));
+        final boolean result = ConstructHelper.buildWallAt(localPlayer.getLocation().getYaw(), clickedBlock.getLocation());
+        if(result == false) {
+            localPlayer.msg("&a(WallBuilder - Debug) &cYou can't build there!");
+            return;
+        }
+
+        localPlayer.msg("&a(WallBuilder - Debug) &aSuccessfully placed a wall");
     }
 
     @Override
@@ -34,7 +39,5 @@ public class WallBuilderAbility extends ItemStackAbility {
     }
 
     @Override
-    public void registerListeners() {
-
-    }
+    public void registerListeners() { }
 }

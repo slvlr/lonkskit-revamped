@@ -1,12 +1,13 @@
 package me.aiglez.lonkskit.abilities.helpers;
 
 import me.aiglez.lonkskit.WorldProvider;
-import me.aiglez.lonkskit.utils.Logger;
+import me.aiglez.lonkskit.utils.Various;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.util.BlockIterator;
-import org.bukkit.util.Vector;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /*
  * Related with Builder ability
@@ -18,36 +19,47 @@ public class ConstructHelper {
     private static final Material WALL_MATERIAL = Material.STONE;
 
 
-    public static boolean buildWallAt(Location location) {
-        Block start = location.getBlock();
-        Block end = WorldProvider.KP_WORLD.getBlockAt(
-                start.getX() + 1,
-                start.getY() + 1,
-                start.getZ() + 1
-        );
+    public static boolean buildWallAt(float yaw, Location location) {
+        final Block base = location.getBlock();
 
-        final BlockIterator it = getBlocksBetween(start.getLocation(), end.getLocation());
+        int minX, minY, minZ;
+        int maxX, maxY, maxZ;
 
-        int placed = 0;
-        while (it.hasNext()) {
-            final Block block = it.next();;
-            block.setType(WALL_MATERIAL);
+        minY = base.getY();
+        maxY = minY + WALL_TALL -1;
 
-            placed++;
+        final int direction = Math.round(yaw / 90f);
+        if(direction % 2 == 0) { // Direction = (0 || 2)
+            minX = base.getX() - ((WALL_WIDE - 1) / 2);
+            maxX = minX + WALL_WIDE - 1;
+            maxZ = minZ = base.getZ();
+        } else { // Direction = (1 || 3)
+            minZ = base.getZ() - ((WALL_WIDE - 1) / 2);
+            maxZ = minZ + WALL_WIDE - 1;
+            maxX = minX = base.getX();
         }
 
-        Logger.debug("[Construct] Placed {0} block(s)", placed);
+        final List<Block> build = new ArrayList<>();
+        boolean pass = true;
+        for(int x = minX; x <= maxX; x++)
+            for(int y = minY; y <= maxY; y++)
+                for(int z = minZ; z <= maxZ; z++) {
+                    final Block block = WorldProvider.KP_WORLD.getBlockAt(x, y, z);
+                    if(canBuildAt(location)) {
+                        build.add(block);
+                    } else {
+                        pass = false;
+                    }
+                }
+        if(pass == false) {
+            return false;
+        }
 
+        build.forEach(block -> block.setType(WALL_MATERIAL));
         return true;
     }
 
     private static boolean canBuildAt(Location location) {
-        return location.getBlock().isEmpty();
-    }
-
-    public static BlockIterator getBlocksBetween(Location start, Location end) {
-        final Vector direction = end.toVector().subtract(start.toVector());
-
-        return new BlockIterator(WorldProvider.KP_WORLD, start.toVector(), direction, 0, 50);
+        return location.getBlock().isEmpty() && Various.assertNotSurroundedWithCactus(location.getBlock());
     }
 }

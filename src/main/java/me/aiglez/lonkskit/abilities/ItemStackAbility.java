@@ -50,8 +50,13 @@ public abstract class ItemStackAbility implements Ability, Listener {
 
         try {
             this.potionEffects = Chain.start(configuration.getNode("potion-effects").getList(new TypeToken<String>() {}))
-                    .map(list -> list.stream().map(unparsed -> PotionEffectBuilder.parse(unparsed).build()).filter(Objects::nonNull).collect(Collectors.toSet()))
-                    .orElseIfNull(Collections.emptySet()).endOrNull();
+                    .map(list -> list.stream().map(unparsed -> PotionEffectBuilder.parse(unparsed).build()).filter(Objects::nonNull)
+                            .collect(Collectors.toSet()))
+                    .end().orElse(Collections.emptySet());
+
+            potionEffects.forEach(potionEffect -> {
+                Logger.debug("[{0}] Found potion effect: {1} A: {2} D: {3} ticks", name, potionEffect.getType(), potionEffect.getAmplifier(), potionEffect.getDuration());
+            });
         } catch (ObjectMappingException e) {
             throw new AbilityRegisterException(name, "Couldn't map an object (LIST) // " + e.getMessage());
         }
@@ -131,12 +136,12 @@ public abstract class ItemStackAbility implements Ability, Listener {
 
     @Override
     public void applyEffects(LocalPlayer localPlayer) {
-
+        localPlayer.toBukkit().addPotionEffects(potionEffects);
     }
 
     @Override
     public void removeEffects(LocalPlayer localPlayer) {
-
+        this.potionEffects.forEach(potionEffect -> localPlayer.toBukkit().removePotionEffect(potionEffect.getType()));
     }
 
     @Override

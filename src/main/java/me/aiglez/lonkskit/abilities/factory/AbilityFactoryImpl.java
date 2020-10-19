@@ -2,10 +2,8 @@ package me.aiglez.lonkskit.abilities.factory;
 
 import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.abilities.Ability;
-import me.aiglez.lonkskit.abilities.itembased.CowboyAbility;
-import me.aiglez.lonkskit.abilities.itembased.SpyAbility;
-import me.aiglez.lonkskit.abilities.itembased.ThorAbility;
-import me.aiglez.lonkskit.abilities.itembased.WallBuilderAbility;
+import me.aiglez.lonkskit.abilities.functional.*;
+import me.aiglez.lonkskit.abilities.itembased.*;
 import me.aiglez.lonkskit.exceptions.AbilityFileNotFoundException;
 import me.aiglez.lonkskit.exceptions.AbilityRegisterException;
 import me.aiglez.lonkskit.utils.Logger;
@@ -37,60 +35,64 @@ public class AbilityFactoryImpl implements AbilityFactory {
 
     @Override
     public void registerAbilities() {
-        registerAbility("thor", new ThorAbility(getFileByName("thor")));
-        registerAbility("cowboy", new CowboyAbility(getFileByName("cowboy")));
-        registerAbility("spy", new SpyAbility(getFileByName("spy")));
-        registerAbility("wallbuilder", new WallBuilderAbility(getFileByName("wallbuilder")));
-        /*
-        registerAbility("dragon", new DragonAbility(getFileByName("dragon")));
-        registerAbility("switcher", new SwitcherAbility(getFileByName("switcher")));
-        registerAbility("portastomp", new PortastompAbility(getFileByName("portastomp")));
-        registerAbility("wizard", new WizardAbility(getFileByName("wizard")));
-        registerAbility("stomp", new StompAbility(getFileByName("stomp")));
-        registerAbility("troll", new TrollAbility(getFileByName("troll")));
-        registerAbility("blink", new BlinkAbility(getFileByName("blink")));
-        registerAbility("kangaroo", new KangarooAbility(getFileByName("kangaroo")));
-        registerAbility("shark", new SharkAbility(getFileByName("shark")));
-        registerAbility("jedi", new JediAbility(getFileByName("jedi")));
-        registerAbility("chomp", new ChompAbility(getFileByName("chomp")));
-        registerAbility("shooter", new ShooterAbility(getFileByName("shooter")));
-        registerAbility("superman", new SupermanAbility(getFileByName("superman")));
-        registerAbility("fisherman", new FishermanAbility(getFileByName("fisherman")));
-        registerAbility("hooker", new HookerAbility(getFileByName("hooker")));
-        registerAbility("tiger", new TigerAbility(getFileByName("tiger")));
-        registerAbility("spy", new SpyAbility(getFileByName("spy")));
+        try {
+            registerAbility("thor", new ThorAbility(getFileByName("thor")));
+            registerAbility("cowboy", new CowboyAbility(getFileByName("cowboy")));
+            registerAbility("spy", new SpyAbility(getFileByName("spy")));
+            registerAbility("wallbuilder", new WallBuilderAbility(getFileByName("wallbuilder")));
 
-        // BETA
+            registerAbility("dragon", new DragonAbility(getFileByName("dragon")));
+            registerAbility("switcher", new SwitcherAbility(getFileByName("switcher")));
+            registerAbility("portastomp", new PortastompAbility(getFileByName("portastomp")));
+            registerAbility("wizard", new WizardAbility(getFileByName("wizard")));
+            registerAbility("stomp", new StompAbility(getFileByName("stomp")));
+            registerAbility("troll", new TrollAbility(getFileByName("troll")));
+            registerAbility("blink", new BlinkAbility(getFileByName("blink")));
+            registerAbility("kangaroo", new KangarooAbility(getFileByName("kangaroo")));
+            registerAbility("shark", new SharkAbility(getFileByName("shark")));
+            registerAbility("jedi", new JediAbility(getFileByName("jedi")));
+            registerAbility("chomp", new ChompAbility(getFileByName("chomp")));
+            registerAbility("shooter", new ShooterAbility(getFileByName("shooter")));
+            registerAbility("superman", new SupermanAbility(getFileByName("superman")));
+            registerAbility("fisherman", new FishermanAbility(getFileByName("fisherman")));
+            registerAbility("hooker", new HookerAbility(getFileByName("hooker")));
+            registerAbility("tiger", new TigerAbility(getFileByName("tiger")));
+            registerAbility("spy", new SpyAbility(getFileByName("spy")));
 
-        registerAbility("hothead", new HotheadAbility(getFileByName("hothead")));
-        registerAbility("hulk", new HulkAbility(getFileByName("hulk")));
-        registerAbility("flinger", new FlingerAbility(getFileByName("flinger")));
-        registerAbility("hothead", new HotheadAbility(getFileByName("hothead")));
-        registerAbility("kamikaze", new KamikazeAbility(getFileByName("kamikaze")));
+            // BETA
 
-        /*
-        Logger.debug("Loading Imad's abilities...");
-        registerAbility("monk", new MonkAbility(getFileByName("monk")));
-        registerAbility("anvil", new AnvilAbility(getFileByName("anvil")));
-        registerAbility("shadowblade", new ShadowbladeAbility(getFileByName("shadowblade")));
+            registerAbility("hothead", new HotheadAbility(getFileByName("hothead")));
+            registerAbility("hulk", new HulkAbility(getFileByName("hulk")));
+            registerAbility("flinger", new FlingerAbility(getFileByName("flinger")));
+            registerAbility("hothead", new HotheadAbility(getFileByName("hothead")));
+            registerAbility("kamikaze", new KamikazeAbility(getFileByName("kamikaze")));
 
-        registerAbility("sonic", new SonicAbility(getFileByName("sonic")));
-        registerAbility("ghost", new GhostAbility(getFileByName("ghost")));
-        registerAbility("hyper", new HyperAbility(getFileByName("hyper")));
+            /*
+            Logger.debug("Loading Imad's abilities...");
+            registerAbility("monk", new MonkAbility(getFileByName("monk")));
+            registerAbility("anvil", new AnvilAbility(getFileByName("anvil")));
+            registerAbility("shadowblade", new ShadowbladeAbility(getFileByName("shadowblade")));
 
-        registerAbility("berserker", new BerserkerAbility(getFileByName("berserker")));
-        registerAbility("turtle", new TurtleAbility(getFileByName("turtle")));
-        registerAbility("snake", new SnakeAbility(getFileByName("snake")));
+            registerAbility("sonic", new SonicAbility(getFileByName("sonic")));
+            registerAbility("ghost", new GhostAbility(getFileByName("ghost")));
+            registerAbility("hyper", new HyperAbility(getFileByName("hyper")));
 
-        registerAbility("flamer", new FlamerAbility(getFileByName("flamer")));
-        registerAbility("killer", new KillerAbility(getFileByName("killer")));
-        registerAbility("elder", new ElderAbility(getFileByName("elder")));
+            registerAbility("berserker", new BerserkerAbility(getFileByName("berserker")));
+            registerAbility("turtle", new TurtleAbility(getFileByName("turtle")));
+            registerAbility("snake", new SnakeAbility(getFileByName("snake")));
 
-        registerAbility("wolf", new WolfAbility(getFileByName("wolf")));
-        registerAbility("spider", new SpiderDAbility(getFileByName("spider")));
-        registerAbility("casper", new Casper(getFileByName("casper")));
-         */
+            registerAbility("flamer", new FlamerAbility(getFileByName("flamer")));
+            registerAbility("killer", new KillerAbility(getFileByName("killer")));
+            registerAbility("elder", new ElderAbility(getFileByName("elder")));
 
+            registerAbility("wolf", new WolfAbility(getFileByName("wolf")));
+            registerAbility("spider", new SpiderDAbility(getFileByName("spider")));
+            registerAbility("casper", new Casper(getFileByName("casper")));
+             */
+
+        } catch (AbilityRegisterException | AbilityFileNotFoundException e) {
+            e.printStackTrace();
+        }
 
         Logger.fine(ChatColor.GREEN + "Registered a total of " + abilities.size() + " abilities.");
     }

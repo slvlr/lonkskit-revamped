@@ -12,11 +12,15 @@ import me.aiglez.lonkskit.players.LocalPlayerFactory;
 import me.aiglez.lonkskit.utils.Logger;
 import me.lucko.helper.config.ConfigFactory;
 import me.lucko.helper.config.ConfigurationNode;
+import me.lucko.helper.config.ConfigurationOptions;
+import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.plugin.ExtendedJavaPlugin;
 import me.lucko.helper.plugin.ap.Plugin;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+
+import java.io.IOException;
 
 @Plugin(
         name = "LonksKit", version = "1.0.9",
@@ -26,10 +30,13 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 public final class KitPlugin extends ExtendedJavaPlugin implements Listener {
 
     private static KitPlugin singleton;
+    private boolean loaded;
 
     private KitFactory kitFactory;
     private LocalPlayerFactory localPlayerFactory;
     private AbilityFactory abilityFactory;
+
+    private YAMLConfigurationLoader confLoader;
     private ConfigurationNode conf;
 
     private ProtocolManager protocolManager; // protocol lib hook
@@ -43,7 +50,14 @@ public final class KitPlugin extends ExtendedJavaPlugin implements Listener {
     public void enable() {
         singleton = this;
         Logger.fine("Loading configuration files...");
-        this.conf = ConfigFactory.yaml().load(getBundledFile("config.yml"));
+        try {
+            this.confLoader = ConfigFactory.yaml().loader(getBundledFile("config.yml"));
+            this.conf = confLoader.load(ConfigurationOptions.defaults());
+        } catch (IOException e) {
+            Logger.severe("Couldn't find the file {0}, shutting down the plugin.", "config.yml");
+            getPluginLoader().disablePlugin(this);
+            return;
+        }
 
         Logger.fine("Loading abilities...");
         this.abilityFactory = AbilityFactory.make();
@@ -64,10 +78,15 @@ public final class KitPlugin extends ExtendedJavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(this, this);
 
         new CommandsRegistry(this);
+        loaded = true;
     }
 
     @Override
     public void disable() {
+        if(!loaded) {
+            Logger.severe("Shutting down, the plugin didn't load properly!");
+            return;
+        }
         Logger.fine("Saving players...");
         localPlayerFactory.saveLocalPlayers();
     }

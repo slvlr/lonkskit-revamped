@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
  * @date 05/10/2020
  */
 public class ChompAbility extends ItemStackAbility {
+
     private final double damage;
 
     public ChompAbility(ConfigurationNode configuration) {
