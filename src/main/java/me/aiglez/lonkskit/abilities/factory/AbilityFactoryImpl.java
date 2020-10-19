@@ -6,8 +6,7 @@ import me.aiglez.lonkskit.abilities.functional.HotheadAbility;
 import me.aiglez.lonkskit.abilities.functional.HulkAbility;
 import me.aiglez.lonkskit.abilities.functional.SharkAbility;
 import me.aiglez.lonkskit.abilities.functional.ShooterAbility;
-import me.aiglez.lonkskit.abilities.functional.johan.AnvilAbility;
-import me.aiglez.lonkskit.abilities.functional.johan.BerserkerAbility;
+import me.aiglez.lonkskit.abilities.functional.johan.*;
 import me.aiglez.lonkskit.exceptions.AbilityFileNotFoundException;
 import me.aiglez.lonkskit.exceptions.AbilityRegisterException;
 import me.aiglez.lonkskit.utils.Logger;
@@ -54,6 +53,9 @@ public class AbilityFactoryImpl implements AbilityFactory {
             // Johan - start
             registerAbility("anvil", new AnvilAbility(yamlConfigurationLoader("anvil")));
             registerAbility("berserker", new BerserkerAbility(yamlConfigurationLoader("berserker")));
+            registerAbility("flamer", new FlamerAbility(yamlConfigurationLoader("flamer")));
+            registerAbility("killer", new KillerAbility(yamlConfigurationLoader("killer")));
+            registerAbility("recall", new RecallAbility(yamlConfigurationLoader("recall")));
             imad++;
             // Johan - end
 
