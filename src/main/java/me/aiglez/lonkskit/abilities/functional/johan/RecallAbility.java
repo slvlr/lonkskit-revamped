@@ -48,7 +48,6 @@ public class RecallAbility extends FunctionalAbility {
                     RecallHelper.addJoinPacket(e.getPlayer());
                     for (EntityPlayer npc : removedNPCS){
                         RecallHelper.removeNPCPacket(npc);
-
                     }
                 });
         Events.subscribe(KitSelectEvent.class)

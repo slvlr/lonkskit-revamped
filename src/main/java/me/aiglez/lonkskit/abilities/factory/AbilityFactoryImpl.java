@@ -56,6 +56,7 @@ public class AbilityFactoryImpl implements AbilityFactory {
             registerAbility("flamer", new FlamerAbility(yamlConfigurationLoader("flamer")));
             registerAbility("killer", new KillerAbility(yamlConfigurationLoader("killer")));
             registerAbility("recall", new RecallAbility(yamlConfigurationLoader("recall")));
+            registerAbility("turtle", new TurtleAbility(yamlConfigurationLoader("turtle")));
             imad++;
             // Johan - end
 
