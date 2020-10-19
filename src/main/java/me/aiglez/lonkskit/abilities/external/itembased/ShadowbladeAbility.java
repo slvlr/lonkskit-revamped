@@ -25,7 +25,7 @@ public class ShadowbladeAbility extends ItemStackAbility {
     public ShadowbladeAbility(ConfigurationNode configuration) {
         super("shadowblade", configuration);
         this.item = ItemStackBuilder.of(Material.IRON_SWORD)
-                .name(getConfiguration().getNode("item-name").getString() == null ? Material.IRON_SWORD.name() : Objects.requireNonNull(getConfiguration().getNode("item-name").getString()))
+                .name(getConfiguration().getNode("item-name").getString() )
                 .build();
     }
 

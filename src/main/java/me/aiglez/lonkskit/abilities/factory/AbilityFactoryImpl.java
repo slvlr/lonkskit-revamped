@@ -15,7 +15,6 @@ import me.aiglez.lonkskit.exceptions.AbilityFileNotFoundException;
 import me.aiglez.lonkskit.exceptions.AbilityRegisterException;
 import me.lucko.helper.config.ConfigFactory;
 import me.lucko.helper.config.ConfigurationNode;
-import org.bukkit.Material;
 
 import java.io.File;
 import java.util.Collections;
@@ -214,7 +213,7 @@ public class AbilityFactoryImpl implements AbilityFactory {
         this.abilities.add(elder);
 
         Ability disguises = new Disguises(
-                getFileByName("disguise").orElseThrow(() -> new AbilityFileNotFoundException("disguise"))
+                getFileByName("disguises").orElseThrow(() -> new AbilityFileNotFoundException("disguises"))
         );
         this.abilities.add(disguises);
 
@@ -222,6 +221,12 @@ public class AbilityFactoryImpl implements AbilityFactory {
                 getFileByName("recall").orElseThrow(() -> new AbilityFileNotFoundException("recall"))
         );
         this.abilities.add(npc);
+
+        Ability wraith = new WraithAbility(
+                getFileByName("wraith").orElseThrow(() -> new AbilityFileNotFoundException("wraith"))
+        );
+
+        this.abilities.add(wraith);
         // Imad - end
     }
 

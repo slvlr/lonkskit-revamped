@@ -2,12 +2,16 @@ package me.aiglez.lonkskit.abilities.external.functionnal;
 
 import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.FunctionalAbility;
+import me.aiglez.lonkskit.abilities.external.itembased.SonicAbility;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.ConfigurationNode;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
-
+import java.io.IOException;
 import java.util.Objects;
 
 public class BerserkerAbility extends FunctionalAbility {
@@ -19,13 +23,11 @@ public class BerserkerAbility extends FunctionalAbility {
     @Override
     public void handleListeners() {
         Events.subscribe(PlayerDeathEvent.class)
-                .filter(e -> e.getEntity().getKiller() != null)
+                .filter(e -> e.getEntity().getKiller() != null && e.getEntity().getKiller() instanceof Player)
                 .filter(AbilityPredicates.isKillerhaveAbility(this))
                 .handler(e -> {
-                    int duration = getConfiguration().getNode("duration").getInt() * 20;
-                    int level = getConfiguration().getNode("level").getInt();
                     assert PotionType.STRENGTH.getEffectType() != null;
-                    Objects.requireNonNull(e.getEntity().getKiller()).addPotionEffect(new PotionEffect(PotionType.STRENGTH.getEffectType(),duration,level));
+                    e.getEntity().addPotionEffect(new PotionEffect(PotionType.STRENGTH.getEffectType(),200,3));
 
                 });
 

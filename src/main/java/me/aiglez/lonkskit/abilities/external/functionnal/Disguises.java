@@ -1,6 +1,6 @@
 package me.aiglez.lonkskit.abilities.external.functionnal;
 
-import com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent;
+import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.abilities.FunctionalAbility;
 import me.aiglez.lonkskit.events.KitSelectEvent;
 import me.libraryaddict.disguise.DisguiseAPI;
@@ -9,8 +9,8 @@ import me.libraryaddict.disguise.disguisetypes.MobDisguise;
 import me.lucko.helper.Events;
 import me.lucko.helper.Schedulers;
 import me.lucko.helper.config.ConfigurationNode;
-import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -19,21 +19,21 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Disguises extends FunctionalAbility {
-    private List<Player> mooshrooms = new ArrayList<Player>();
-    private List<Player> creepers = new ArrayList<Player>();
-    private List<Player> spiders = new ArrayList<Player>();
-    private List<Player> snowmen = new ArrayList<Player>();
-    private int random = RandomUtils.nextInt(5);
+    private final List<Player> mooshrooms = new ArrayList<Player>();
+    private final List<Player> creepers = new ArrayList<Player>();
+    private final List<Player> spiders = new ArrayList<Player>();
+    private final List<Player> snowmen = new ArrayList<Player>();
+    private final List<Player> victimsOfSnow = new ArrayList<Player>();
+    private int times;
+    private int times1;
+    private int times2;
+
     public Disguises(ConfigurationNode configuration) {
         super("disguises", configuration);
     }
@@ -46,63 +46,89 @@ public class Disguises extends FunctionalAbility {
                     DisguiseAPI.undisguiseToAll(e.getLocalPlayer().toBukkit());
                     String backendName = e.getKit().getBackendName().toUpperCase();
                     kitsSelect(e.getLocalPlayer().toBukkit(),backendName,"SPIDER","PIG","WOLF","CREEPER","MOOSHROOM","SNOWM");
-                    if (e.getKit().getBackendName().contains("RECALL")){
-                        Schedulers.sync()
-                                .runLater(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Arrays.stream(e.getLocalPlayer().toBukkit().getInventory().getContents())
-                                                .filter(a -> a.getType() == Material.PLAYER_HEAD).forEach(a -> {
-                                            SkullMeta meta = (SkullMeta) a.getItemMeta();
-                                            meta.setOwningPlayer(e.getLocalPlayer().toBukkit());
-                                            a.setItemMeta(meta);
-                                        });
-                                    }
-                                },5L);
-                    }
+
+
                 });
         //MOOSHROOM Ability
         Events.subscribe(PlayerMoveEvent.class)
-                .filter(e -> mooshrooms.contains(e.getPlayer()))
-                .filter(e -> e.getTo().getBlock().getType() == Material.MYCELIUM || e.getFrom().getBlock().getType() == Material.MYCELIUM )
                 .handler(e -> {
-                    random = RandomUtils.nextInt(5);
-                    e.getPlayer().sendMessage(String.valueOf(random));
-                    if (random == 4){
-                        e.getPlayer().setHealth(e.getPlayer().getHealth() + 2);
-                        e.getPlayer().sendMessage("YOU RECEIVE 1 <3 ");
-                    }
-                    if (snowmen.contains(e.getPlayer()) ){
-                        if (e.getTo().getBlock().getType() == Material.ICE || e.getTo().getBlock().getType() == Material.BLUE_ICE || e.getTo().getBlock().getType() == Material.FROSTED_ICE){
-                            if (random == 0){
-                                ItemStack itemStack = new ItemStack(Material.SNOWBALL);
-                                itemStack.addEnchantment(Enchantment.ARROW_KNOCKBACK,4);
-                                e.getPlayer().getInventory().addItem(itemStack);
+                    if (victimsOfSnow.contains(e.getPlayer())) e.setCancelled(true);
+                    if (mooshrooms.contains(e.getPlayer())) {
+                        if (e.getTo().getBlock().getType() == Material.MYCELIUM || e.getFrom().getBlock().getType() == Material.MYCELIUM
+                        || e.getTo().getBlock().getRelative(0,-1,0).getType() == Material.MYCELIUM ||  e.getFrom().getBlock().getRelative(0,-1,0).getType() == Material.MYCELIUM ) {
+                            if (times1 == 0) {
+                                if (e.getPlayer().getHealth() != 20) {
+                                    e.getPlayer().setHealth(Math.min(20.00D,e.getPlayer().getHealth() + 1)); //KHLIHA HAKA W T2KD MN WRAITH TDIR DAKCHI B CONFIG FILES W LAY3AWN
+                                }
+                            }
+                            if (times1 >= 20) {
+                                times1 = 0;
+                            }else
+                                times1++;
+                        }
+                        if (snowmen.contains(e.getPlayer())) {
+                            if (e.getTo().getBlock().getType() == Material.ICE ||
+                                    e.getTo().getBlock().getType() == Material.BLUE_ICE ||
+                                    e.getTo().getBlock().getType() == Material.FROSTED_ICE ||
+                            e.getTo().getBlock().getRelative(0,-1,0).getType() == Material.ICE ||
+                                    e.getFrom().getBlock().getRelative(0,-1,0).getType() == Material.BLUE_ICE || e.getFrom().getBlock().getRelative(0,-1,0).getType() == Material.FROSTED_ICE ) {
+                                if (times == 0) {
+                                    ItemStack itemStack = new ItemStack(Material.SNOWBALL);
+                                    itemStack.addEnchantment(Enchantment.ARROW_DAMAGE,4);
+                                    e.getPlayer().getInventory().setItem(27,itemStack);
+                                    e.getPlayer().sendMessage("You received A Good SnowBall");
+                                }
+                                if (times >= 24){
+                                    times = 0;
+                                }else times++;
+
                             }
                         }
                     }
+                    if (spiders.contains(e.getPlayer())){
+                        if (nearWeb(e.getTo().clone()) || nearWeb(e.getTo().clone().add(0,1,0))){
+                            if (!(e.getPlayer().hasPotionEffect(PotionEffectType.INCREASE_DAMAGE) && e.getPlayer().hasPotionEffect(PotionEffectType.SPEED))) {
+                                e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 10 * 20, 1)); //Set It Customizable !!
+                                e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 10 * 20, 1));
+                            }
+                        }
+
+
+
+                    }
+
                 });
+
         //CREEPER Ability
         Events.subscribe(EntityDamageByEntityEvent.class)
                 .filter(e -> e.getEntity() instanceof Player && e.getDamager() instanceof Player)
-                .filter(e -> creepers.contains((Player)e.getDamager()))
+                .filter(e -> creepers.contains(e.getDamager()))
                 .handler(e ->{
-                    random = RandomUtils.nextInt(5);
-                   if (random == 3){
-                       ((Player)e.getEntity()).setVelocity(e.getEntity().getLocation().getDirection().multiply(3).setY(2));
-                   }
+                    if (times2 == 0) {
+                        e.setCancelled(true);
+                        Bukkit.getScheduler().runTaskLater(KitPlugin.getSingleton(), () -> {
+                            e.getEntity().setVelocity(e.getEntity().getLocation().getDirection().multiply(3).setY(2));
+                        },1L);
+                    }
+                    if (times2 >= 10) {
+                        times2 = 0;
+                    }else
+                        times2++;
                 });
         //SNOWMAN Ability
         Events.subscribe(ProjectileHitEvent.class)
-                .filter(e -> snowmen.contains((Player)e.getEntity().getShooter()))
-                .filter(e -> e.getEntity() instanceof Snowball)
+                .filter(e -> snowmen.contains(e.getEntity().getShooter()))
+                .filter(e -> e.getEntity() instanceof Snowball && e.getHitEntity() instanceof Player)
                 .handler(e ->{
                     Player victim = (Player) e.getHitEntity();
                     assert victim != null;
-                    victim.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,60,5));
-                    victim.addPotionEffect(new PotionEffect(PotionEffectType.SLOW,60,4000));
-                    victim.damage(getConfiguration().getNode("damage").getDouble());
-
+                    int duration = 7 * 20;
+                    victim.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,duration,5));
+                    victim.addPotionEffect(new PotionEffect(PotionEffectType.SLOW,duration,5));
+                    victim.damage(3);
+                    victimsOfSnow.add(victim);
+                    Schedulers.sync()
+                                .runLater(() -> victimsOfSnow.remove(victim),Long.valueOf(duration));
                 });
     }
 
@@ -142,8 +168,19 @@ public class Disguises extends FunctionalAbility {
 
     }
 
-
-
+    private boolean nearWeb(Location loc) {
+        double range = .3;
+        if (loc.add(0, 0, 0).getBlock().getType().equals(Material.COBWEB)
+                || loc.add(range, 0, 0).getBlock().getType().equals(Material.COBWEB)
+                || loc.add(-range, 0, 0).getBlock().getType().equals(Material.COBWEB)
+                || loc.add(range, 0, range).getBlock().getType().equals(Material.COBWEB)
+                || loc.add(-range, 0, range).getBlock().getType().equals(Material.COBWEB)
+                || loc.add(-range, 0, -range).getBlock().getType().equals(Material.COBWEB)
+                || loc.add(0, 0, range).getBlock().getType().equals(Material.COBWEB)
+                || loc.add(0, 0, -range).getBlock().getType().equals(Material.COBWEB))
+            return true;
+        return false;
+    }
 
 
 

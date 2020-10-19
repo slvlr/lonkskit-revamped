@@ -20,7 +20,6 @@ public class SnakeAbility extends ItemStackAbility {
     public SnakeAbility(ConfigurationNode configuration) {
         super("snake", configuration);
         this.item = ItemStackBuilder.of(Material.IRON_SWORD)
-                .name(getConfiguration().getNode("item-name").getString() == null ? Material.IRON_SWORD.name() : Objects.requireNonNull(getConfiguration().getNode("item-name").getString()))
                 .build();
     }
 
@@ -52,8 +51,9 @@ public class SnakeAbility extends ItemStackAbility {
                 .filter(e -> AbilityPredicates.HastheKit(this,e))
                 .handler(e -> {
                     Player player = (Player) e.getEntity();
-                    int duration = getConfiguration().getNode("duration").getInt() * 20;
-                    int level = getConfiguration().getNode("level").getInt();
+                    int duration = 4 * 20;
+                    int level = 2;
+
                     player.addPotionEffect(new PotionEffect(PotionEffectType.POISON,duration,level));
                 });
 

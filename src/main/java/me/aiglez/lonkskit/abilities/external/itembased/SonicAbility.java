@@ -49,17 +49,13 @@ public class SonicAbility extends ItemStackAbility {
             return;
         }
         if (isItemStack(localPlayer.toBukkit().getInventory().getItemInMainHand())) {
-            try {
-                int duration = getConfig("sonic").getInt("duration");
-                int level = getConfig("sonic").getInt("level");
+                int duration = 15;
+                int level = 3;
                 PotionEffect speed3 = new PotionEffect(PotionEffectType.SPEED, duration * 20,level);
                 if (!localPlayer.toBukkit().hasPotionEffect(PotionEffectType.SPEED)) {
                     localPlayer.toBukkit().addPotionEffect(speed3);
                 } else
                     localPlayer.msg("&c You have Speed III Already !!");
-            } catch (IOException | InvalidConfigurationException ioException) {
-                System.out.println("Can't access config file!!");
-            }
         }
     }
 

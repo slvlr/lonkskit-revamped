@@ -27,7 +27,7 @@ public class ElderAbility extends ItemStackAbility {
     public ElderAbility(ConfigurationNode configuration) {
         super("elder", configuration);
         this.item = ItemStackBuilder.of(Material.BLAZE_ROD)
-                .name(Objects.requireNonNull(getConfiguration().getNode("item-name").getString()))
+                .name("&3Staff")
                 .build();
     }
 
@@ -61,7 +61,7 @@ public class ElderAbility extends ItemStackAbility {
                     LocalPlayer localPlayer = LocalPlayer.get(event.getPlayer());
                     Player victim = (Player) event.getRightClicked();
                     if (!cooldown.test(localPlayer)){
-                        localPlayer.msg("&e(Sonic) &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
+                        localPlayer.msg("&e(Elder) &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
                         return;
                     }
                     work(victim);
