@@ -11,7 +11,7 @@ public class Various {
 
     public static void damage(LocalPlayer localPlayer, double amount, boolean ignoreArmor) {
         if(ignoreArmor) {
-            localPlayer.toBukkit().setHealth(Math.min(localPlayer.toBukkit().getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() - amount, 0));
+            localPlayer.toBukkit().setHealth(Math.min(localPlayer.toBukkit().getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() - amount, 20));
         } else {
             localPlayer.toBukkit().damage(amount);
         }

@@ -60,7 +60,7 @@ public class AbilityFactoryImpl implements AbilityFactory {
             registerAbility("turtle", new TurtleAbility(yamlConfigurationLoader("turtle")));
             registerAbility("disguises", new TurtleAbility(yamlConfigurationLoader("disguises")));
 
-            imad++;
+            imad += 7;
             // Johan - end
 
             Logger.debug("[Abilities] registering itemstack abilities...");
@@ -72,9 +72,20 @@ public class AbilityFactoryImpl implements AbilityFactory {
             registerAbility("flinger", new FlingerAbility(yamlConfigurationLoader("flinger")));
             registerAbility("hooker", new HookerAbility(yamlConfigurationLoader("hooker")));
             registerAbility("jedi", new JediAbility(yamlConfigurationLoader("jedi")));
+            registerAbility("kamikaze", new KamikazeAbility(yamlConfigurationLoader("kamikaze")));
+            registerAbility("kangaroo", new KangarooAbility(yamlConfigurationLoader("kangaroo")));
+            registerAbility("portastomp", new PortastompAbility(yamlConfigurationLoader("portastomp")));
+            registerAbility("superman", new SupermanAbility(yamlConfigurationLoader("superman")));
+            registerAbility("switcher", new SwitcherAbility(yamlConfigurationLoader("switcher")));
+            registerAbility("thor", new ThorAbility(yamlConfigurationLoader("thor")));
+            registerAbility("tiger", new TigerAbility(yamlConfigurationLoader("tiger")));
+            registerAbility("troll", new TrollAbility(yamlConfigurationLoader("troll")));
+            registerAbility("wizard", new WizardAbility(yamlConfigurationLoader("wizard")));
 
+            registerAbility("spy", new SpyAbility(yamlConfigurationLoader("spy")));
+            registerAbility("wallbuilder", new WallBuilderAbility(yamlConfigurationLoader("wallbuilder")));
 
-            aiglez++;
+            aiglez += 18;
 
         } catch (AbilityRegisterException | AbilityFileNotFoundException | IOException e) {
             e.printStackTrace();

@@ -6,7 +6,7 @@ import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.lucko.helper.Events;
-import me.lucko.helper.config.ConfigurationNode;
+import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.metadata.Metadata;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
@@ -14,6 +14,7 @@ import org.bukkit.entity.Snowball;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -22,8 +23,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class WizardAbility extends ItemStackAbility {
 
-    public WizardAbility(ConfigurationNode configuration) {
-        super("wizard", configuration);
+    public WizardAbility(YAMLConfigurationLoader configurationLoader) throws IOException {
+        super("wizard", configurationLoader);
     }
 
     // --------------------------------------------------------------------------------------------

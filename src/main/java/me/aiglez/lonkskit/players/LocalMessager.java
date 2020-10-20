@@ -13,6 +13,7 @@ public interface LocalMessager {
 
     default void msg(ConfigurationNode node, Object... replacements) {
         if(node == null || node.getValueType() != ValueType.SCALAR) return;
+        if(node.getString() == null || node.getString().isEmpty()) return;
         msg(node.getString(""), replacements);
     }
 }

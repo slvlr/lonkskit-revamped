@@ -6,19 +6,20 @@ import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.lucko.helper.Events;
 import me.lucko.helper.Schedulers;
-import me.lucko.helper.config.ConfigurationNode;
+import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.metadata.ExpiringValue;
 import me.lucko.helper.scheduler.Ticks;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 public class TigerAbility extends ItemStackAbility {
 
-    public TigerAbility(ConfigurationNode configuration) {
-        super("tiger", configuration);
+    public TigerAbility(YAMLConfigurationLoader configurationLoader) throws IOException {
+        super("tiger", configurationLoader);
     }
 
     public void whenRightClicked(PlayerInteractEvent e) {
@@ -32,11 +33,11 @@ public class TigerAbility extends ItemStackAbility {
         applyEffects(localPlayer);
 
         localPlayer.metadata().put(MetadataProvider.PLAYER_DOUBLE_DAMAGE, ExpiringValue.of(true, 10L, TimeUnit.SECONDS));
-        localPlayer.toBukkit().chat(configuration.getNode("messages", "start").getString("Message Null: start"));
+        localPlayer.toBukkit().chat(configuration.getNode("messages", "start").getString(""));
         Schedulers.async()
                 .runLater(() -> localPlayer.metadata().remove(MetadataProvider.PLAYER_DOUBLE_DAMAGE),
                         Ticks.from(configuration.getNode("duration").getLong(10L), TimeUnit.SECONDS))
-                .thenRunSync(() -> localPlayer.msg(configuration.getNode("messages", "end").getString("Message Null: end")));
+                .thenRunSync(() -> localPlayer.msg(configuration.getNode("messages", "end")));
     }
 
     public void whenLeftClicked(PlayerInteractEvent e) {}
@@ -46,7 +47,7 @@ public class TigerAbility extends ItemStackAbility {
         Events.subscribe(EntityDamageByEntityEvent.class)
                 .filter(AbilityPredicates.damagerHasAbility(this))
                 .handler(e -> {
-                    LocalPlayer damager = LocalPlayer.get((Player)e.getDamager());
+                    final LocalPlayer damager = LocalPlayer.get((Player)e.getDamager());
                     if (damager.metadata().has(MetadataProvider.PLAYER_DOUBLE_DAMAGE)) {
                         e.setDamage(e.getDamage() * configuration.getNode("multiply").getDouble(1D));
                     }

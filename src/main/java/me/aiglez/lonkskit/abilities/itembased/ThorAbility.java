@@ -6,7 +6,7 @@ import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.lucko.helper.Events;
-import me.lucko.helper.config.ConfigurationNode;
+import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.metadata.ExpiringValue;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -15,6 +15,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import java.io.IOException;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -26,8 +27,8 @@ public class ThorAbility extends ItemStackAbility {
 
     private final Set<Material> transparentMaterials = Sets.newHashSet(Material.AIR, Material.CAVE_AIR, Material.VOID_AIR);
 
-    public ThorAbility(ConfigurationNode configuration) {
-        super("thor", configuration);
+    public ThorAbility(YAMLConfigurationLoader configurationLoader) throws IOException {
+        super("thor", configurationLoader);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -46,6 +47,8 @@ public class ThorAbility extends ItemStackAbility {
 
         localPlayer.metadata().put(MetadataProvider.PLAYER_NO_LIGHTING_DAMAGE, ExpiringValue.of(true, 3, TimeUnit.SECONDS));
         localPlayer.toBukkit().getWorld().strikeLightning(target.getLocation());
+
+        localPlayer.msg(configuration.getNode("messages", "strike"));
     }
 
     @Override

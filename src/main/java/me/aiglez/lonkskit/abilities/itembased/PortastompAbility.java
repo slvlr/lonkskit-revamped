@@ -3,10 +3,11 @@ package me.aiglez.lonkskit.abilities.itembased;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.Schedulers;
-import me.lucko.helper.config.ConfigurationNode;
+import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -15,8 +16,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class PortastompAbility extends ItemStackAbility {
 
-    public PortastompAbility(ConfigurationNode configuration) {
-        super("portastomp", configuration);
+    public PortastompAbility(YAMLConfigurationLoader yamlConfigurationLoader) throws IOException {
+        super("portastomp", yamlConfigurationLoader);
     }
 
     // --------------------------------------------------------------------------------------------

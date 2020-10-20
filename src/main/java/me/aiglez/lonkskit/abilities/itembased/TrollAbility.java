@@ -4,12 +4,14 @@ import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.Events;
-import me.lucko.helper.config.ConfigurationNode;
+import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.random.RandomSelector;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.potion.PotionEffect;
+
+import java.io.IOException;
 
 /**
  * @author AigleZ
@@ -19,8 +21,8 @@ public class TrollAbility extends ItemStackAbility {
 
     private final RandomSelector<PotionEffect> potionEffectRandomSelector;
 
-    public TrollAbility(ConfigurationNode configuration) {
-        super("troll", configuration);
+    public TrollAbility(YAMLConfigurationLoader configurationLoader) throws IOException {
+        super("troll", configurationLoader);
         try {
             this.potionEffectRandomSelector = RandomSelector.uniform(potionEffects);
         } catch (IllegalArgumentException e) {
@@ -48,7 +50,7 @@ public class TrollAbility extends ItemStackAbility {
 
                     victim.toBukkit().addPotionEffect(potionEffectRandomSelector.pick());
 
-                    damager.msg(configuration.getNode("messages", "trolled").getString("Message trolled Null"), victim.getLastKnownName());
+                    damager.msg(configuration.getNode("messages", "trolled"), victim.getLastKnownName());
                 });
     }
 }

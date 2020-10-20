@@ -7,7 +7,7 @@ import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.lucko.helper.Events;
 import me.lucko.helper.Schedulers;
-import me.lucko.helper.config.ConfigurationNode;
+import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.event.filter.EventFilters;
 import me.lucko.helper.metadata.Metadata;
 import me.lucko.helper.metadata.SoftValue;
@@ -18,14 +18,16 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import java.io.IOException;
+
 /**
  * @author AigleZ
  * @date 10/10/2020
  */
 public class SpyAbility extends ItemStackAbility {
 
-    public SpyAbility(ConfigurationNode configuration) {
-        super("spy", configuration);
+    public SpyAbility(YAMLConfigurationLoader yamlConfigurationLoader) throws IOException {
+        super("spy", yamlConfigurationLoader);
     }
 
     @Override
@@ -87,6 +89,8 @@ public class SpyAbility extends ItemStackAbility {
                 .filter(e -> e.getEntity() instanceof Arrow)
                 .filter(EventFilters.entityHasMetadata(MetadataProvider.SPY_ARROW))
                 .handler(e -> {
+                    long start = System.currentTimeMillis();
+
                     final Arrow arrow = (Arrow) e.getEntity();
                     if(arrow.getShooter() == null) {
                         return;
@@ -94,13 +98,13 @@ public class SpyAbility extends ItemStackAbility {
 
                     final LocalPlayer localPlayer = LocalPlayer.get((Player) arrow.getShooter());
 
-                    localPlayer.toBukkit().setSpectatorTarget(null);
                     localPlayer.toBukkit().setGameMode(GameMode.SURVIVAL);
-
                     localPlayer.toBukkit().teleport(arrow.getLocation().subtract(0D, 1D, 0D));
                     localPlayer.metadata().remove(MetadataProvider.SPY_PLAYER);
 
-                    localPlayer.msg("&6(Spy - Debug) &aYour arrow has landed");
+                    localPlayer.toBukkit().setSpectatorTarget(null);
+                    localPlayer.msg("&6(Spy - Debug) &aYour arrow has landed (handle time: {0}ms)",
+                            start - System.currentTimeMillis());
                 });
     }
 }

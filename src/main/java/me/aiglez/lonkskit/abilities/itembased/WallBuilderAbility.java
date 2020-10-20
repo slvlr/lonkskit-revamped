@@ -3,14 +3,16 @@ package me.aiglez.lonkskit.abilities.itembased;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.abilities.helpers.ConstructHelper;
 import me.aiglez.lonkskit.players.LocalPlayer;
-import me.lucko.helper.config.ConfigurationNode;
+import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import org.bukkit.block.Block;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import java.io.IOException;
+
 public class WallBuilderAbility extends ItemStackAbility {
 
-    public WallBuilderAbility(ConfigurationNode configuration) {
-        super("wallbuilder", configuration);
+    public WallBuilderAbility(YAMLConfigurationLoader configurationLoader) throws IOException {
+        super("wallbuilder", configurationLoader);
     }
 
     @Override

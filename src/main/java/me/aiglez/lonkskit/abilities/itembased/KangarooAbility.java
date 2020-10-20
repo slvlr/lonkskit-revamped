@@ -2,9 +2,10 @@ package me.aiglez.lonkskit.abilities.itembased;
 
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
-import me.lucko.helper.config.ConfigurationNode;
+import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -13,8 +14,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class KangarooAbility extends ItemStackAbility {
 
-    public KangarooAbility(ConfigurationNode configuration) {
-        super("kangaroo", configuration);
+    public KangarooAbility(YAMLConfigurationLoader configurationLoader) throws IOException {
+        super("kangaroo", configurationLoader);
     }
 
     @Override

@@ -3,15 +3,16 @@ package me.aiglez.lonkskit.abilities.itembased;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.Schedulers;
-import me.lucko.helper.config.ConfigurationNode;
+import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 public class SupermanAbility extends ItemStackAbility {
 
-    public SupermanAbility(ConfigurationNode configuration) {
-        super("superman", configuration);
+    public SupermanAbility(YAMLConfigurationLoader configurationLoader) throws IOException {
+        super("superman", configurationLoader);
     }
 
     @Override

@@ -3,7 +3,7 @@ package me.aiglez.lonkskit.abilities.itembased;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.Events;
-import me.lucko.helper.config.ConfigurationNode;
+import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -12,6 +12,7 @@ import org.bukkit.entity.Snowball;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -21,8 +22,8 @@ import java.util.concurrent.TimeUnit;
 public class SwitcherAbility extends ItemStackAbility {
     // TODO: add 4 snowballs when killing a player
 
-    public SwitcherAbility(ConfigurationNode configuration) {
-        super("switcher", configuration);
+    public SwitcherAbility(YAMLConfigurationLoader configurationLoader) throws IOException {
+        super("switcher", configurationLoader);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -60,7 +61,7 @@ public class SwitcherAbility extends ItemStackAbility {
                     localPlayer.toBukkit().teleport(hitLocation);
                     hit.teleport(playerLocation);
 
-                    localPlayer.msg(configuration.getNode("messages", "switcher").getString("Message switched Null"), hit.getName());
+                    localPlayer.msg(configuration.getNode("messages", "switched"), hit.getName());
                 });
     }
 }
