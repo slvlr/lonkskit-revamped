@@ -55,11 +55,11 @@ public class AbilityFactoryImpl implements AbilityFactory {
             // Johan - start
             registerAbility("anvil", new AnvilAbility(yamlConfigurationLoader("anvil")));
             registerAbility("berserker", new BerserkerAbility(yamlConfigurationLoader("berserker")));
+            registerAbility("disguises", new DisguiseAbilities(yamlConfigurationLoader("disguises")));
             registerAbility("flamer", new FlamerAbility(yamlConfigurationLoader("flamer")));
             registerAbility("killer", new KillerAbility(yamlConfigurationLoader("killer")));
             registerAbility("recall", new RecallAbility(yamlConfigurationLoader("recall")));
             registerAbility("turtle", new TurtleAbility(yamlConfigurationLoader("turtle")));
-            registerAbility("disguises", new DisguiseAbilities(yamlConfigurationLoader("disguises")));
             imad += 7;
             // Johan - end
 
@@ -91,9 +91,10 @@ public class AbilityFactoryImpl implements AbilityFactory {
             registerAbility("hyper", new HyperAbility(yamlConfigurationLoader("hyper")));
             registerAbility("monk", new MonkAbility(yamlConfigurationLoader("monk")));
             registerAbility("shadowblade", new ShadowbladeAbility(yamlConfigurationLoader("shadowblade")));
+            registerAbility("snake", new SnakeAbility(yamlConfigurationLoader("snake")));
             registerAbility("wraith", new WraithAbility(yamlConfigurationLoader("wraith")));
             registerAbility("sonic", new SonicAbility(yamlConfigurationLoader("sonic")));
-            imad += 7;
+            imad += 8;
             // johan - end
 
         } catch (AbilityRegisterException | AbilityFileNotFoundException | IOException e) {
