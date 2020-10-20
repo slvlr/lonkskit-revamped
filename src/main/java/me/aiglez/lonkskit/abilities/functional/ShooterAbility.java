@@ -45,13 +45,12 @@ public class ShooterAbility extends FunctionalAbility {
                     final HashMap<Integer, ItemStack> map = inventory.removeItem(new ItemStack(Material.ARROW, 5));
                     int toRemove = 5;
                     if(!map.isEmpty()) {
-                        localPlayer.msg("&e(Debug - Shooter) seems like you don't have 5 arrows:: (you need {0} more)", map.size());
                         toRemove = 5 - map.size();
                     }
 
                     final long delay = configuration.getNode("delay-between-arrows").getLong(1L);
-                    localPlayer.msg("&e(Debug - Shooter) Delay (ticks): " + delay);
-                    AtomicInteger launched = new AtomicInteger(0);
+
+                    final AtomicInteger launched = new AtomicInteger(0);
                     final int finalToRemove = toRemove;
                     Schedulers.sync()
                             .runRepeating(t -> {

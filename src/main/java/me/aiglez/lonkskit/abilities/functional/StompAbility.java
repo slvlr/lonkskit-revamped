@@ -33,6 +33,7 @@ public class StompAbility extends FunctionalAbility {
                             configuration.getNode("radius", "x-axis").getDouble(1D),
                             configuration.getNode("radius", "y-axis").getDouble(1D),
                             configuration.getNode("radius", "z-axis").getDouble(1D)
+
                     ).forEach(player -> {
                         final LocalPlayer under = LocalPlayer.get(player);
                         if(!localPlayer.toBukkit().hasLineOfSight(under.toBukkit())) return;
@@ -45,7 +46,8 @@ public class StompAbility extends FunctionalAbility {
                                 damage = e.getFinalDamage();
                             }
                             under.toBukkit().damage(damage);
-                            under.msg(configuration.getNode("messages", "tip").getString("Message tip Null"));
+                            under.msg(configuration.getNode("messages", "tip"));
+                            localPlayer.msg(configuration.getNode("messages", "stomped"), under.getLastKnownName());
                         }
                     });
                     e.setDamage(Math.min(e.getDamage(), configuration.getNode("max-damage", "stomper").getDouble(4.5D)));

@@ -9,7 +9,6 @@ import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 
 import java.io.IOException;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author AigleZ
@@ -27,20 +26,18 @@ public class HotheadAbility extends FunctionalAbility {
                 .filter(AbilityPredicates.hasAbility(this))
                 .handler(e -> {
                     final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
-
                     applyEffects(localPlayer);
 
-                    final AtomicInteger burned = new AtomicInteger(0);
-                    WorldProvider.KP_WORLD.getNearbyEntities(localPlayer.getLocation(), 4, 4, 4)
-                            .forEach(entity -> {
-                                if(entity.getUniqueId().equals(localPlayer.getUniqueId())) {
+                    WorldProvider.KP_WORLD.getNearbyPlayers(localPlayer.getLocation(),
+                            configuration.getNode("radius", "x-axis").getDouble(1D),
+                            configuration.getNode("radius", "y-axis").getDouble(1D),
+                            configuration.getNode("radius", "z-axis").getDouble(1D))
+                            .forEach(player -> {
+                                if(player.getUniqueId().equals(localPlayer.getUniqueId())) {
                                     return;
                                 }
-                                entity.setFireTicks(40);
-                                burned.incrementAndGet();
+                                player.setFireTicks(40);
                             });
-
-                    localPlayer.msg("&c(Hothead - Debug) Burning {0} entities", burned.intValue());
                 });
 
     }

@@ -8,9 +8,7 @@ import me.lucko.helper.Events;
 import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.event.filter.EventFilters;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.util.Vector;
 
@@ -47,7 +45,7 @@ public class HulkAbility extends FunctionalAbility {
                             final Vector vector = localPlayer.getLocation().getDirection().multiply(1.5D);
                             passenger.setVelocity(vector);
 
-                            localPlayer.msg("&a(Hulk - Debug) &fYou have &cejected &a{0} (&6interact entity)", passenger.getName());
+                            localPlayer.msg("&a(Hulk - Debug) &fYou have &cejected &a{0}.", passenger.getName());
                             return;
                         }
 
@@ -57,25 +55,6 @@ public class HulkAbility extends FunctionalAbility {
 
                     localPlayer.toBukkit().addPassenger(rightClicked);
                     localPlayer.msg("&a(Hulk - Debug) &fYou have picked-up &a{0}", rightClicked.getName());
-                });
-
-        Events.subscribe(PlayerInteractEvent.class)
-                .filter(AbilityPredicates.hasAbility(this))
-                .filter(e -> e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR)
-                .handler(e -> {
-                    final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
-
-                    if(localPlayer.toBukkit().getPassengers().isEmpty()) {
-                        return;
-                    }
-
-                    final Entity pickedUp = localPlayer.toBukkit().getPassengers().get(0);
-                    localPlayer.toBukkit().eject();
-
-                    final Vector vector = localPlayer.getLocation().getDirection().multiply(1.5D);
-                    pickedUp.setVelocity(vector);
-
-                    localPlayer.msg("&a(Hulk - Debug) &fYou have &cejected &a{0}", pickedUp.getName());
                 });
 
         Events.subscribe(PlayerToggleSneakEvent.class)

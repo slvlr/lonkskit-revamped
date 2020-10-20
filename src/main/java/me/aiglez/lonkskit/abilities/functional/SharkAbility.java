@@ -39,10 +39,11 @@ public class SharkAbility extends FunctionalAbility {
                 });
 
         Events.subscribe(EntityDamageEvent.class)
-                .filter(e -> e.getEntity() instanceof Player)
                 .filter(e -> e.getCause() == EntityDamageEvent.DamageCause.DROWNING)
                 .filter(AbilityPredicates.possiblyHasAbility(this))
                 .handler(e -> {
+                    Player player = (Player) e.getEntity();
+                    player.setRemainingAir(player.getMaximumAir());
                     e.setDamage(0);
                     e.setCancelled(true);
                 });
