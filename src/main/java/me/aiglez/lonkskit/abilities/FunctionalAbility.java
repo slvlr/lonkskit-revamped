@@ -58,21 +58,37 @@ public abstract class FunctionalAbility implements Ability {
         registerListeners();
     }
 
+    /**
+     * Ability's name.
+     * @return the name of the ability
+     */
     @Override
     public String getName() {
         return this.name;
     }
 
+    /**
+     * Ability's configuration.
+     * @return the configuration of the ability
+     */
     @Override
     public ConfigurationNode getConfiguration() {
         return this.configuration;
     }
 
+    /**
+     * Ability's cooldown.
+     * @return the cooldown of the ability
+     */
     @Override
     public CooldownMap<LocalPlayer> getCooldown() {
         return this.cooldown;
     }
 
+    /**
+     * Reload the configuration
+     * @throws IOException if the file isn't found, or corrupted.
+     */
     @Override
     public void reloadConfiguration() throws IOException {
         Logger.debug("[{0}] Reloading configuration ...", this.name);
@@ -83,14 +99,39 @@ public abstract class FunctionalAbility implements Ability {
         this.configuration = this.configurationLoader.load();
     }
 
+    /**
+     * Apply potion effects to the given local player.
+     * @param localPlayer local player
+     */
     @Override
     public void applyEffects(LocalPlayer localPlayer) {
-        localPlayer.toBukkit().addPotionEffects(potionEffects);
+        localPlayer.toBukkit().addPotionEffects(this.potionEffects);
     }
 
+    /**
+     * Remove potion effects from the given local player.
+     * @param localPlayer local player
+     */
     @Override
     public void removeEffects(LocalPlayer localPlayer) {
         this.potionEffects.forEach(potionEffect -> localPlayer.toBukkit().removePotionEffect(potionEffect.getType()));
+    }
+
+    /**
+     * Whether the given local player has the ability's potion effects.
+     * @param localPlayer local player
+     * @return true if the given local player has the ability's potion effects
+     */
+    @Override
+    public boolean hasEffects(LocalPlayer localPlayer) {
+        boolean has = false;
+        for (final PotionEffect pe : potionEffects) {
+            if(!localPlayer.toBukkit().hasPotionEffect(pe.getType())) {
+                return false;
+            }
+            has = true;
+        }
+        return has;
     }
 
     @Override

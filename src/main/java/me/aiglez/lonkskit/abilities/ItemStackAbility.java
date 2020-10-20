@@ -63,10 +63,6 @@ public abstract class ItemStackAbility implements Ability, Listener {
                     .map(list -> list.stream().map(unparsed -> PotionEffectBuilder.parse(unparsed).build()).filter(Objects::nonNull)
                             .collect(Collectors.toSet()))
                     .end().orElse(Collections.emptySet());
-
-            potionEffects.forEach(potionEffect -> {
-                Logger.debug("[{0}] Found potion effect: {1} A: {2} D: {3} ticks", name, potionEffect.getType(), potionEffect.getAmplifier(), potionEffect.getDuration());
-            });
         } catch (ObjectMappingException e) {
             throw new AbilityRegisterException(name, "Couldn't map an object (LIST) // " + e.getMessage());
         }
@@ -106,21 +102,37 @@ public abstract class ItemStackAbility implements Ability, Listener {
         registerListeners();
     }
 
+    /**
+     * Ability's name.
+     * @return the name of the ability
+     */
     @Override
     public String getName() {
         return this.name;
     }
 
+    /**
+     * Ability's configuration.
+     * @return the configuration of the ability
+     */
     @Override
     public ConfigurationNode getConfiguration() {
         return this.configuration;
     }
 
+    /**
+     * Ability's cooldown.
+     * @return the cooldown of the ability
+     */
     @Override
     public CooldownMap<LocalPlayer> getCooldown() {
         return this.cooldown;
     }
 
+    /**
+     * Reload the configuration
+     * @throws IOException if the file isn't found, or corrupted.
+     */
     @Override
     public void reloadConfiguration() throws IOException {
         Logger.debug("[{0}] Reloading configuration ...", this.name);
@@ -131,8 +143,17 @@ public abstract class ItemStackAbility implements Ability, Listener {
         this.configuration = this.configurationLoader.load();
     }
 
+    /**
+     * Ability's itemstack.
+     * @return the itemstack representing the ability
+     */
     public ItemStack getItemStack() { return this.item; }
 
+    /**
+     * Whether the itemstack is representing this ability
+     * @param item the itemstack
+     * @return true if the itemstack is representing this ability
+     */
     public boolean isItemStack(ItemStack item) {
         Preconditions.checkNotNull(item);
         if(this.item == null) return false;
@@ -149,16 +170,29 @@ public abstract class ItemStackAbility implements Ability, Listener {
      */
     public abstract void whenLeftClicked(PlayerInteractEvent e);
 
+    /**
+     * Apply potion effects to the given local player.
+     * @param localPlayer local player
+     */
     @Override
     public void applyEffects(LocalPlayer localPlayer) {
         localPlayer.toBukkit().addPotionEffects(this.potionEffects);
     }
 
+    /**
+     * Remove potion effects from the given local player.
+     * @param localPlayer local player
+     */
     @Override
     public void removeEffects(LocalPlayer localPlayer) {
         this.potionEffects.forEach(potionEffect -> localPlayer.toBukkit().removePotionEffect(potionEffect.getType()));
     }
 
+    /**
+     * Whether the given local player has the ability's potion effects.
+     * @param localPlayer local player
+     * @return true if the given local player has the ability's potion effects
+     */
     @Override
     public boolean hasEffects(LocalPlayer localPlayer) {
         boolean has = false;

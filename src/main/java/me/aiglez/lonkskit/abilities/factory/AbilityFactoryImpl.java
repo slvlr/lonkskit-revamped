@@ -60,7 +60,6 @@ public class AbilityFactoryImpl implements AbilityFactory {
             registerAbility("recall", new RecallAbility(yamlConfigurationLoader("recall")));
             registerAbility("turtle", new TurtleAbility(yamlConfigurationLoader("turtle")));
             registerAbility("disguises", new DisguiseAbilities(yamlConfigurationLoader("disguises")));
-
             imad += 7;
             // Johan - end
 
@@ -82,10 +81,8 @@ public class AbilityFactoryImpl implements AbilityFactory {
             registerAbility("tiger", new TigerAbility(yamlConfigurationLoader("tiger")));
             registerAbility("troll", new TrollAbility(yamlConfigurationLoader("troll")));
             registerAbility("wizard", new WizardAbility(yamlConfigurationLoader("wizard")));
-
             registerAbility("spy", new SpyAbility(yamlConfigurationLoader("spy")));
             registerAbility("wallbuilder", new WallBuilderAbility(yamlConfigurationLoader("wallbuilder")));
-
             aiglez += 18;
 
             // johan - start
@@ -96,6 +93,7 @@ public class AbilityFactoryImpl implements AbilityFactory {
             registerAbility("shadowblade", new ShadowbladeAbility(yamlConfigurationLoader("shadowblade")));
             registerAbility("wraith", new WraithAbility(yamlConfigurationLoader("wraith")));
             registerAbility("sonic", new SonicAbility(yamlConfigurationLoader("sonic")));
+            imad += 7;
             // johan - end
 
         } catch (AbilityRegisterException | AbilityFileNotFoundException | IOException e) {
