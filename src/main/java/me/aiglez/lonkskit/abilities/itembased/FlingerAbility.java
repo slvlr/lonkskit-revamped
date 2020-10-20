@@ -5,7 +5,7 @@ import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.lucko.helper.Events;
-import me.lucko.helper.config.ConfigurationNode;
+import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.metadata.Metadata;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Entity;
@@ -13,18 +13,26 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
 public class FlingerAbility extends ItemStackAbility {
 
-    public FlingerAbility(ConfigurationNode configuration) {
-        super("flinger", configuration);
+    public FlingerAbility(YAMLConfigurationLoader configurationLoader) throws IOException {
+        super("flinger", configurationLoader);
     }
 
     @Override
     public void whenRightClicked(PlayerInteractEvent e) {
         e.setCancelled(true);
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
+        if(!cooldown.test(localPlayer)){
+            localPlayer.msg("&b[LonksKit] &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
+            return;
+        }
 
         final Egg egg = localPlayer.toBukkit().launchProjectile(Egg.class);
+
         egg.setShooter(localPlayer.toBukkit());
         Metadata.provideForEntity(egg).put(MetadataProvider.EGG_FLINGER, true);
         applyEffects(localPlayer);
@@ -47,22 +55,13 @@ public class FlingerAbility extends ItemStackAbility {
                     if (damager.getShooter() == null) return;
 
                     final LocalPlayer shooter = LocalPlayer.get((Player) damager.getShooter());
-                    if (shooter.toBukkit() == null) return;
+                    if (shooter.toBukkit() == null || shooter.getUniqueId().equals(victim.getUniqueId())) return;
 
-                    if (victim.getUniqueId().equals(shooter.getUniqueId())) {
-                        shooter.msg("&6(Flinger - Debug) &cYou can't target yourself!");
-                        return;
-                    }
-
-                    double distance = shooter.getLocation().distance(victim.getLocation()); //TODO: cleanup later
-                    if(distance > 20) {
+                    if(shooter.getLocation().distance(victim.getLocation()) > 20) {
                         e.setDamage(999);
-                        shooter.msg("&6(Flinger - Debug) &aYou have instant-killed {0}", victim.getName());
                     } else {
                         e.setDamage(2D);
-                        shooter.msg("&6(Flinger - Debug) &cOne heart damage ({0} < 20)" , distance);
                     }
-
                     damager.remove();
                 });
 

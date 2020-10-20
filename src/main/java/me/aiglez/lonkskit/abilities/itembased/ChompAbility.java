@@ -4,10 +4,13 @@ import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.Events;
-import me.lucko.helper.config.ConfigurationNode;
+import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author AigleZ
@@ -15,11 +18,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
  */
 public class ChompAbility extends ItemStackAbility {
 
-    private final double damage;
-
-    public ChompAbility(ConfigurationNode configuration) {
-        super("chomp", configuration);
-        this.damage = configuration.getNode("damage").getDouble(5);
+    public ChompAbility(YAMLConfigurationLoader configurationLoader) throws IOException {
+        super("chomp", configurationLoader);
     }
 
     @Override
@@ -42,10 +42,15 @@ public class ChompAbility extends ItemStackAbility {
                     final LocalPlayer damager = LocalPlayer.get((Player) e.getDamager());
                     final LocalPlayer victim = LocalPlayer.get((Player) e.getEntity());
 
+                    if(!cooldown.test(damager)){
+                        damager.msg("&b[LonksKit] &cPlease wait, {0} second(s) left", cooldown.remainingTime(damager, TimeUnit.SECONDS));
+                        return;
+                    }
+
                     applyEffects(damager);
 
-                    e.setDamage(damage);
-                    damager.msg("(Debug - Chomp) &cYou have chomped {0} [damage: {1}]", victim.getLastKnownName(), damage);
+                    e.setDamage(configuration.getNode("damage").getDouble(5));
+                    damager.msg(configuration.getNode("messages", "chomped"), victim.getLastKnownName());
                 });
     }
 }

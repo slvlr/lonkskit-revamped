@@ -4,11 +4,12 @@ import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.Various;
-import me.lucko.helper.config.ConfigurationNode;
+import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import org.bukkit.Location;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -17,8 +18,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class JediAbility extends ItemStackAbility {
 
-    public JediAbility(ConfigurationNode configuration) {
-        super("jedi", configuration);
+    public JediAbility(YAMLConfigurationLoader configurationLoader) throws IOException {
+        super("jedi", configurationLoader);
     }
 
     // --------------------------------------------------------------------------------------------

@@ -7,6 +7,7 @@ import me.aiglez.lonkskit.abilities.functional.HulkAbility;
 import me.aiglez.lonkskit.abilities.functional.SharkAbility;
 import me.aiglez.lonkskit.abilities.functional.ShooterAbility;
 import me.aiglez.lonkskit.abilities.functional.johan.*;
+import me.aiglez.lonkskit.abilities.itembased.*;
 import me.aiglez.lonkskit.exceptions.AbilityFileNotFoundException;
 import me.aiglez.lonkskit.exceptions.AbilityRegisterException;
 import me.aiglez.lonkskit.utils.Logger;
@@ -62,34 +63,26 @@ public class AbilityFactoryImpl implements AbilityFactory {
             imad++;
             // Johan - end
 
-            /*
-            Logger.debug("Loading Imad's abilities...");
-            registerAbility("monk", new MonkAbility(getFileByName("monk")));
-            registerAbility("anvil", new AnvilAbility(getFileByName("anvil")));
-            registerAbility("shadowblade", new ShadowbladeAbility(getFileByName("shadowblade")));
+            Logger.debug("[Abilities] registering itemstack abilities...");
+            registerAbility("blink", new BlinkAbility(yamlConfigurationLoader("blink")));
+            registerAbility("chomp", new ChompAbility(yamlConfigurationLoader("chomp")));
+            //registerAbility("cowboy", new CowboyAbility(yamlConfigurationLoader("cowboy")));
+            registerAbility("dragon", new DragonAbility(yamlConfigurationLoader("dragon")));
+            registerAbility("fisherman", new FishermanAbility(yamlConfigurationLoader("fisherman")));
+            registerAbility("flinger", new FlingerAbility(yamlConfigurationLoader("flinger")));
+            registerAbility("hooker", new HookerAbility(yamlConfigurationLoader("hooker")));
+            registerAbility("jedi", new JediAbility(yamlConfigurationLoader("jedi")));
 
-            registerAbility("sonic", new SonicAbility(getFileByName("sonic")));
-            registerAbility("ghost", new GhostAbility(getFileByName("ghost")));
-            registerAbility("hyper", new HyperAbility(getFileByName("hyper")));
 
-            registerAbility("berserker", new BerserkerAbility(getFileByName("berserker")));
-            registerAbility("turtle", new TurtleAbility(getFileByName("turtle")));
-            registerAbility("snake", new SnakeAbility(getFileByName("snake")));
-
-            registerAbility("flamer", new FlamerAbility(getFileByName("flamer")));
-            registerAbility("killer", new KillerAbility(getFileByName("killer")));
-            registerAbility("elder", new ElderAbility(getFileByName("elder")));
-
-            registerAbility("wolf", new WolfAbility(getFileByName("wolf")));
-            registerAbility("spider", new SpiderDAbility(getFileByName("spider")));
-            registerAbility("casper", new Casper(getFileByName("casper")));
-             */
+            aiglez++;
 
         } catch (AbilityRegisterException | AbilityFileNotFoundException | IOException e) {
             e.printStackTrace();
         }
 
-        Logger.fine(ChatColor.GREEN + "Registered a total of " + abilities.size() + " abilities.");
+        Logger.fine(ChatColor.GREEN + "Registered a total of {0} abilities. (aiglez: {1} | johan: {2})",
+                abilities.size(), aiglez, imad
+        );
     }
 
     @Override

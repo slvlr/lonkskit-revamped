@@ -7,7 +7,7 @@ import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.lucko.helper.Events;
 import me.lucko.helper.Schedulers;
-import me.lucko.helper.config.ConfigurationNode;
+import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.metadata.ExpiringValue;
 import org.bukkit.Effect;
 import org.bukkit.entity.Player;
@@ -15,6 +15,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -23,8 +24,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class DragonAbility extends ItemStackAbility {
 
-    public DragonAbility(ConfigurationNode configuration) {
-        super("dragon", configuration);
+    public DragonAbility(YAMLConfigurationLoader configurationLoader) throws IOException {
+        super("dragon", configurationLoader);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -59,8 +60,6 @@ public class DragonAbility extends ItemStackAbility {
 
                     WorldProvider.KP_WORLD.playEffect(localPlayer.getLocation(), Effect.MOBSPAWNER_FLAMES, 0);
                 }, 10L, 8L);
-
-        localPlayer.msg("&b(Debug - Dragon) You have been pushed (strength: {0})", configuration.getNode("strength").getDouble(5D));
     }
 
     @Override

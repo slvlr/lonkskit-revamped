@@ -4,17 +4,19 @@ import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.Events;
-import me.lucko.helper.config.ConfigurationNode;
+import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
+import java.io.IOException;
+
 public class FishermanAbility extends ItemStackAbility {
 
-    public FishermanAbility(ConfigurationNode configuration) {
-        super("fisherman", configuration);
+    public FishermanAbility(YAMLConfigurationLoader configurationLoader) throws IOException {
+        super("fisherman", configurationLoader);
     }
 
     @Override

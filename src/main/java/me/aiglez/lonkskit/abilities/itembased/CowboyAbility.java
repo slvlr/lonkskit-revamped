@@ -9,7 +9,7 @@ import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.lucko.helper.Events;
 import me.lucko.helper.Schedulers;
-import me.lucko.helper.config.ConfigurationNode;
+import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.metadata.Metadata;
 import me.lucko.helper.metadata.SoftValue;
 import org.bukkit.Material;
@@ -22,14 +22,16 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.io.IOException;
+
 /**
  * @author AigleZ
  * @date 06/10/2020
  */
 public class CowboyAbility extends ItemStackAbility {
 
-    public CowboyAbility(ConfigurationNode configuration) {
-        super("cowboy", configuration);
+    public CowboyAbility(YAMLConfigurationLoader configurationLoader) throws IOException {
+        super("cowboy", configurationLoader);
     }
 
     @Override

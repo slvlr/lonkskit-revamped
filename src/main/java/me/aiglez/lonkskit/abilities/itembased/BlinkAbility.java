@@ -2,11 +2,12 @@ package me.aiglez.lonkskit.abilities.itembased;
 
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
-import me.lucko.helper.config.ConfigurationNode;
+import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -15,8 +16,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class BlinkAbility extends ItemStackAbility {
 
-    public BlinkAbility(ConfigurationNode configuration) {
-        super("blink", configuration);
+    public BlinkAbility(YAMLConfigurationLoader configurationLoader) throws IOException {
+        super("blink", configurationLoader);
     }
 
     // --------------------------------------------------------------------------------------------
