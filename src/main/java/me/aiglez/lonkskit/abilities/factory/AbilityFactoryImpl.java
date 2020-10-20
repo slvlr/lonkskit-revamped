@@ -8,6 +8,7 @@ import me.aiglez.lonkskit.abilities.functional.SharkAbility;
 import me.aiglez.lonkskit.abilities.functional.ShooterAbility;
 import me.aiglez.lonkskit.abilities.functional.johan.*;
 import me.aiglez.lonkskit.abilities.itembased.*;
+import me.aiglez.lonkskit.abilities.itembased.johan.*;
 import me.aiglez.lonkskit.exceptions.AbilityFileNotFoundException;
 import me.aiglez.lonkskit.exceptions.AbilityRegisterException;
 import me.aiglez.lonkskit.utils.Logger;
@@ -86,6 +87,16 @@ public class AbilityFactoryImpl implements AbilityFactory {
             registerAbility("wallbuilder", new WallBuilderAbility(yamlConfigurationLoader("wallbuilder")));
 
             aiglez += 18;
+
+            // johan - start
+            registerAbility("elder", new ElderAbility(yamlConfigurationLoader("elder")));
+            registerAbility("ghost", new GhostAbility(yamlConfigurationLoader("ghost")));
+            registerAbility("hyper", new HyperAbility(yamlConfigurationLoader("hyper")));
+            registerAbility("monk", new MonkAbility(yamlConfigurationLoader("monk")));
+            registerAbility("shadowblade", new ShadowbladeAbility(yamlConfigurationLoader("shadowblade")));
+            registerAbility("wraith", new WraithAbility(yamlConfigurationLoader("wraith")));
+            registerAbility("sonic", new SonicAbility(yamlConfigurationLoader("sonic")));
+            // johan - end
 
         } catch (AbilityRegisterException | AbilityFileNotFoundException | IOException e) {
             e.printStackTrace();

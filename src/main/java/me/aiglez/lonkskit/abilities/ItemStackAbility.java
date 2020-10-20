@@ -151,12 +151,24 @@ public abstract class ItemStackAbility implements Ability, Listener {
 
     @Override
     public void applyEffects(LocalPlayer localPlayer) {
-        localPlayer.toBukkit().addPotionEffects(potionEffects);
+        localPlayer.toBukkit().addPotionEffects(this.potionEffects);
     }
 
     @Override
     public void removeEffects(LocalPlayer localPlayer) {
         this.potionEffects.forEach(potionEffect -> localPlayer.toBukkit().removePotionEffect(potionEffect.getType()));
+    }
+
+    @Override
+    public boolean hasEffects(LocalPlayer localPlayer) {
+        boolean has = false;
+        for (final PotionEffect pe : potionEffects) {
+            if(!localPlayer.toBukkit().hasPotionEffect(pe.getType())) {
+                return false;
+            }
+            has = true;
+        }
+        return has;
     }
 
     @Override

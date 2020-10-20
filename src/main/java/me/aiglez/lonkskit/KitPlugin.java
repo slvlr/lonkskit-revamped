@@ -25,7 +25,7 @@ import java.io.IOException;
 @Plugin(
         name = "LonksKit", version = "1.0.9",
         authors = "AigleZ", apiVersion = "1.16",
-        hardDepends = {"ProtocolLib", "helper"}
+        hardDepends = {"ProtocolLib", "helper", "LibsDisguises"}
 )
 public final class KitPlugin extends ExtendedJavaPlugin implements Listener {
 
