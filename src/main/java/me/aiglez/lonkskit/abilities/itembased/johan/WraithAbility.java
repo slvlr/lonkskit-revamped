@@ -63,11 +63,13 @@ public class WraithAbility extends ItemStackAbility {
                             }
                         }
                         if (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
-                            if (map.containsKey(e.getPlayer().getUniqueId())) {
-                                if (!cooldown.testSilently(LocalPlayer.get(e.getPlayer()))) {
-                                    e.getPlayer().teleport(map.get(e.getPlayer().getUniqueId()));
-                                    map.remove(e.getPlayer().getUniqueId());
-                                    applyEffects(LocalPlayer.get(e.getPlayer()));
+                            if(isItemStack(e.getItem())) {
+                                if (map.containsKey(e.getPlayer().getUniqueId())) {
+                                    if (!cooldown.testSilently(LocalPlayer.get(e.getPlayer()))) {
+                                        e.getPlayer().teleport(map.get(e.getPlayer().getUniqueId()));
+                                        map.remove(e.getPlayer().getUniqueId());
+                                        applyEffects(LocalPlayer.get(e.getPlayer()));
+                                    }
                                 }
                             }
                         }
