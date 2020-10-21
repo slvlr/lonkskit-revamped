@@ -39,12 +39,15 @@ public class KamikazeAbility extends ItemStackAbility {
         localPlayer.msg("&4(Kamikaze - Debug) &cYou have exploded! (HP left: {0})", damage);
 
         // damage
-        localPlayer.toBukkit().damage(999);
+        localPlayer.toBukkit().setHealth(0D);
         WorldProvider.KP_WORLD.getNearbyPlayers(localPlayer.getLocation(),
                 configuration.getNode("radius", "x-axis").getDouble(5D),
                 configuration.getNode("radius", "y-axis").getDouble(5D),
                 configuration.getNode("radius", "z-axis").getDouble(5D))
-                .forEach(player -> Various.damage(LocalPlayer.get(player), damage, true));
+                .stream().filter(player -> !player.getUniqueId().equals(localPlayer.getUniqueId()))
+                .forEach(player -> {
+                    Various.damage(LocalPlayer.get(player), damage, true);
+                });
         // damage
 
         localPlayer.msg(configuration.getNode("messages", "exploded"));

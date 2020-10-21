@@ -26,13 +26,12 @@ public class WallBuilderAbility extends ItemStackAbility {
             return;
         }
 
-        final boolean result = ConstructHelper.buildWallAt(localPlayer.getLocation().getYaw(), clickedBlock.getLocation());
-        if(result == false) {
+        final boolean result = ConstructHelper.buildWallAt(localPlayer.getLocation().getYaw(), clickedBlock);
+        if(result) {
+            localPlayer.msg("&a(WallBuilder - Debug) &aSuccessfully placed a wall");
+        } else {
             localPlayer.msg("&a(WallBuilder - Debug) &cYou can't build there!");
-            return;
         }
-
-        localPlayer.msg("&a(WallBuilder - Debug) &aSuccessfully placed a wall");
     }
 
     @Override

@@ -37,8 +37,8 @@ public class AbilityPredicates {
             if(!localPlayer.hasSelectedKit()) return false;
             for (final String abilityName : abilitiesName) {
                 final Ability ability = Ability.get(abilityName);
-                if(!localPlayer.getNullableSelectedKit().hasAbility(ability)) {
-                    return false;
+                if(localPlayer.getNullableSelectedKit().hasAbility(ability)) {
+                    return true;
                 }
             }
             return false;

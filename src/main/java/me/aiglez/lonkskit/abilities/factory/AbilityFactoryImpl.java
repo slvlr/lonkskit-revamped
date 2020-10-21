@@ -2,10 +2,7 @@ package me.aiglez.lonkskit.abilities.factory;
 
 import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.abilities.Ability;
-import me.aiglez.lonkskit.abilities.functional.HotheadAbility;
-import me.aiglez.lonkskit.abilities.functional.HulkAbility;
-import me.aiglez.lonkskit.abilities.functional.SharkAbility;
-import me.aiglez.lonkskit.abilities.functional.ShooterAbility;
+import me.aiglez.lonkskit.abilities.functional.*;
 import me.aiglez.lonkskit.abilities.functional.johan.*;
 import me.aiglez.lonkskit.abilities.itembased.*;
 import me.aiglez.lonkskit.abilities.itembased.johan.*;
@@ -50,7 +47,8 @@ public class AbilityFactoryImpl implements AbilityFactory {
             registerAbility("shark", new SharkAbility(yamlConfigurationLoader("shark")));
             registerAbility("shooter", new ShooterAbility(yamlConfigurationLoader("shooter")));
             registerAbility("shark", new SharkAbility(yamlConfigurationLoader("shark")));
-            aiglez += 5;
+            registerAbility("stomp", new StompAbility(yamlConfigurationLoader("stomp")));
+            aiglez += 6;
 
             // Johan - start
             registerAbility("anvil", new AnvilAbility(yamlConfigurationLoader("anvil")));

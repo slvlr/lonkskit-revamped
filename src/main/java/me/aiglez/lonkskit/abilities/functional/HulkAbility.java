@@ -7,10 +7,12 @@ import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.event.filter.EventFilters;
+import me.lucko.helper.metadata.Metadata;
+import me.lucko.helper.metadata.SoftValue;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
-import org.bukkit.util.Vector;
 
 import java.io.IOException;
 
@@ -33,28 +35,26 @@ public class HulkAbility extends FunctionalAbility {
                     final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
                     final Entity rightClicked = e.getRightClicked();
 
-                    if(!localPlayer.toBukkit().getPassengers().isEmpty()) {
-                        final Entity passenger = localPlayer.toBukkit().getPassengers().get(0);
-                        if(passenger == null) return;
+                    final Player bukkit = localPlayer.toBukkit();
+                    if(bukkit.getPassengers().isEmpty()) {
+                        // no passengers pick up the entity
+                        bukkit.addPassenger(rightClicked);
 
-                        applyEffects(localPlayer);
-
-                        if(passenger.getUniqueId().equals(rightClicked.getUniqueId())) {
-                            localPlayer.toBukkit().eject();
-
-                            final Vector vector = localPlayer.getLocation().getDirection().multiply(1.5D);
-                            passenger.setVelocity(vector);
-
-                            localPlayer.msg("&a(Hulk - Debug) &fYou have &cejected &a{0}.", passenger.getName());
+                        Metadata.provideForEntity(rightClicked).put(MetadataProvider.HULK_PICKED_UP, SoftValue.of(true));
+                        localPlayer.msg("&eYou have picked up {0}", rightClicked.getName());
+                    } else {
+                        final Entity passenger = bukkit.getPassengers().get(0);
+                        if(passenger == null) {
+                            localPlayer.msg("&cPassenger at index 0 was not found!");
                             return;
                         }
 
-                        localPlayer.msg("&a(Hulk - Debug) &cYou have already picked-up an entity!");
-                        return;
-                    }
+                        eject(bukkit, passenger);
 
-                    localPlayer.toBukkit().addPassenger(rightClicked);
-                    localPlayer.msg("&a(Hulk - Debug) &fYou have picked-up &a{0}", rightClicked.getName());
+                        boolean remove = Metadata.provideForEntity(passenger).remove(MetadataProvider.HULK_PICKED_UP);
+                        localPlayer.msg("&cYou have ejected {0} (remove result: {1})", passenger.getName(), remove);
+                    }
+                    e.setCancelled(true);
                 });
 
         Events.subscribe(PlayerToggleSneakEvent.class)
@@ -63,10 +63,19 @@ public class HulkAbility extends FunctionalAbility {
                     final LocalPlayer pickedUp = LocalPlayer.get(e.getPlayer());
                     if(pickedUp.toBukkit().isInsideVehicle()) {
                         pickedUp.toBukkit().getVehicle().eject();
+                        pickedUp.metadata().remove(MetadataProvider.HULK_PICKED_UP);
 
                         pickedUp.msg("&a(Hulk - Debug) &fYou have &cescaped &f!");
                     }
                 });
 
+        
+    }
+    
+    private void eject(Player vehicle, Entity entity) {
+        vehicle.eject();
+        entity.setVelocity(vehicle.getLocation().getDirection().multiply(1.5D).setY(
+                vehicle.getLocation().getDirection().getY() * 0.75
+        ));
     }
 }

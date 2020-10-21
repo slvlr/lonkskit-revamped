@@ -98,13 +98,13 @@ public class SpyAbility extends ItemStackAbility {
 
                     final LocalPlayer localPlayer = LocalPlayer.get((Player) arrow.getShooter());
 
+                    localPlayer.metadata().remove(MetadataProvider.SPY_PLAYER);
+                    localPlayer.toBukkit().setSpectatorTarget(null);
                     localPlayer.toBukkit().setGameMode(GameMode.SURVIVAL);
                     localPlayer.toBukkit().teleport(arrow.getLocation().subtract(0D, 1D, 0D));
-                    localPlayer.metadata().remove(MetadataProvider.SPY_PLAYER);
 
-                    localPlayer.toBukkit().setSpectatorTarget(null);
                     localPlayer.msg("&6(Spy - Debug) &aYour arrow has landed (handle time: {0}ms)",
-                            start - System.currentTimeMillis());
+                            System.currentTimeMillis() - start);
                 });
     }
 }

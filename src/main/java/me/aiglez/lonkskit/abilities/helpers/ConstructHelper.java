@@ -1,7 +1,7 @@
 package me.aiglez.lonkskit.abilities.helpers;
 
 import me.aiglez.lonkskit.WorldProvider;
-import me.aiglez.lonkskit.utils.Various;
+import me.aiglez.lonkskit.utils.Logger;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -18,15 +18,12 @@ public class ConstructHelper {
     private static final int WALL_WIDE = 5;
     private static final Material WALL_MATERIAL = Material.STONE;
 
-
-    public static boolean buildWallAt(float yaw, Location location) {
-        final Block base = location.getBlock();
-
+    public static boolean buildWallAt(float yaw, Block base) {
         int minX, minY, minZ;
         int maxX, maxY, maxZ;
 
         minY = base.getY();
-        maxY = minY + WALL_TALL -1;
+        maxY = minY + WALL_TALL - 1;
 
         final int direction = Math.round(yaw / 90f);
         if(direction % 2 == 0) { // Direction = (0 || 2)
@@ -39,27 +36,31 @@ public class ConstructHelper {
             maxX = minX = base.getX();
         }
 
-        final List<Block> build = new ArrayList<>();
-        boolean pass = true;
-        for(int x = minX; x <= maxX; x++)
-            for(int y = minY; y <= maxY; y++)
-                for(int z = minZ; z <= maxZ; z++) {
+        final List<Block> blocks = new ArrayList<>();
+        int blockCount = 0;
+        for(int x = minX; x <= maxX; x++) {
+            for (int y = minY; y <= maxY; y++) {
+                for (int z = minZ; z <= maxZ; z++) {
                     final Block block = WorldProvider.KP_WORLD.getBlockAt(x, y, z);
-                    if(canBuildAt(location)) {
-                        build.add(block);
+                    blockCount++;
+                    if (canBuildAt(block.getLocation())) {
+                        blocks.add(block);
                     } else {
-                        pass = false;
+                        Logger.debug("[WallBuilder] You can't build there found block type {0}", block.getType());
                     }
                 }
-        if(pass == false) {
+            }
+        }
+        Logger.debug("[WallBuilder] Block Count: {0}  ||  Buildable Blocks Count {1}", blockCount, blocks.size());
+        if(blockCount == blocks.size()) {
+            blocks.forEach(block -> block.setType(WALL_MATERIAL));
+            return true;
+        } else {
             return false;
         }
-
-        build.forEach(block -> block.setType(WALL_MATERIAL));
-        return true;
     }
 
     private static boolean canBuildAt(Location location) {
-        return location.getBlock().isEmpty() && Various.assertNotSurroundedWithCactus(location.getBlock());
+        return location.getBlock().isEmpty();
     }
 }
