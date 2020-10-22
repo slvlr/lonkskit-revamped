@@ -2,6 +2,7 @@ package me.aiglez.lonkskit.commands;
 
 import co.aikar.commands.PaperCommandManager;
 import me.aiglez.lonkskit.KitPlugin;
+import me.aiglez.lonkskit.utils.Logger;
 import org.bukkit.configuration.InvalidConfigurationException;
 
 import java.io.IOException;
@@ -17,6 +18,7 @@ public class CommandsRegistry {
         try {
             loadLocales();
         } catch (IOException | InvalidConfigurationException e) {
+            Logger.severe("Couldn't load messages.yml.");
             e.printStackTrace();
         }
         registerCommands();

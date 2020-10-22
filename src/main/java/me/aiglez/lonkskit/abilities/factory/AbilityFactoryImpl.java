@@ -81,7 +81,8 @@ public class AbilityFactoryImpl implements AbilityFactory {
             registerAbility("wizard", new WizardAbility(yamlConfigurationLoader("wizard")));
             registerAbility("spy", new SpyAbility(yamlConfigurationLoader("spy")));
             registerAbility("wallbuilder", new WallBuilderAbility(yamlConfigurationLoader("wallbuilder")));
-            aiglez += 18;
+            registerAbility("domebuilder", new DomeBuilderAbility(yamlConfigurationLoader("domebuilder")));
+            aiglez += 19;
 
             // johan - start
             registerAbility("elder", new ElderAbility(yamlConfigurationLoader("elder")));

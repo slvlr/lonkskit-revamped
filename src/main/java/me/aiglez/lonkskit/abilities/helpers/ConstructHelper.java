@@ -2,10 +2,12 @@ package me.aiglez.lonkskit.abilities.helpers;
 
 import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.utils.Logger;
+import me.lucko.helper.Schedulers;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +19,7 @@ public class ConstructHelper {
     private static final int WALL_TALL = 2;
     private static final int WALL_WIDE = 5;
     private static final Material WALL_MATERIAL = Material.STONE;
+    private static final Material DOME_MATERIAL = Material.GLASS;
 
     public static boolean buildWallAt(float yaw, Block base) {
         int minX, minY, minZ;
@@ -43,10 +46,10 @@ public class ConstructHelper {
                 for (int z = minZ; z <= maxZ; z++) {
                     final Block block = WorldProvider.KP_WORLD.getBlockAt(x, y, z);
                     blockCount++;
-                    if (canBuildAt(block.getLocation())) {
+                    if (canBuildOnTop(block, null)) {
                         blocks.add(block);
                     } else {
-                        Logger.debug("[WallBuilder] You can't build there found block type {0}", block.getType());
+                        Logger.debug("[WallBuilder] You can't build there, found block type {0}", block.getType());
                     }
                 }
             }
@@ -60,7 +63,161 @@ public class ConstructHelper {
         }
     }
 
-    private static boolean canBuildAt(Location location) {
-        return location.getBlock().isEmpty();
+    public static boolean buildDome(Location location, long wait) {
+        final int x = location.getBlockX();
+        final int y = location.getBlockY();
+        final int z = location.getBlockZ();
+
+        if(!canBuildDome(x, y, z)) return false;
+
+        //Bottom
+        for(int i = x-1; i <= x+1; i++)
+            for(int k = z-1; k <= z+1; k++) {
+                final int j = y-1;
+                final Block block = WorldProvider.KP_WORLD.getBlockAt(i, j, k);
+                if(block.getType().equals(Material.AIR))
+                    block.setType(DOME_MATERIAL);
+            }
+        //Top
+        for(int i = x-1; i <= x+1; i++)
+            for(int k = z-1; k <= z+1; k++) {
+                final int j = y+3;
+                final Block block = WorldProvider.KP_WORLD.getBlockAt(i, j, k);
+                if(block.getType().equals(Material.AIR))
+                    block.setType(DOME_MATERIAL);
+            }
+        //Side 1
+        for(int i = x-1; i <= x+1; i++)
+            for(int j = y; j <= y+2; j++) {
+                final int k = z-2;
+                final Block block = WorldProvider.KP_WORLD.getBlockAt(i, j, k);
+                if(block.getType().equals(Material.AIR))
+                    block.setType(DOME_MATERIAL);
+            }
+        //Side 3t
+        for(int i = x-1; i <= x+1; i++)
+            for(int j = y; j <= y+2; j++) {
+                final int k = z+2;
+                final Block block = WorldProvider.KP_WORLD.getBlockAt(i, j, k);
+                if(block.getType().equals(Material.AIR))
+                    block.setType(DOME_MATERIAL);
+            }
+        //Side 2
+        for(int k = z-1; k <= z+1; k++)
+            for(int j = y; j <= y+2; j++) {
+                final int i = x-2;
+                final Block block = WorldProvider.KP_WORLD.getBlockAt(i, j, k);
+                if(block.getType().equals(Material.AIR))
+                    block.setType(DOME_MATERIAL);
+            }
+        //Side 4
+        for(int k = z-1; k <= z+1; k++)
+            for(int j = y; j <= y+2; j++) {
+                final int i = x+2;
+                final Block block = WorldProvider.KP_WORLD.getBlockAt(i, j, k);
+                if(block.getType().equals(Material.AIR))
+                    block.setType(DOME_MATERIAL);
+            }
+
+        Schedulers.sync().runLater(() -> {
+            //Bottom
+            for(int i = x-1; i <= x+1; i++)
+                for(int k = z-1; k <= z+1; k++) {
+                    final int j = y-1;
+                    final Block block = WorldProvider.KP_WORLD.getBlockAt(i, j, k);
+                    if(block.getType() == DOME_MATERIAL)
+                        block.setType(Material.AIR);
+                }
+            //Top
+            for(int i = x-1; i <= x+1; i++)
+                for(int k = z-1; k <= z+1; k++) {
+                    final int j = y+3;
+                    final Block block = WorldProvider.KP_WORLD.getBlockAt(i, j, k);
+                    if(block.getType() == DOME_MATERIAL)
+                        block.setType(Material.AIR);
+                }
+            //Side 1
+            for(int i = x-1; i <= x+1; i++)
+                for(int j = y; j <= y+2; j++) {
+                    final int k = z-2;
+                    final Block block = WorldProvider.KP_WORLD.getBlockAt(i, j, k);
+                    if(block.getType() == DOME_MATERIAL)
+                        block.setType(Material.AIR);
+                }
+            //Side 3
+            for(int i = x-1; i <= x+1; i++)
+                for(int j = y; j <= y+2; j++) {
+                    final int k = z+2;
+                    final Block block = WorldProvider.KP_WORLD.getBlockAt(i, j, k);
+                    if(block.getType() == DOME_MATERIAL)
+                        block.setType(Material.AIR);
+                }
+            //Side 2
+            for(int k = z-1; k <= z+1; k++)
+                for(int j = y; j <= y+2; j++) {
+                    final int i = x-2;
+                    final Block block = WorldProvider.KP_WORLD.getBlockAt(i, j, k);
+                    if(block.getType() == DOME_MATERIAL)
+                        block.setType(Material.AIR);
+                }
+            //Side 4
+            for(int k = z-1; k <= z+1; k++)
+                for(int j = y; j <= y+2; j++) {
+                    final int i = x+2;
+                    final Block block = WorldProvider.KP_WORLD.getBlockAt(i, j, k);
+                    if(block.getType() == DOME_MATERIAL)
+                        block.setType(Material.AIR);
+                }
+        }, wait);
+
+        return true;
+    }
+
+    public static boolean canBuildDome(int x, int y, int z) {
+        //Bottom
+        for(int i = x-1; i <= x+1; i++)
+            for(int k = z-1; k <= z+1; k++) {
+                final int j = y-1;
+                if(!canBuildOnTop(WorldProvider.KP_WORLD.getBlockAt(i, j, k), DOME_MATERIAL)) return false;
+            }
+        //Top
+        for(int i = x-1; i <= x+1; i++)
+            for(int k = z-1; k <= z+1; k++) {
+                final int j = y+3;
+                if(!canBuildOnTop(WorldProvider.KP_WORLD.getBlockAt(i, j, k), DOME_MATERIAL)) return false;
+            }
+        //Side 1
+        for(int i = x-1; i <= x+1; i++)
+            for(int j = y; j <= y+2; j++) {
+                final int k = z-2;
+                if(!canBuildOnTop(WorldProvider.KP_WORLD.getBlockAt(i, j, k), DOME_MATERIAL)) return false;
+            }
+        //Side 3
+        for(int i = x-1; i <= x+1; i++)
+            for(int j = y; j <= y+2; j++) {
+                final int k = z+2;
+                if(!canBuildOnTop(WorldProvider.KP_WORLD.getBlockAt(i, j, k), DOME_MATERIAL)) return false;
+            }
+        //Side 2
+        for(int k = z-1; k <= z+1; k++)
+            for(int j = y; j <= y+2; j++) {
+                final int i = x-2;
+                if(!canBuildOnTop(WorldProvider.KP_WORLD.getBlockAt(i, j, k), DOME_MATERIAL)) return false;
+            }
+        //Side 4
+        for(int k = z-1; k <= z+1; k++)
+            for(int j = y; j <= y+2; j++) {
+                final int i = x+2;
+                if(!canBuildOnTop(WorldProvider.KP_WORLD.getBlockAt(i, j, k), DOME_MATERIAL)) return false;
+            }
+
+        return true;
+    }
+
+    private static boolean canBuildOnTop(Block block, @Nullable Material avoid) {
+        if(avoid != null && block.getType() == avoid) {
+            return false;
+        }
+        return block.isEmpty();
     }
 }

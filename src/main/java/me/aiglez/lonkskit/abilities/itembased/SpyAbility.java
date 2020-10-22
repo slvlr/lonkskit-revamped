@@ -9,16 +9,19 @@ import me.lucko.helper.Events;
 import me.lucko.helper.Schedulers;
 import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.event.filter.EventFilters;
+import me.lucko.helper.metadata.ExpiringValue;
 import me.lucko.helper.metadata.Metadata;
 import me.lucko.helper.metadata.SoftValue;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author AigleZ
@@ -55,7 +58,7 @@ public class SpyAbility extends ItemStackAbility {
                     // spectator - start
                     Schedulers.sync()
                             .runLater(() -> {
-                                localPlayer.metadata().put(MetadataProvider.SPY_PLAYER, SoftValue.of(true));
+                                localPlayer.metadata().put(MetadataProvider.SPY_PLAYER, ExpiringValue.of(true, 1, TimeUnit.SECONDS));
                                 localPlayer.toBukkit().setGameMode(GameMode.SPECTATOR);
                                 localPlayer.toBukkit().setSpectatorTarget(arrow);
                                 }, 2L);
@@ -106,5 +109,15 @@ public class SpyAbility extends ItemStackAbility {
                     localPlayer.msg("&6(Spy - Debug) &aYour arrow has landed (handle time: {0}ms)",
                             System.currentTimeMillis() - start);
                 });
+
+        Events.subscribe(PlayerDeathEvent.class)
+                .filter(AbilityPredicates.possiblyHasMetadata(MetadataProvider.SPY_ARROW))
+                .handler(e -> {
+                    final LocalPlayer localPlayer = LocalPlayer.get(e.getEntity());
+                    localPlayer.metadata().remove(MetadataProvider.SPY_PLAYER);
+                    localPlayer.toBukkit().setSpectatorTarget(null);
+                    localPlayer.toBukkit().setGameMode(GameMode.SURVIVAL);
+                });
+
     }
 }

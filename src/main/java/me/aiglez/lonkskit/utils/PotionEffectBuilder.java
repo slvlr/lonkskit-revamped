@@ -83,12 +83,13 @@ public class PotionEffectBuilder {
     }
 
     public PotionEffectBuilder amplifier(int amplifier) {
-        Preconditions.checkArgument(duration > 0, "Potion amplifier may not be inferior to 1");
+        Preconditions.checkArgument(amplifier > 0, "Potion amplifier may not be inferior to 1");
         this.amplifier = amplifier;
         return this;
     }
 
     public PotionEffect build() {
-        return new PotionEffect(type, (int) duration, Math.min(amplifier - 1, 0));
+        int a = Math.max(amplifier - 1, 0);
+        return new PotionEffect(type, (int) duration, a);
     }
 }

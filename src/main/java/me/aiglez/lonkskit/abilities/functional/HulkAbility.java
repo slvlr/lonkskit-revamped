@@ -3,6 +3,7 @@ package me.aiglez.lonkskit.abilities.functional;
 import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.FunctionalAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
+import me.aiglez.lonkskit.utils.Logger;
 import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
@@ -36,6 +37,7 @@ public class HulkAbility extends FunctionalAbility {
                     final Entity rightClicked = e.getRightClicked();
 
                     final Player bukkit = localPlayer.toBukkit();
+                    Logger.debug("Fired");
                     if(bukkit.getPassengers().isEmpty()) {
                         // no passengers pick up the entity
                         bukkit.addPassenger(rightClicked);

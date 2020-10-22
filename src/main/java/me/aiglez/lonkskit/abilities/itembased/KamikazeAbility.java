@@ -35,7 +35,7 @@ public class KamikazeAbility extends ItemStackAbility {
                 false,
                 localPlayer.toBukkit()
         );
-        final double damage = localPlayer.toBukkit().getHealth();
+        final double damage = Math.min(localPlayer.toBukkit().getHealth(), 0.5D);
         localPlayer.msg("&4(Kamikaze - Debug) &cYou have exploded! (HP left: {0})", damage);
 
         // damage
