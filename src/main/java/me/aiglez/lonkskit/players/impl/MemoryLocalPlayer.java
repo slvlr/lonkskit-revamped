@@ -1,4 +1,4 @@
-package me.aiglez.lonkskit.data;
+package me.aiglez.lonkskit.players.impl;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;

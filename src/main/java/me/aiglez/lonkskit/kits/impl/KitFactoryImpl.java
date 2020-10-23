@@ -1,11 +1,13 @@
-package me.aiglez.lonkskit.kits;
+package me.aiglez.lonkskit.kits.impl;
 
 import com.google.common.primitives.Ints;
 import com.google.common.reflect.TypeToken;
 import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.LonksKitProvider;
 import me.aiglez.lonkskit.abilities.Ability;
-import me.aiglez.lonkskit.data.MemoryKit;
+import me.aiglez.lonkskit.kits.Kit;
+import me.aiglez.lonkskit.kits.KitFactory;
+import me.aiglez.lonkskit.kits.KitSelectorHolder;
 import me.aiglez.lonkskit.utils.Logger;
 import me.aiglez.lonkskit.utils.PotionEffectBuilder;
 import me.aiglez.lonkskit.utils.items.ItemStackParser;

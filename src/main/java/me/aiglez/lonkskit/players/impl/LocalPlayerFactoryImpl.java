@@ -3,7 +3,6 @@ package me.aiglez.lonkskit.players.impl;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonElement;
 import me.aiglez.lonkskit.KitPlugin;
-import me.aiglez.lonkskit.data.MemoryLocalPlayer;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.players.LocalPlayerFactory;
 import me.aiglez.lonkskit.utils.Logger;
@@ -37,6 +36,16 @@ public class LocalPlayerFactoryImpl implements LocalPlayerFactory {
     }
 
     @Override
+    public LocalPlayer getLocalPlayer(String name) {
+        for (final LocalPlayer localPlayer : cache.values()) {
+            if(localPlayer.getLastKnownName() != null && localPlayer.getLastKnownName().equalsIgnoreCase(name)) {
+                return localPlayer;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public boolean loadLocalPlayers() {
         if(!this.cacheFile.exists()) {
             Logger.warn("Cache file not found, assuming there is no player to load...");
@@ -53,7 +62,7 @@ public class LocalPlayerFactoryImpl implements LocalPlayerFactory {
             e.printStackTrace();
             return false;
         }
-        return false;
+        return true;
     }
 
     @Override

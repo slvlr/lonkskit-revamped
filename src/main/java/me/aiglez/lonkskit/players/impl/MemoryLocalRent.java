@@ -1,19 +1,19 @@
-package me.aiglez.lonkskit.data;
+package me.aiglez.lonkskit.players.impl;
 
 import me.aiglez.lonkskit.kits.Kit;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.players.LocalRent;
 
-public class MemoryRent implements LocalRent {
+public class MemoryLocalRent implements LocalRent {
 
     private final LocalPlayer localPlayer;
     private final Kit rentedKit;
 
     private int uses;
 
-    public MemoryRent(LocalPlayer localPlayer, Kit rentedKit) { this(localPlayer, rentedKit, 0); }
+    public MemoryLocalRent(LocalPlayer localPlayer, Kit rentedKit) { this(localPlayer, rentedKit, 0); }
 
-    public MemoryRent(LocalPlayer localPlayer, Kit rentedKit, int uses) {
+    public MemoryLocalRent(LocalPlayer localPlayer, Kit rentedKit, int uses) {
         this.localPlayer = localPlayer;
         this.rentedKit = rentedKit;
         this.uses = uses;

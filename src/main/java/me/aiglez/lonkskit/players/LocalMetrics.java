@@ -1,6 +1,6 @@
 package me.aiglez.lonkskit.players;
 
-import me.aiglez.lonkskit.data.MemoryMetrics;
+import me.aiglez.lonkskit.players.impl.MemoryLocalMetrics;
 
 @SuppressWarnings({"unused", "RedundantSuppression"})
 public interface LocalMetrics {
@@ -20,6 +20,6 @@ public interface LocalMetrics {
     void updateAll(int kills, int deaths);
 
     static LocalMetrics newMetrics(LocalPlayer localPlayer) {
-        return new MemoryMetrics(localPlayer);
+        return new MemoryLocalMetrics(localPlayer);
     }
 }

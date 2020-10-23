@@ -1,4 +1,4 @@
-package me.aiglez.lonkskit.data;
+package me.aiglez.lonkskit.kits.impl;
 
 import com.google.common.base.Preconditions;
 import me.aiglez.lonkskit.abilities.Ability;

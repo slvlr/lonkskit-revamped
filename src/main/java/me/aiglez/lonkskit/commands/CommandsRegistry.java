@@ -15,6 +15,11 @@ public class CommandsRegistry {
     public CommandsRegistry(KitPlugin plugin) {
         this.acf = new PaperCommandManager(plugin);
         this.acf.enableUnstableAPI("brigadier");
+        this.acf.setDefaultExceptionHandler((command, registeredCommand, sender, args, t) -> {
+            Logger.warn("Error occured while executing command: {0}", command.getName());
+            return false;
+        });
+
         try {
             loadLocales();
         } catch (IOException | InvalidConfigurationException e) {
@@ -29,7 +34,8 @@ public class CommandsRegistry {
         acf.getLocales().setDefaultLocale(Locale.ENGLISH);
     }
 
-    private void registerCompletions() {
+    private void registerContexts() {
+
     }
 
     private void registerCommands() {

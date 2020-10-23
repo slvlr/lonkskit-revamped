@@ -1,7 +1,7 @@
 package me.aiglez.lonkskit.players;
 
-import me.aiglez.lonkskit.data.MemoryRent;
 import me.aiglez.lonkskit.kits.Kit;
+import me.aiglez.lonkskit.players.impl.MemoryLocalRent;
 
 @SuppressWarnings({"unused", "RedundantSuppression"})
 public interface LocalRent {
@@ -21,7 +21,7 @@ public interface LocalRent {
         return getRented().getUsesPerRent() - getUses();
     }
 
-    static LocalRent of(LocalPlayer localPlayer, Kit kit) { return new MemoryRent(localPlayer, kit); }
+    static LocalRent of(LocalPlayer localPlayer, Kit kit) { return new MemoryLocalRent(localPlayer, kit); }
 
-    static LocalRent of(LocalPlayer localPlayer, Kit kit, int uses) { return new MemoryRent(localPlayer, kit, uses); }
+    static LocalRent of(LocalPlayer localPlayer, Kit kit, int uses) { return new MemoryLocalRent(localPlayer, kit, uses); }
 }

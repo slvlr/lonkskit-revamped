@@ -7,11 +7,13 @@ public interface LocalPlayerFactory {
 
     LocalPlayer getLocalPlayer(Player player);
 
+    LocalPlayer getLocalPlayer(String name);
+
     boolean loadLocalPlayers();
 
     boolean saveLocalPlayers();
 
-    static LocalPlayerFactory makeInstance() {
+    static LocalPlayerFactory make() {
         return new LocalPlayerFactoryImpl();
     }
 }

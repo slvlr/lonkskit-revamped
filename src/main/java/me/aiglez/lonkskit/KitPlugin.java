@@ -4,6 +4,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import me.aiglez.lonkskit.abilities.factory.AbilityFactory;
 import me.aiglez.lonkskit.commands.CommandsRegistry;
+import me.aiglez.lonkskit.controllers.Controllers;
 import me.aiglez.lonkskit.kits.KitFactory;
 import me.aiglez.lonkskit.listeners.AbilityListeners;
 import me.aiglez.lonkskit.listeners.PlayerListeners;
@@ -68,7 +69,7 @@ public final class KitPlugin extends ExtendedJavaPlugin implements Listener {
         this.kitFactory.loadKits();
 
         Logger.fine("Loading players...");
-        this.localPlayerFactory = LocalPlayerFactory.makeInstance();
+        this.localPlayerFactory = LocalPlayerFactory.make();
         this.localPlayerFactory.loadLocalPlayers();
 
         Logger.fine("Registering listeners and commands...");
@@ -78,6 +79,7 @@ public final class KitPlugin extends ExtendedJavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(this, this);
 
         new CommandsRegistry(this);
+        Controllers.PLAYER.loadLoginItems();
         loaded = true;
     }
 
@@ -100,6 +102,8 @@ public final class KitPlugin extends ExtendedJavaPlugin implements Listener {
     public AbilityFactory getAbilityFactory() { return this.abilityFactory; }
 
     public ProtocolManager getProtocolManager() { return protocolManager; }
+
+    public ConfigurationNode getConf() { return conf; }
 
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent e) {

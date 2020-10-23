@@ -1,5 +1,7 @@
 package me.aiglez.lonkskit.kits;
 
+import me.aiglez.lonkskit.kits.impl.KitFactoryImpl;
+
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;

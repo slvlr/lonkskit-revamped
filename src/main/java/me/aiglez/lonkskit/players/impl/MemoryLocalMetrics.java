@@ -1,18 +1,18 @@
-package me.aiglez.lonkskit.data;
+package me.aiglez.lonkskit.players.impl;
 
 import me.aiglez.lonkskit.players.LocalMetrics;
 import me.aiglez.lonkskit.players.LocalPlayer;
 
-public class MemoryMetrics implements LocalMetrics {
+public class MemoryLocalMetrics implements LocalMetrics {
 
     private final LocalPlayer holder;
     private int kills, deaths;
 
-    public MemoryMetrics(LocalPlayer holder) {
+    public MemoryLocalMetrics(LocalPlayer holder) {
         this(holder, 0, 0);
     }
 
-    public MemoryMetrics(LocalPlayer holder, int kills, int deaths) {
+    public MemoryLocalMetrics(LocalPlayer holder, int kills, int deaths) {
         this.holder = holder;
         this.kills = kills;
         this.deaths = deaths;
