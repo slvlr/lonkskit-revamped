@@ -16,7 +16,8 @@ public class CommandsRegistry {
         this.acf = new PaperCommandManager(plugin);
         this.acf.enableUnstableAPI("brigadier");
         this.acf.setDefaultExceptionHandler((command, registeredCommand, sender, args, t) -> {
-            Logger.warn("Error occured while executing command: {0}", command.getName());
+            Logger.warn("An error occurred while executing command: {0}", command.getName());
+            if(t != null) t.printStackTrace();
             return false;
         });
 

@@ -7,21 +7,17 @@ import me.aiglez.lonkskit.commands.CommandsRegistry;
 import me.aiglez.lonkskit.controllers.Controllers;
 import me.aiglez.lonkskit.kits.KitFactory;
 import me.aiglez.lonkskit.listeners.AbilityListeners;
+import me.aiglez.lonkskit.listeners.InteractListeners;
 import me.aiglez.lonkskit.listeners.PlayerListeners;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.players.LocalPlayerFactory;
 import me.aiglez.lonkskit.utils.Logger;
-import me.lucko.helper.config.ConfigFactory;
 import me.lucko.helper.config.ConfigurationNode;
-import me.lucko.helper.config.ConfigurationOptions;
-import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.plugin.ExtendedJavaPlugin;
 import me.lucko.helper.plugin.ap.Plugin;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-
-import java.io.IOException;
 
 @Plugin(
         name = "LonksKit", version = "1.0.9",
@@ -37,7 +33,6 @@ public final class KitPlugin extends ExtendedJavaPlugin implements Listener {
     private LocalPlayerFactory localPlayerFactory;
     private AbilityFactory abilityFactory;
 
-    private YAMLConfigurationLoader confLoader;
     private ConfigurationNode conf;
 
     private ProtocolManager protocolManager; // protocol lib hook
@@ -51,14 +46,7 @@ public final class KitPlugin extends ExtendedJavaPlugin implements Listener {
     public void enable() {
         singleton = this;
         Logger.fine("Loading configuration files...");
-        try {
-            this.confLoader = ConfigFactory.yaml().loader(getBundledFile("config.yml"));
-            this.conf = confLoader.load(ConfigurationOptions.defaults());
-        } catch (IOException e) {
-            Logger.severe("Couldn't find the file {0}, shutting down the plugin.", "config.yml");
-            getPluginLoader().disablePlugin(this);
-            return;
-        }
+        this.conf = loadConfigNode("config.yml");
 
         Logger.fine("Loading abilities...");
         this.abilityFactory = AbilityFactory.make();
@@ -73,12 +61,9 @@ public final class KitPlugin extends ExtendedJavaPlugin implements Listener {
         this.localPlayerFactory.loadLocalPlayers();
 
         Logger.fine("Registering listeners and commands...");
-        new AbilityListeners(this);
-        new PlayerListeners(this);
+        registerListeners();
+        registerCommands();
 
-        getServer().getPluginManager().registerEvents(this, this);
-
-        new CommandsRegistry(this);
         Controllers.PLAYER.loadLoginItems();
         loaded = true;
     }
@@ -93,6 +78,17 @@ public final class KitPlugin extends ExtendedJavaPlugin implements Listener {
         localPlayerFactory.saveLocalPlayers();
     }
 
+    private void registerListeners() {
+        new AbilityListeners(this);
+        new InteractListeners(this);
+        new PlayerListeners(this);
+        registerListener(this);
+    }
+
+    private void registerCommands() {
+        new CommandsRegistry(this);
+    }
+
     public static KitPlugin getSingleton() { return singleton; }
 
     public KitFactory getKitFactory() { return this.kitFactory; }
@@ -100,8 +96,6 @@ public final class KitPlugin extends ExtendedJavaPlugin implements Listener {
     public LocalPlayerFactory getPlayerFactory() { return this.localPlayerFactory; }
 
     public AbilityFactory getAbilityFactory() { return this.abilityFactory; }
-
-    public ProtocolManager getProtocolManager() { return protocolManager; }
 
     public ConfigurationNode getConf() { return conf; }
 
