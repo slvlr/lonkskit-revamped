@@ -4,6 +4,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Subcommand;
 import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.controllers.Controllers;
 import me.aiglez.lonkskit.players.LocalPlayer;
@@ -16,10 +17,11 @@ public class MainCommand extends BaseCommand {
     // -------------------------------------------- //
     // DEFAULT
     // -------------------------------------------- //
-    @Default @CommandPermission("lonkskit.kitpvp")
+    @Default @Subcommand("join")
+    @CommandPermission("lonkskit.kitpvp")
     public void onDefault(Player player) {
         final LocalPlayer localPlayer = LocalPlayer.get(player.getPlayer());
-        if(localPlayer.inKPWorld()) {
+        if(localPlayer.isValid()) {
             localPlayer.msg("&b[LonksKit] &cYou are already in the Kit PvP world.");
             return;
         }
@@ -32,7 +34,7 @@ public class MainCommand extends BaseCommand {
                         localPlayer.toBukkit().getInventory().addItem(hotbarItem.getItemStack());
                     }
                 }
-                localPlayer.setAtArena(false);
+                localPlayer.setInArena(false);
 
             } else {
                 localPlayer.msg("&b[LonksKit] &cAn error occurred while trying to teleport you to the Kit PvP world. Try later.");

@@ -28,7 +28,7 @@ public class InteractListeners implements Listener {
     public void onInventoryMove(InventoryClickEvent e) {
         if(!(e.getWhoClicked() instanceof Player) || e.getClickedInventory() == null) return;
         final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getWhoClicked());
-        if(!localPlayer.inKPWorld() || !localPlayer.isSafe() || localPlayer.atArena()) return;
+        if(!localPlayer.isValid() || !localPlayer.isSafe() || localPlayer.inArena()) return;
 
         if(e.getCurrentItem() != null) {
             if(isLoggingItemStack(e.getCurrentItem())) {
@@ -57,7 +57,7 @@ public class InteractListeners implements Listener {
     public void onInventoryDrag(InventoryDragEvent e) {
         if(!(e.getWhoClicked() instanceof Player)) return;
         final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getWhoClicked());
-        if(!localPlayer.inKPWorld() || !localPlayer.isSafe() || localPlayer.atArena()) return;
+        if(!localPlayer.isValid() || !localPlayer.isSafe() || localPlayer.inArena()) return;
 
     }
 
@@ -67,7 +67,7 @@ public class InteractListeners implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInteract(PlayerInteractEvent e) {
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
-        if(!localPlayer.inKPWorld() || !e.hasItem()) return;
+        if(!localPlayer.isValid() || !e.hasItem()) return;
         final ItemStack item = e.getItem();
 
         if(isLoggingItemStack(item)) {

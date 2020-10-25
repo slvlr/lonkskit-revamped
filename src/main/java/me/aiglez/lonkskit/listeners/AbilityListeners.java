@@ -20,7 +20,7 @@ public class AbilityListeners implements Listener {
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
-        if(!localPlayer.inKPWorld()) return;
+        if(!localPlayer.isValid()) return;
 
         // handle abilities
         if(!e.hasItem()) return;

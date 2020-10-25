@@ -14,6 +14,7 @@ public class MetadataProvider {
     public static final MetadataKey<Boolean> SPY_PLAYER = MetadataKey.createBooleanKey("spy-player");
     public static final MetadataKey<Boolean> LEAVE_HORSE = MetadataKey.createBooleanKey("spy-player");
 
+    public static final MetadataKey<LocalPlayer> LAST_ATTACKER = MetadataKey.create("combat-tag", LocalPlayer.class);
     /**
      * Entities MetadataProvider
      */

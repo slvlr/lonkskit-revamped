@@ -1,5 +1,6 @@
 package me.aiglez.lonkskit;
 
+import com.google.common.base.Preconditions;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.Helper;
 import org.bukkit.Bukkit;
@@ -14,7 +15,8 @@ public class WorldProvider {
     public static final World MAIN_WORLD = Bukkit.getWorld("world");
 
     public static boolean inKPWorld(LocalPlayer localPlayer) {
-        return localPlayer.toBukkit() != null && localPlayer.toBukkit().getWorld().getUID().equals(KP_WORLD.getUID());
+        Preconditions.checkNotNull(localPlayer, "local player may not be null");
+        return localPlayer.isOnline() && localPlayer.getWorld().getUID().equals(KP_WORLD.getUID());
     }
 
     private WorldProvider() {

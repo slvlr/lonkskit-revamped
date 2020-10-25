@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonElement;
+import me.aiglez.lonkskit.Constants;
 import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.controllers.Controllers;
 import me.aiglez.lonkskit.events.KitSelectEvent;
@@ -15,8 +16,10 @@ import me.aiglez.lonkskit.players.LocalRent;
 import me.aiglez.lonkskit.players.messages.Replaceable;
 import me.aiglez.lonkskit.struct.HotbarItemStack;
 import me.aiglez.lonkskit.utils.Logger;
+import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.lucko.helper.Events;
 import me.lucko.helper.gson.JsonBuilder;
+import me.lucko.helper.metadata.ExpiringValue;
 import me.lucko.helper.profiles.MojangApi;
 import me.lucko.helper.text3.Text;
 import org.bukkit.Location;
@@ -28,6 +31,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -42,7 +46,7 @@ public class MemoryLocalPlayer implements LocalPlayer {
     private String lastKnownName;
     private Player bukkit;
     private Kit selectedKit;
-    private boolean safe, atArena;
+    private boolean safe, inArena;
 
     private Set<Location> demomanTraps;
 
@@ -87,6 +91,15 @@ public class MemoryLocalPlayer implements LocalPlayer {
     }
 
     @Override
+    public boolean isOnline() {
+        if(toBukkit() == null) {
+            return false;
+        } else {
+            return toBukkit().isOnline();
+        }
+    }
+
+    @Override
     public Player toBukkit() { return this.bukkit; }
 
     @Override
@@ -94,25 +107,25 @@ public class MemoryLocalPlayer implements LocalPlayer {
 
     @Override
     public Location getLocation() {
-        Preconditions.checkNotNull(bukkit, "player is not online");
-        return bukkit.getLocation();
+        Preconditions.checkNotNull(this.bukkit, "player is offline");
+        return this.bukkit.getLocation();
     }
 
     @Override
     public World getWorld() {
-        Preconditions.checkNotNull(bukkit, "player is not online");
-        return bukkit.getWorld();
+        Preconditions.checkNotNull(this.bukkit, "player is offline");
+        return this.bukkit.getWorld();
     }
 
     @Override
-    public boolean inKPWorld() {
+    public boolean isValid() {
         return WorldProvider.inKPWorld(this);
     }
 
     @Override
     public PlayerInventory getInventory() {
-        Preconditions.checkNotNull(bukkit, "player is not online");
-        return bukkit.getInventory();
+        Preconditions.checkNotNull(this.bukkit, "player is offline");
+        return this.bukkit.getInventory();
     }
 
     @Override
@@ -129,14 +142,16 @@ public class MemoryLocalPlayer implements LocalPlayer {
     @Override
     public boolean setSelectedKit(Kit kit) {
         if(!isSafe()) {
-            System.out.println("Not safe");
             return false;
         }
-        this.selectedKit = kit;
-        if(selectedKit == null) return true;
+        if(kit == null) {
+            this.selectedKit = null;
+            return true;
+        }
 
+        this.selectedKit = kit;
         Events.call(new KitSelectEvent(kit, this));
-        if(toBukkit() == null) {
+        if(!isOnline()) {
             Logger.severe("Player not found: " + (toBukkit() == null));
             return false;
         }
@@ -149,14 +164,12 @@ public class MemoryLocalPlayer implements LocalPlayer {
         player.setLevel(0);
         if(player.isFlying()) player.setFlying(false);
 
-        player.addPotionEffects(kit.getPotionEffects());
+        player.addPotionEffects(this.selectedKit.getPotionEffects());
 
-        player.sendMessage("§bSetting armor");
-        kit.getInventoryArmors().forEach((equipmentSlot, item) -> player.getInventory().setItem(equipmentSlot, item));
+        this.selectedKit.getInventoryArmors().forEach((equipmentSlot, item) -> player.getInventory().setItem(equipmentSlot, item));
 
-        player.sendMessage("§bSetting content");
         try {
-            player.getInventory().addItem(kit.getInventoryContent().toArray(new ItemStack[0]));
+            player.getInventory().addItem(this.selectedKit.getInventoryContent().toArray(new ItemStack[0]));
         } catch (ArrayIndexOutOfBoundsException e) {
             e.printStackTrace();
             return false;
@@ -168,21 +181,22 @@ public class MemoryLocalPlayer implements LocalPlayer {
     public double getPoints() { return this.points.doubleValue(); }
 
     @Override
-    public void incrementPoints(int by) { this.points.incrementAndGet(); }
+    public void incrementPoints(int amount) {
+        this.points.getAndAdd(amount);
+    }
 
     @Override
-    public boolean decrementPoints(int by) {
-        if(by < 0) return false;
-        if(by > points.get()) return false;
-        points.set(points.get() - by);
+    public boolean decrementPoints(int amount) {
+        if(amount < 0 || amount > this.points.intValue()) return false;
+        points.set(points.get() - amount);
         return true;
     }
 
     @Override
-    public boolean atArena() { return this.atArena; }
+    public boolean inArena() { return this.inArena; }
 
     @Override
-    public void setAtArena(boolean bool) { this.atArena = bool; }
+    public void setInArena(boolean status) { this.inArena = status; }
 
     @Override
     public boolean isSafe() { return this.safe; }
@@ -192,14 +206,12 @@ public class MemoryLocalPlayer implements LocalPlayer {
 
     @Override
     public void updateSafeStatus() {
-        if(toBukkit() != null) {
-            if(getInventory().isEmpty()) {
-                setSafeStatus(true);
-                for (HotbarItemStack hotbarItem : Controllers.PLAYER.getHotbarItems()) {
-                    getInventory().addItem(hotbarItem.getItemStack());
-                }
-                msg("&b[LonksKit] &aYou can now play!");
+        if(isOnline() && getInventory().isEmpty()) {
+            setSafeStatus(true);
+            for (HotbarItemStack hotbarItem : Controllers.PLAYER.getHotbarItems()) {
+                getInventory().addItem(hotbarItem.getItemStack());
             }
+            msg("&b[LonksKit] &aYou can now play!");
         }
     }
 
@@ -211,8 +223,22 @@ public class MemoryLocalPlayer implements LocalPlayer {
 
     @Override
     public void openKitSelector() {
-        Preconditions.checkNotNull(bukkit, "player is not online");
+        Preconditions.checkNotNull(bukkit, "player is offline");
         new KitSelectorGUI(this).open();
+    }
+
+    @Override
+    public Optional<LocalPlayer> getLastAttacker() {
+        return metadata().get(MetadataProvider.LAST_ATTACKER);
+    }
+
+    @Override
+    public void setLastAttacker(LocalPlayer localPlayer) {
+        if(localPlayer == null || localPlayer.getUniqueId().equals(this.uniqueId)) {
+            metadata().remove(MetadataProvider.LAST_ATTACKER);
+        } else {
+            metadata().put(MetadataProvider.LAST_ATTACKER, ExpiringValue.of(localPlayer, Constants.ATTACKER_TAG_EXPIRING, TimeUnit.MINUTES));
+        }
     }
 
     @Override
@@ -230,7 +256,6 @@ public class MemoryLocalPlayer implements LocalPlayer {
     public void msg(String message, Object... replacements) {
         msg(Replaceable.handle(message, replacements));
     }
-
 
     @Override
     public List<LocalRent> getRents() { return this.rents; }

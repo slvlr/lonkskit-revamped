@@ -25,7 +25,7 @@ public class SafetyListeners implements Listener {
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent e) {
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
-        if(!localPlayer.inKPWorld()) return;
+        if(!localPlayer.isValid()) return;
 
         if(!localPlayer.isSafe()) {
             unsafeReminder(localPlayer);

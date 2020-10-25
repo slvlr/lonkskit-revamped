@@ -27,6 +27,8 @@ public interface LocalPlayer extends GsonSerializable, LocalMessager, LocalRente
 
     String getLastKnownName();
 
+    boolean isOnline();
+
     Player toBukkit();
 
     void setBukkit(Player bukkit);
@@ -38,7 +40,7 @@ public interface LocalPlayer extends GsonSerializable, LocalMessager, LocalRente
     /**
      * Mirror to {@see WorldProvider#inKPWorld}
      */
-    boolean inKPWorld();
+    boolean isValid();
 
     PlayerInventory getInventory();
 
@@ -52,13 +54,13 @@ public interface LocalPlayer extends GsonSerializable, LocalMessager, LocalRente
 
     double getPoints();
 
-    void incrementPoints(int by);
+    void incrementPoints(int amount);
 
-    boolean decrementPoints(int by);
+    boolean decrementPoints(int amount);
 
-    boolean atArena();
+    boolean inArena();
 
-    void setAtArena(boolean bool);
+    void setInArena(boolean status);
 
     boolean isSafe();
 
@@ -69,6 +71,10 @@ public interface LocalPlayer extends GsonSerializable, LocalMessager, LocalRente
     boolean hasAccess(Kit kit);
 
     void openKitSelector();
+
+    Optional<LocalPlayer> getLastAttacker();
+
+    void setLastAttacker(LocalPlayer localPlayer);
 
     default MetadataMap metadata() {
         return Metadata.provideForPlayer(getUniqueId());
@@ -120,7 +126,6 @@ public interface LocalPlayer extends GsonSerializable, LocalMessager, LocalRente
 
         return localPlayer;
     }
-
 
     @Override
     JsonElement serialize();

@@ -37,7 +37,7 @@ public class PlayerListeners implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onDeath(PlayerDeathEvent e) {
         final LocalPlayer victim = LocalPlayer.get(e.getEntity());
-        if(!victim.inKPWorld() || victim.toBukkit().getKiller() == null) return;
+        if(!victim.isValid() || victim.toBukkit().getKiller() == null) return;
 
 
     }
@@ -48,10 +48,10 @@ public class PlayerListeners implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onDrop(PlayerDropItemEvent e) {
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
-        if(!localPlayer.inKPWorld()) return;
+        if(!localPlayer.isValid()) return;
         final ItemStack item = e.getItemDrop().getItemStack();
 
-        if(localPlayer.atArena()) {
+        if(localPlayer.inArena()) {
             localPlayer.msg("&b[LonksKit] &cYou can't throw anything in the arena!");
             e.setCancelled(true);
             return;
