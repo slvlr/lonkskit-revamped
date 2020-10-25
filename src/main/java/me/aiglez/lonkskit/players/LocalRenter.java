@@ -16,4 +16,5 @@ public interface LocalRenter {
     void addRent(LocalRent rent);
 
     void removeRent(LocalRent rent);
+
 }

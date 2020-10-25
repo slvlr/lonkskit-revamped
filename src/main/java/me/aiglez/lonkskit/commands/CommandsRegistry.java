@@ -1,6 +1,7 @@
 package me.aiglez.lonkskit.commands;
 
 import co.aikar.commands.PaperCommandManager;
+import com.google.common.base.Preconditions;
 import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.utils.Logger;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -13,6 +14,7 @@ public class CommandsRegistry {
     private final PaperCommandManager acf;
 
     public CommandsRegistry(KitPlugin plugin) {
+        Preconditions.checkNotNull(plugin, "plugin instance may not be null");
         this.acf = new PaperCommandManager(plugin);
         this.acf.enableUnstableAPI("brigadier");
         this.acf.setDefaultExceptionHandler((command, registeredCommand, sender, args, t) -> {
@@ -35,11 +37,8 @@ public class CommandsRegistry {
         acf.getLocales().setDefaultLocale(Locale.ENGLISH);
     }
 
-    private void registerContexts() {
-
-    }
-
     private void registerCommands() {
         acf.registerCommand(new MainCommand());
+        acf.registerCommand(new LeaveCommand());
     }
 }

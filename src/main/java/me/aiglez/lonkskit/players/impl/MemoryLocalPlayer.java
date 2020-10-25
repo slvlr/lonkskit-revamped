@@ -4,6 +4,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonElement;
+import me.aiglez.lonkskit.WorldProvider;
+import me.aiglez.lonkskit.controllers.Controllers;
 import me.aiglez.lonkskit.events.KitSelectEvent;
 import me.aiglez.lonkskit.kits.Kit;
 import me.aiglez.lonkskit.kits.KitSelectorGUI;
@@ -11,6 +13,7 @@ import me.aiglez.lonkskit.players.LocalMetrics;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.players.LocalRent;
 import me.aiglez.lonkskit.players.messages.Replaceable;
+import me.aiglez.lonkskit.struct.HotbarItemStack;
 import me.aiglez.lonkskit.utils.Logger;
 import me.lucko.helper.Events;
 import me.lucko.helper.gson.JsonBuilder;
@@ -102,6 +105,11 @@ public class MemoryLocalPlayer implements LocalPlayer {
     }
 
     @Override
+    public boolean inKPWorld() {
+        return WorldProvider.inKPWorld(this);
+    }
+
+    @Override
     public PlayerInventory getInventory() {
         Preconditions.checkNotNull(bukkit, "player is not online");
         return bukkit.getInventory();
@@ -184,7 +192,15 @@ public class MemoryLocalPlayer implements LocalPlayer {
 
     @Override
     public void updateSafeStatus() {
-
+        if(toBukkit() != null) {
+            if(getInventory().isEmpty()) {
+                setSafeStatus(true);
+                for (HotbarItemStack hotbarItem : Controllers.PLAYER.getHotbarItems()) {
+                    getInventory().addItem(hotbarItem.getItemStack());
+                }
+                msg("&b[LonksKit] &aYou can now play!");
+            }
+        }
     }
 
     @Override

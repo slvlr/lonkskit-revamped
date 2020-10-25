@@ -4,11 +4,11 @@ import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.LonksKitProvider;
 import me.aiglez.lonkskit.abilities.Ability;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
+import me.aiglez.lonkskit.players.LocalPlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class AbilityListeners implements Listener {
@@ -19,6 +19,9 @@ public class AbilityListeners implements Listener {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
+        final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
+        if(!localPlayer.inKPWorld()) return;
+
         // handle abilities
         if(!e.hasItem()) return;
         final ItemStack item = e.getItem();
@@ -45,6 +48,8 @@ public class AbilityListeners implements Listener {
             }
         }
     }
+
+    /*
     @EventHandler
     public void onDamage(PlayerItemDamageEvent e) {
         final ItemStack item = e.getItem();
@@ -57,6 +62,9 @@ public class AbilityListeners implements Listener {
                 }
             }
         }
+
     }
+
+     */
 
 }

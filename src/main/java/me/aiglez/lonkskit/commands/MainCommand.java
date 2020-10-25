@@ -7,7 +7,8 @@ import co.aikar.commands.annotation.Default;
 import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.controllers.Controllers;
 import me.aiglez.lonkskit.players.LocalPlayer;
-import me.aiglez.lonkskit.struct.LoginItemStack;
+import me.aiglez.lonkskit.struct.HotbarItemStack;
+import org.bukkit.entity.Player;
 
 @CommandAlias("kitpvp")
 public class MainCommand extends BaseCommand {
@@ -16,23 +17,19 @@ public class MainCommand extends BaseCommand {
     // DEFAULT
     // -------------------------------------------- //
     @Default @CommandPermission("lonkskit.kitpvp")
-    public void onDefault(LocalPlayer localPlayer) {
-        if(WorldProvider.inKPWorld(localPlayer)) {
+    public void onDefault(Player player) {
+        final LocalPlayer localPlayer = LocalPlayer.get(player.getPlayer());
+        if(localPlayer.inKPWorld()) {
             localPlayer.msg("&b[LonksKit] &cYou are already in the Kit PvP world.");
             return;
-        }
-
-        if(!localPlayer.toBukkit().getInventory().isEmpty()) {
-            localPlayer.msg("&b[LonksKit] &cYou have items in your inventory, you won't be able to player, you need to put those items in your enderchest.");
-            localPlayer.setSafeStatus(false);
         }
 
         localPlayer.toBukkit().teleportAsync(WorldProvider.KP_WORLD.getSpawnLocation()).whenComplete((result, throwable) -> {
             if(result) {
                 localPlayer.msg("&b[LonksKit] &aWelcome in the Kit PvP world !");
                 if(localPlayer.isSafe()) {
-                    for (LoginItemStack loginItemStack : Controllers.PLAYER.getLoginItems()) {
-                        localPlayer.toBukkit().getInventory().addItem(loginItemStack.getItemStack());
+                    for (HotbarItemStack hotbarItem : Controllers.PLAYER.getHotbarItems()) {
+                        localPlayer.toBukkit().getInventory().addItem(hotbarItem.getItemStack());
                     }
                 }
                 localPlayer.setAtArena(false);
@@ -41,5 +38,10 @@ public class MainCommand extends BaseCommand {
                 localPlayer.msg("&b[LonksKit] &cAn error occurred while trying to teleport you to the Kit PvP world. Try later.");
             }
         });
+
+        if(!localPlayer.toBukkit().getInventory().isEmpty()) {
+            localPlayer.msg("&b[LonksKit] &cYou have items in your inventory, you won't be able to play, you need to put those items in your enderchest.");
+            localPlayer.setSafeStatus(false);
+        }
     }
 }

@@ -21,7 +21,7 @@ public class KitSelectorHolder {
     private final boolean      display;
     private final int          slot;
     private final List<String> lore;
-    private Color color;
+    private Color              color;
 
     public KitSelectorHolder(final Material material, final String displayName, final boolean display, final int slot, final List<String> lore, Optional<Color> color) {
         this.material = material;

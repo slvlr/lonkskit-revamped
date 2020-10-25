@@ -33,7 +33,7 @@ public final class ItemStackBuilder {
             ItemFlag.HIDE_DESTROYS, ItemFlag.HIDE_PLACED_ON
     };
 
-    private final ItemStack itemStack;
+    private ItemStack itemStack;
 
     public static ItemStackBuilder of(Material material) {
         return new ItemStackBuilder(new ItemStack(material));
@@ -162,8 +162,18 @@ public final class ItemStackBuilder {
         return this;
     }
 
+    public ItemStackBuilder withNBT(String key) {
+        this.itemStack = ItemStackNBT.setKeyValue(this.itemStack, key, (byte) 1);
+        return this;
+    }
+
+    public ItemStackBuilder withNBT(String key, Object value) {
+        this.itemStack = ItemStackNBT.setKeyValue(this.itemStack, key, value);
+        return this;
+    }
+
     public ItemStack build() {
-        return this.itemStack;
+        return ItemStackNBT.setKeyValue(this.itemStack, "kitpvp", (byte) 1);
     }
 
     public Item.Builder buildItem() {

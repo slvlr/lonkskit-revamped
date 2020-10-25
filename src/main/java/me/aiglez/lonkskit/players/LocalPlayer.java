@@ -35,6 +35,11 @@ public interface LocalPlayer extends GsonSerializable, LocalMessager, LocalRente
 
     World getWorld();
 
+    /**
+     * Mirror to {@see WorldProvider#inKPWorld}
+     */
+    boolean inKPWorld();
+
     PlayerInventory getInventory();
 
     LocalMetrics getMetrics();

@@ -1,7 +1,5 @@
 package me.aiglez.lonkskit;
 
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
 import me.aiglez.lonkskit.abilities.factory.AbilityFactory;
 import me.aiglez.lonkskit.commands.CommandsRegistry;
 import me.aiglez.lonkskit.controllers.Controllers;
@@ -35,13 +33,6 @@ public final class KitPlugin extends ExtendedJavaPlugin implements Listener {
 
     private ConfigurationNode conf;
 
-    private ProtocolManager protocolManager; // protocol lib hook
-
-    @Override
-    protected void load() {
-        this.protocolManager = ProtocolLibrary.getProtocolManager();
-    }
-
     @Override
     public void enable() {
         singleton = this;
@@ -64,7 +55,8 @@ public final class KitPlugin extends ExtendedJavaPlugin implements Listener {
         registerListeners();
         registerCommands();
 
-        Controllers.PLAYER.loadLoginItems();
+        Logger.fine("Initializing controllers...");
+        Controllers.initControllers();
         loaded = true;
     }
 
@@ -108,5 +100,4 @@ public final class KitPlugin extends ExtendedJavaPlugin implements Listener {
             e.setCancelled(true);
         }
     }
-
 }

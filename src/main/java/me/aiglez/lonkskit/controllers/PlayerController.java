@@ -1,29 +1,28 @@
 package me.aiglez.lonkskit.controllers;
 
-import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.google.common.reflect.TypeToken;
 import me.aiglez.lonkskit.KitPlugin;
-import me.aiglez.lonkskit.struct.LoginItemStack;
+import me.aiglez.lonkskit.struct.HotbarItemStack;
 import me.aiglez.lonkskit.utils.Logger;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.config.objectmapping.ObjectMappingException;
 import org.bukkit.Material;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 public class PlayerController {
 
-    private final Map<String, LoginItemStack> loginItems;
+    private final Set<HotbarItemStack> loggingItems;
 
     public PlayerController() {
-        this.loginItems = Maps.newHashMap();
+        this.loggingItems = Sets.newHashSet();
     }
 
-    public void loadLoginItems() {
+    public void loadHotbarItems() {
         final ConfigurationNode config = KitPlugin.getSingleton().getConf().getNode("hotbar");
 
         for (final Object childName : config.getChildrenMap().keySet()) {
@@ -37,22 +36,22 @@ public class PlayerController {
                 final List<String> playerCommands = child.getNode("lore").getList(new TypeToken<String>() {});
                 final List<String> consoleCommands = child.getNode("lore").getList(new TypeToken<String>() {});
 
-                final LoginItemStack loginItemStack = new LoginItemStack(
-                        ItemStackBuilder.of(material).name(name).lore(lore).build(),
+                final HotbarItemStack hotbarItem = new HotbarItemStack(
+                        ItemStackBuilder.of(material).name(name).lore(lore).withNBT("logging-item").build(),
                         playerCommands,
                         consoleCommands
                 );
 
-                loginItems.put((String) childName, loginItemStack);
+                loggingItems.add(hotbarItem);
 
             } catch (NullPointerException | ObjectMappingException e) {
-                Logger.severe("Couldn't load a login itemstack, skipping this one.");
+                Logger.severe("Couldn't load a hotbar itemstack, skipping this one.");
                 e.printStackTrace();
             }
         }
     }
 
-    public Collection<LoginItemStack> getLoginItems() {
-        return Collections.unmodifiableCollection(loginItems.values());
+    public Set<HotbarItemStack> getHotbarItems() {
+        return Collections.unmodifiableSet(this.loggingItems);
     }
 }
