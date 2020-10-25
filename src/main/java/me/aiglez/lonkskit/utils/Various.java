@@ -2,7 +2,10 @@ package me.aiglez.lonkskit.utils;
 
 import com.google.common.base.Preconditions;
 import me.aiglez.lonkskit.Constants;
+import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.players.LocalPlayer;
+import me.aiglez.lonkskit.players.messages.Replaceable;
+import me.lucko.helper.utils.Players;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -12,6 +15,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 public class Various {
+
+    public static void broadcast(String message, Object... replacements) {
+        Preconditions.checkNotNull(message, "message may not be null");
+        Players.stream()
+                .filter(player -> player.getWorld().getUID().equals(WorldProvider.KP_WORLD.getUID()))
+                .forEach(player -> player.sendMessage(Replaceable.handle(message, replacements)));
+    }
 
     public static boolean isThrowable(ItemStack item) {
         Preconditions.checkNotNull(item, "item may not be null");

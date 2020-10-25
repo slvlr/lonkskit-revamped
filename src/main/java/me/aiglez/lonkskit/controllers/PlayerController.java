@@ -2,9 +2,13 @@ package me.aiglez.lonkskit.controllers;
 
 import com.google.common.collect.Sets;
 import com.google.common.reflect.TypeToken;
+import me.aiglez.lonkskit.Constants;
 import me.aiglez.lonkskit.KitPlugin;
+import me.aiglez.lonkskit.kits.Kit;
+import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.struct.HotbarItemStack;
 import me.aiglez.lonkskit.utils.Logger;
+import me.aiglez.lonkskit.utils.Various;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.config.objectmapping.ObjectMappingException;
@@ -53,5 +57,28 @@ public class PlayerController {
 
     public Set<HotbarItemStack> getHotbarItems() {
         return Collections.unmodifiableSet(this.loggingItems);
+    }
+
+    public void handleDeathOf(LocalPlayer killer, LocalPlayer victim) {
+        final Kit using = killer.getNullableSelectedKit();
+        killer.incrementPoints(Constants.POINTS_PER_KILL);
+
+        killer.getMetrics().incrementKillsCount();
+        victim.getMetrics().incrementDeathsCount();
+
+        killer.setLastAttacker(null);
+        victim.setLastAttacker(null);
+
+        killer.msg("&b[LonksKit] &aYou have been awarded {0} points for killing {1}.",
+                Constants.POINTS_PER_KILL, victim.getLastKnownName()
+        );
+
+        victim.msg("&b[LonksKit] &cYou have been killed by {1}.",
+                killer.getLastKnownName()
+        );
+
+        Various.broadcast("&7{0} &fwas killed by &c{1} &fusing &b{2}&f.",
+                victim.getLastKnownName(), killer.getLastKnownName(), using.getDisplayName()
+        );
     }
 }

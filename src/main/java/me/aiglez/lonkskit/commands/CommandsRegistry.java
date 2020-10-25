@@ -41,4 +41,10 @@ public class CommandsRegistry {
         acf.registerCommand(new MainCommand());
         acf.registerCommand(new LeaveCommand());
     }
+
+    private void registerReplacements() {
+        acf.getCommandReplacements().addReplacements(
+                "main_command", "kitpvp"
+        );
+    }
 }

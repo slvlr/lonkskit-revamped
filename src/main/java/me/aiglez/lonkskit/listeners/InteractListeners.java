@@ -24,7 +24,7 @@ public class InteractListeners implements Listener {
     // -------------------------------------------- //
     // BLOCK ITEM MOVING
     // -------------------------------------------- //
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    //@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInventoryMove(InventoryClickEvent e) {
         if(!(e.getWhoClicked() instanceof Player) || e.getClickedInventory() == null) return;
         final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getWhoClicked());
@@ -53,7 +53,7 @@ public class InteractListeners implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    //@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInventoryDrag(InventoryDragEvent e) {
         if(!(e.getWhoClicked() instanceof Player)) return;
         final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getWhoClicked());

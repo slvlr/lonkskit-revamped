@@ -5,7 +5,6 @@ import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.Various;
 import me.aiglez.lonkskit.utils.items.ItemStackNBT;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -22,7 +21,7 @@ public class SafetyListeners implements Listener {
     // -------------------------------------------- //
     // BLOCK COMMANDS
     // -------------------------------------------- //
-    @EventHandler
+    //@EventHandler
     public void onCommand(PlayerCommandPreprocessEvent e) {
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
         if(!localPlayer.isValid()) return;
@@ -36,7 +35,7 @@ public class SafetyListeners implements Listener {
     // --------------------------------------------------------------- //
     // BLOCK ENDERCHEST (block putting non-throwable items in the ec)
     // --------------------------------------------------------------- //
-    @EventHandler
+    //@EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
         if(!(e.getWhoClicked() instanceof Player) || e.getClickedInventory() == null || e.getClickedInventory().getType() != InventoryType.ENDER_CHEST) return;
         final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getWhoClicked());
