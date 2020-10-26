@@ -43,17 +43,6 @@ public class DemomanAbility extends ItemStackAbility {
                     final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
                     final Block block = e.getBlock();
 
-                    if(localPlayer.getTrapsCount() >= 5) {
-                        localPlayer.msg("&b[LonksKit] &cYou have already placed 5 traps!");
-                        e.setCancelled(true);
-                        return;
-                    }
-
-                    if(!isValid(block)) {
-                        localPlayer.msg("&b[LonksKit] &cYou can't place the trap there!");
-                        e.setCancelled(true);
-                        return;
-                    }
 
 
                 });

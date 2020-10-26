@@ -19,6 +19,7 @@ import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.lucko.helper.Events;
 import me.lucko.helper.metadata.ExpiringValue;
 import me.lucko.helper.metadata.Metadata;
+import me.lucko.helper.metadata.MetadataMap;
 import me.lucko.helper.text3.Text;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -173,6 +174,12 @@ public class MemoryLocalPlayer implements LocalPlayer {
         } else {
             Metadata.provideForPlayer(toBukkit()).put(MetadataProvider.LAST_ATTACKER, ExpiringValue.of(localPlayer, Constants.ATTACKER_TAG_EXPIRING, TimeUnit.MINUTES));
         }
+    }
+
+    @Override
+    public MetadataMap getMetadata() {
+        Preconditions.checkNotNull(this.bukkit, "player is offline");
+        return Metadata.provideForPlayer(this.bukkit);
     }
 
     @Override

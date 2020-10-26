@@ -32,10 +32,10 @@ public class TigerAbility extends ItemStackAbility {
 
         applyEffects(localPlayer);
 
-        localPlayer.metadata().put(MetadataProvider.PLAYER_DOUBLE_DAMAGE, ExpiringValue.of(true, 10L, TimeUnit.SECONDS));
+        localPlayer.getMetadata().put(MetadataProvider.PLAYER_DOUBLE_DAMAGE, ExpiringValue.of(true, 10L, TimeUnit.SECONDS));
         localPlayer.toBukkit().chat(configuration.getNode("messages", "start").getString(""));
         Schedulers.async()
-                .runLater(() -> localPlayer.metadata().remove(MetadataProvider.PLAYER_DOUBLE_DAMAGE),
+                .runLater(() -> localPlayer.getMetadata().remove(MetadataProvider.PLAYER_DOUBLE_DAMAGE),
                         Ticks.from(configuration.getNode("duration").getLong(10L), TimeUnit.SECONDS))
                 .thenRunSync(() -> localPlayer.msg(configuration.getNode("messages", "end")));
     }
@@ -48,7 +48,7 @@ public class TigerAbility extends ItemStackAbility {
                 .filter(AbilityPredicates.damagerHasAbility(this))
                 .handler(e -> {
                     final LocalPlayer damager = LocalPlayer.get((Player)e.getDamager());
-                    if (damager.metadata().has(MetadataProvider.PLAYER_DOUBLE_DAMAGE)) {
+                    if (damager.getMetadata().has(MetadataProvider.PLAYER_DOUBLE_DAMAGE)) {
                         e.setDamage(e.getDamage() * configuration.getNode("multiply").getDouble(1D));
                     }
         });

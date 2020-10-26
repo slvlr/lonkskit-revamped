@@ -2,6 +2,7 @@ package me.aiglez.lonkskit.players;
 
 import me.aiglez.lonkskit.LonksKitProvider;
 import me.aiglez.lonkskit.kits.Kit;
+import me.lucko.helper.metadata.MetadataMap;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -50,6 +51,8 @@ public interface LocalPlayer extends OfflineLocalPlayer, LocalMessager, LocalRen
     Optional<LocalPlayer> getLastAttacker();
 
     void setLastAttacker(LocalPlayer localPlayer);
+
+    MetadataMap getMetadata();
 
     static LocalPlayer get(Player player) {
         if(LonksKitProvider.getPlayerFactory() == null) throw new UnsupportedOperationException("The player factory isn't initialized yet!");

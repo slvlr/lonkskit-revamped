@@ -58,7 +58,7 @@ public class SpyAbility extends ItemStackAbility {
                     // spectator - start
                     Schedulers.sync()
                             .runLater(() -> {
-                                localPlayer.metadata().put(MetadataProvider.SPY_PLAYER, ExpiringValue.of(true, 1, TimeUnit.SECONDS));
+                                localPlayer.getMetadata().put(MetadataProvider.SPY_PLAYER, ExpiringValue.of(true, 1, TimeUnit.SECONDS));
                                 localPlayer.toBukkit().setGameMode(GameMode.SPECTATOR);
                                 localPlayer.toBukkit().setSpectatorTarget(arrow);
                                 }, 2L);
@@ -101,7 +101,7 @@ public class SpyAbility extends ItemStackAbility {
 
                     final LocalPlayer localPlayer = LocalPlayer.get((Player) arrow.getShooter());
 
-                    localPlayer.metadata().remove(MetadataProvider.SPY_PLAYER);
+                    localPlayer.getMetadata().remove(MetadataProvider.SPY_PLAYER);
                     localPlayer.toBukkit().setSpectatorTarget(null);
                     localPlayer.toBukkit().setGameMode(GameMode.SURVIVAL);
                     localPlayer.toBukkit().teleport(arrow.getLocation().subtract(0D, 1D, 0D));
@@ -114,7 +114,7 @@ public class SpyAbility extends ItemStackAbility {
                 .filter(AbilityPredicates.possiblyHasMetadata(MetadataProvider.SPY_ARROW))
                 .handler(e -> {
                     final LocalPlayer localPlayer = LocalPlayer.get(e.getEntity());
-                    localPlayer.metadata().remove(MetadataProvider.SPY_PLAYER);
+                    localPlayer.getMetadata().remove(MetadataProvider.SPY_PLAYER);
                     localPlayer.toBukkit().setSpectatorTarget(null);
                     localPlayer.toBukkit().setGameMode(GameMode.SURVIVAL);
                 });

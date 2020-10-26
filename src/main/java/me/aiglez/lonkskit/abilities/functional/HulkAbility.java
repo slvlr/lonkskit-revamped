@@ -65,7 +65,7 @@ public class HulkAbility extends FunctionalAbility {
                     final LocalPlayer pickedUp = LocalPlayer.get(e.getPlayer());
                     if(pickedUp.toBukkit().isInsideVehicle()) {
                         pickedUp.toBukkit().getVehicle().eject();
-                        pickedUp.metadata().remove(MetadataProvider.HULK_PICKED_UP);
+                        pickedUp.getMetadata().remove(MetadataProvider.HULK_PICKED_UP);
 
                         pickedUp.msg("&a(Hulk - Debug) &fYou have &cescaped &f!");
                     }

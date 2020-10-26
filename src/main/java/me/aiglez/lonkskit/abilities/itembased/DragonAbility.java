@@ -39,7 +39,7 @@ public class DragonAbility extends ItemStackAbility {
         }
 
         applyEffects(localPlayer);
-        localPlayer.metadata().put(MetadataProvider.PLAYER_NO_FALL_DAMAGE, ExpiringValue.of(true, 10, TimeUnit.SECONDS));
+        localPlayer.getMetadata().put(MetadataProvider.PLAYER_NO_FALL_DAMAGE, ExpiringValue.of(true, 10, TimeUnit.SECONDS));
 
         final Vector vec = localPlayer.toBukkit().getLocation().getDirection().multiply(
                 configuration.getNode("strength").getDouble(5D)
@@ -48,7 +48,7 @@ public class DragonAbility extends ItemStackAbility {
 
         Schedulers.sync()
                 .runRepeating(task -> {
-                    if(!localPlayer.metadata().has(MetadataProvider.PLAYER_NO_FALL_DAMAGE)) {
+                    if(!localPlayer.getMetadata().has(MetadataProvider.PLAYER_NO_FALL_DAMAGE)) {
                         task.stop();
                         return;
                     }
@@ -73,7 +73,7 @@ public class DragonAbility extends ItemStackAbility {
                 .filter(AbilityPredicates.possiblyHasMetadata(MetadataProvider.PLAYER_NO_FALL_DAMAGE))
                 .handler(e -> {
                     final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getEntity());
-                    localPlayer.metadata().remove(MetadataProvider.PLAYER_NO_FALL_DAMAGE);
+                    localPlayer.getMetadata().remove(MetadataProvider.PLAYER_NO_FALL_DAMAGE);
                     e.setCancelled(true);
                 });
     }
