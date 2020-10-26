@@ -1,10 +1,13 @@
 package me.aiglez.lonkskit.players.impl;
 
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Sets;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonElement;
 import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.players.LocalPlayerFactory;
+import me.aiglez.lonkskit.players.OfflineLocalPlayer;
 import me.aiglez.lonkskit.utils.Logger;
 import me.lucko.helper.gson.GsonProvider;
 import me.lucko.helper.gson.JsonBuilder;
@@ -12,52 +15,68 @@ import org.bukkit.entity.Player;
 
 import java.io.*;
 import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class LocalPlayerFactoryImpl implements LocalPlayerFactory {
 
-    private final Map<UUID, LocalPlayer> cache;
+    private final Set<OfflineLocalPlayer> cache;
     private final File cacheFile;
     private final Type setType;
 
     public LocalPlayerFactoryImpl() {
-        this.cache = new HashMap<>();
+        this.cache = Sets.newHashSet();
         this.cacheFile = new File(KitPlugin.getSingleton().getDataFolder(), "cache.json");
-        this.setType = new TypeToken<HashSet<LocalPlayer>>(){}.getType();
+        this.setType = new TypeToken<HashSet<OfflineLocalPlayer>>(){}.getType();
+    }
+
+
+    @Override
+    public OfflineLocalPlayer getOfflineLocalPlayer(UUID uniqueId) {
+        OfflineLocalPlayer found = null;
+        for (OfflineLocalPlayer offlineLocalPlayer : this.cache) {
+            if(offlineLocalPlayer.getUniqueId().equals(uniqueId)) {
+                found = offlineLocalPlayer;
+            }
+        }
+
+        if(found == null) {
+            found = new MemoryOfflineLocalPlayer(uniqueId, 0);
+            Logger.debug("The player with unique id {0} was not found in cache creating a new instance");
+            this.cache.add(found);
+        }
+
+        return found;
+    }
+
+    @Override
+    public Optional<OfflineLocalPlayer> getOfflineLocalPlayer(String name) {
+        Preconditions.checkNotNull(name, "name may not be null");
+        return this.cache.stream().filter(offlineLocalPlayer -> offlineLocalPlayer.getLastKnownName().equalsIgnoreCase(name)).findFirst();
     }
 
     @Override
     public LocalPlayer getLocalPlayer(Player player) {
-        return this.cache.computeIfAbsent(player.getUniqueId(), x -> new MemoryLocalPlayer(player));
+        Preconditions.checkNotNull(player, "player may not be null");
+        return getOfflineLocalPlayer(player.getUniqueId()).getOnlinePlayer();
     }
 
     @Override
-    public LocalPlayer getLocalPlayer(String name) {
-        for (final LocalPlayer localPlayer : cache.values()) {
-            if(localPlayer.getLastKnownName() != null && localPlayer.getLastKnownName().equalsIgnoreCase(name)) {
-                return localPlayer;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public boolean loadLocalPlayers() {
+    public boolean loadOfflineLocalPlayers() {
         if(!this.cacheFile.exists()) {
             Logger.warn("Cache file not found, assuming there is no player to load...");
             return true;
         }
         try {
             final Reader reader = new FileReader(this.cacheFile);
-            final HashSet<LocalPlayer> loaded = GsonProvider.prettyPrinting().fromJson(reader, setType);
+            final HashSet<OfflineLocalPlayer> loaded = GsonProvider.prettyPrinting().fromJson(reader, setType);
 
-            loaded.forEach(localPlayer -> cache.put(localPlayer.getUniqueId(), localPlayer));
+            this.cache.addAll(loaded);
 
-            Logger.fine("Loaded " + cache.size() + " player(s).");
+            Logger.fine("Loaded " + this.cache.size() + " player(s).");
         } catch (IOException e) {
             e.printStackTrace();
             return false;
@@ -66,16 +85,17 @@ public class LocalPlayerFactoryImpl implements LocalPlayerFactory {
     }
 
     @Override
-    public boolean saveLocalPlayers() {
+    public boolean saveOfflineLocalPlayers() {
         if(this.cache.isEmpty()) {
             Logger.warn("No player was found to cache...");
             return true;
         }
-        if(assertFile()) {
+        if(assertFileExists()) {
             try {
                 final Writer writer = new FileWriter(cacheFile);
-                final JsonElement element = JsonBuilder.array()
-                        .addAll(cache.values().stream().map(LocalPlayer::serialize).collect(Collectors.toSet())).build();
+                final JsonElement element = JsonBuilder.array().addAll(
+                        this.cache.stream().map(OfflineLocalPlayer::serialize).collect(Collectors.toSet())
+                ).build();
 
                 // TODO: eventually change this to {@link GsonProvider#standard} later
                 GsonProvider.prettyPrinting().toJson(element, writer);
@@ -91,7 +111,7 @@ public class LocalPlayerFactoryImpl implements LocalPlayerFactory {
         return false;
     }
 
-    private boolean assertFile() {
+    private boolean assertFileExists() {
         if(!this.cacheFile.exists()) {
             try {
                 this.cacheFile.createNewFile();

@@ -1,25 +1,25 @@
 package me.aiglez.lonkskit.players.impl;
 
 import me.aiglez.lonkskit.players.LocalMetrics;
-import me.aiglez.lonkskit.players.LocalPlayer;
+import me.aiglez.lonkskit.players.OfflineLocalPlayer;
 
 public class MemoryLocalMetrics implements LocalMetrics {
 
-    private final LocalPlayer holder;
+    private final OfflineLocalPlayer holder;
     private int kills, deaths;
 
-    public MemoryLocalMetrics(LocalPlayer holder) {
+    public MemoryLocalMetrics(OfflineLocalPlayer holder) {
         this(holder, 0, 0);
     }
 
-    public MemoryLocalMetrics(LocalPlayer holder, int kills, int deaths) {
+    public MemoryLocalMetrics(OfflineLocalPlayer holder, int kills, int deaths) {
         this.holder = holder;
         this.kills = kills;
         this.deaths = deaths;
     }
 
     @Override
-    public LocalPlayer getHolder() { return holder; }
+    public OfflineLocalPlayer getHolder() { return holder; }
 
     @Override
     public int getKillsCount() { return kills; }

@@ -5,7 +5,7 @@ import me.aiglez.lonkskit.players.impl.MemoryLocalMetrics;
 @SuppressWarnings({"unused", "RedundantSuppression"})
 public interface LocalMetrics {
 
-    LocalPlayer getHolder();
+    OfflineLocalPlayer getHolder();
 
     int getKillsCount();
 
@@ -19,7 +19,7 @@ public interface LocalMetrics {
 
     void updateAll(int kills, int deaths);
 
-    static LocalMetrics newMetrics(LocalPlayer localPlayer) {
-        return new MemoryLocalMetrics(localPlayer);
+    static LocalMetrics newMetrics(OfflineLocalPlayer offlineLocalPlayer) {
+        return new MemoryLocalMetrics(offlineLocalPlayer);
     }
 }

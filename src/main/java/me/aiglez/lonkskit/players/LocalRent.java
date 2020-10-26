@@ -8,7 +8,7 @@ public interface LocalRent {
 
     Kit getRented();
 
-    LocalPlayer getLocalPlayer();
+    OfflineLocalPlayer getOfflineLocalPlayer();
 
     int getUses();
 
@@ -21,7 +21,7 @@ public interface LocalRent {
         return getRented().getUsesPerRent() - getUses();
     }
 
-    static LocalRent of(LocalPlayer localPlayer, Kit kit) { return new MemoryLocalRent(localPlayer, kit); }
+    static LocalRent of(OfflineLocalPlayer offlineLocalPlayer, Kit kit) { return new MemoryLocalRent(offlineLocalPlayer, kit); }
 
-    static LocalRent of(LocalPlayer localPlayer, Kit kit, int uses) { return new MemoryLocalRent(localPlayer, kit, uses); }
+    static LocalRent of(OfflineLocalPlayer offlineLocalPlayer, Kit kit, int uses) { return new MemoryLocalRent(offlineLocalPlayer, kit, uses); }
 }

@@ -1,8 +1,6 @@
 package me.aiglez.lonkskit.players.impl;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.google.gson.JsonElement;
 import me.aiglez.lonkskit.Constants;
 import me.aiglez.lonkskit.WorldProvider;
@@ -13,90 +11,44 @@ import me.aiglez.lonkskit.kits.KitSelectorGUI;
 import me.aiglez.lonkskit.players.LocalMetrics;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.players.LocalRent;
+import me.aiglez.lonkskit.players.OfflineLocalPlayer;
 import me.aiglez.lonkskit.players.messages.Replaceable;
 import me.aiglez.lonkskit.struct.HotbarItemStack;
 import me.aiglez.lonkskit.utils.Logger;
 import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.lucko.helper.Events;
-import me.lucko.helper.gson.JsonBuilder;
 import me.lucko.helper.metadata.ExpiringValue;
-import me.lucko.helper.profiles.MojangApi;
+import me.lucko.helper.metadata.Metadata;
 import me.lucko.helper.text3.Text;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import java.util.*;
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 public class MemoryLocalPlayer implements LocalPlayer {
 
-    // to serialize
-    private final UUID uniqueId;
-    private final List<LocalRent> rents;
-    private final AtomicInteger points;
-    private final LocalMetrics metrics;
+    private final OfflineLocalPlayer offline;
 
-    private String lastKnownName;
     private Player bukkit;
     private Kit selectedKit;
     private boolean safe, inArena;
 
-    private Set<Location> demomanTraps;
-
-    public MemoryLocalPlayer(Player player) {
-        this.uniqueId = player.getUniqueId();
-        this.rents = Lists.newArrayList();
-        this.points = new AtomicInteger(0);
-        this.lastKnownName = player.getName();
-        this.bukkit = player;
+    public MemoryLocalPlayer(final OfflineLocalPlayer offline, final Player bukkit) {
+        Preconditions.checkNotNull(offline, "offline local player may not be null");
+        Preconditions.checkNotNull(bukkit, "bukkit instance may not be null");
+        Preconditions.checkArgument(offline.getUniqueId().equals(bukkit.getUniqueId()), "must be the same unique id");
+        this.bukkit = bukkit;
+        this.offline = offline;
         this.safe = true;
-        this.metrics = LocalMetrics.newMetrics(this);
-    }
-
-    public MemoryLocalPlayer(UUID uniqueId, int points) {
-        this.uniqueId = uniqueId;
-        this.rents = Lists.newArrayList();
-        this.points = new AtomicInteger(points);
-        this.safe = true;
-        this.metrics = LocalMetrics.newMetrics(this);
-    }
-
-    @Override
-    public UUID getUniqueId() { return this.uniqueId; }
-
-    @Override
-    public String getLastKnownName() {
-        if(this.lastKnownName == null) {
-            if(bukkit != null) {
-                this.lastKnownName = bukkit.getName();
-            } else {
-                try {
-                    Logger.fine("Fetching username of [" + uniqueId + "]" );
-                    this.lastKnownName = MojangApi.uuidToUsername(uniqueId).get();
-                } catch (Exception e) {
-                    this.lastKnownName = "Unknown";
-                    Logger.severe("An error occurred while trying to fetch a player's username by UUID.");
-                    e.printStackTrace();
-                }
-            }
-        }
-        return this.lastKnownName;
-    }
-
-    @Override
-    public boolean isOnline() {
-        if(toBukkit() == null) {
-            return false;
-        } else {
-            return toBukkit().isOnline();
-        }
+        this.inArena = false;
     }
 
     @Override
@@ -127,9 +79,6 @@ public class MemoryLocalPlayer implements LocalPlayer {
         Preconditions.checkNotNull(this.bukkit, "player is offline");
         return this.bukkit.getInventory();
     }
-
-    @Override
-    public LocalMetrics getMetrics() { return this.metrics; }
 
     @Override
     public Kit getNullableSelectedKit() { return this.selectedKit; }
@@ -178,21 +127,6 @@ public class MemoryLocalPlayer implements LocalPlayer {
     }
 
     @Override
-    public double getPoints() { return this.points.doubleValue(); }
-
-    @Override
-    public void incrementPoints(int amount) {
-        this.points.getAndAdd(amount);
-    }
-
-    @Override
-    public boolean decrementPoints(int amount) {
-        if(amount < 0 || amount > this.points.intValue()) return false;
-        points.set(points.get() - amount);
-        return true;
-    }
-
-    @Override
     public boolean inArena() { return this.inArena; }
 
     @Override
@@ -217,27 +151,27 @@ public class MemoryLocalPlayer implements LocalPlayer {
 
     @Override
     public boolean hasAccess(Kit kit) {
-        if(kit == null || bukkit == null) return false;
+        if(kit == null || this.bukkit == null) return false;
         return bukkit.hasPermission("lonkskit.kit" + kit.getBackendName());
     }
 
     @Override
     public void openKitSelector() {
-        Preconditions.checkNotNull(bukkit, "player is offline");
+        Preconditions.checkNotNull(this.bukkit, "player is offline");
         new KitSelectorGUI(this).open();
     }
 
     @Override
     public Optional<LocalPlayer> getLastAttacker() {
-        return metadata().get(MetadataProvider.LAST_ATTACKER);
+        return Metadata.provideForPlayer(toBukkit()).get(MetadataProvider.LAST_ATTACKER);
     }
 
     @Override
     public void setLastAttacker(LocalPlayer localPlayer) {
-        if(localPlayer == null || localPlayer.getUniqueId().equals(this.uniqueId)) {
-            metadata().remove(MetadataProvider.LAST_ATTACKER);
+        if(localPlayer == null || localPlayer.getUniqueId().equals(this.getUniqueId())) {
+            Metadata.provideForPlayer(toBukkit()).remove(MetadataProvider.LAST_ATTACKER);
         } else {
-            metadata().put(MetadataProvider.LAST_ATTACKER, ExpiringValue.of(localPlayer, Constants.ATTACKER_TAG_EXPIRING, TimeUnit.MINUTES));
+            Metadata.provideForPlayer(toBukkit()).put(MetadataProvider.LAST_ATTACKER, ExpiringValue.of(localPlayer, Constants.ATTACKER_TAG_EXPIRING, TimeUnit.MINUTES));
         }
     }
 
@@ -258,64 +192,73 @@ public class MemoryLocalPlayer implements LocalPlayer {
     }
 
     @Override
-    public List<LocalRent> getRents() { return this.rents; }
+    public UUID getUniqueId() {
+        return this.offline.getUniqueId();
+    }
+
+    @Override
+    public String getLastKnownName() {
+        return this.offline.getLastKnownName();
+    }
+
+    @Override
+    public boolean isOnline() {
+        return this.offline.isOnline();
+    }
+
+    @Override
+    public LocalPlayer getOnlinePlayer() {
+        return this;
+    }
+
+    @Override
+    public LocalMetrics getMetrics() {
+        return this.offline.getMetrics();
+    }
+
+    @Override
+    public double getPoints() {
+        return this.offline.getPoints();
+    }
+
+    @Override
+    public void incrementPoints(int amount) {
+        this.offline.incrementPoints(amount);
+    }
+
+    @Override
+    public boolean decrementPoints(int amount) {
+        return this.offline.decrementPoints(amount);
+    }
+
+    @Override
+    public List<LocalRent> getRents() {
+        return this.offline.getRents();
+    }
 
     @Override
     public Optional<LocalRent> getRent(Kit kit) {
-        return this.rents.stream().filter(localRent -> localRent.getRented().equals(kit)).findFirst();
+        return this.offline.getRent(kit);
     }
 
     @Override
     public boolean hasRented(Kit kit) {
-        return this.rents.stream().map(LocalRent::getRented).anyMatch(k -> k.equals(kit));
+        return this.offline.hasRented(kit);
     }
 
     @Override
     public void addRent(LocalRent rent) {
-        this.rents.add(rent);
+        this.offline.addRent(rent);
     }
 
     @Override
     public void removeRent(LocalRent rent) {
-        this.rents.remove(rent);
+        this.offline.removeRent(rent);
     }
 
+    @Nonnull
     @Override
     public JsonElement serialize() {
-        return JsonBuilder.object()
-                .add("unique-id", uniqueId.toString())
-                .add("points", points.get())
-
-                .add("metrics", JsonBuilder.object()
-                        .add("deaths", metrics.getDeathsCount())
-                        .add("kills", metrics.getKillsCount())
-                        .build()
-                )
-                .add("rents", JsonBuilder.array()
-                        .addAll(
-                                rents.stream().map(rent -> JsonBuilder.object()
-                                        .add("uses", rent.getUses())
-                                        .add("kit", rent.getRented().getBackendName())
-                                        .build()
-                                ).collect(Collectors.toList())
-                        ).build()
-                )
-                .build();
-    }
-
-    @Override
-    public Set<Location> getTraps() {
-        if(demomanTraps == null) demomanTraps = Sets.newHashSet();
-        return Collections.unmodifiableSet(demomanTraps);
-    }
-
-    @Override
-    public boolean hasTraps() {
-        return !demomanTraps.isEmpty();
-    }
-
-    @Override
-    public void placeTrap(Block block) {
-
+        return this.offline.serialize();
     }
 }

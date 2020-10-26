@@ -49,7 +49,7 @@ public final class KitPlugin extends ExtendedJavaPlugin implements Listener {
 
         Logger.fine("Loading players...");
         this.localPlayerFactory = LocalPlayerFactory.make();
-        this.localPlayerFactory.loadLocalPlayers();
+        this.localPlayerFactory.loadOfflineLocalPlayers();
 
         Logger.fine("Registering listeners and commands...");
         registerListeners();
@@ -67,7 +67,7 @@ public final class KitPlugin extends ExtendedJavaPlugin implements Listener {
             return;
         }
         Logger.fine("Saving players...");
-        localPlayerFactory.saveLocalPlayers();
+        localPlayerFactory.saveOfflineLocalPlayers();
     }
 
     private void registerListeners() {
