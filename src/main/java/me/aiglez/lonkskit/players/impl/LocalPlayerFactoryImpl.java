@@ -15,10 +15,7 @@ import org.bukkit.entity.Player;
 
 import java.io.*;
 import java.lang.reflect.Type;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class LocalPlayerFactoryImpl implements LocalPlayerFactory {
@@ -62,6 +59,11 @@ public class LocalPlayerFactoryImpl implements LocalPlayerFactory {
     public LocalPlayer getLocalPlayer(Player player) {
         Preconditions.checkNotNull(player, "player may not be null");
         return getOfflineLocalPlayer(player.getUniqueId()).getOnlinePlayer();
+    }
+
+    @Override
+    public Set<OfflineLocalPlayer> getCachedOfflinePlayers() {
+        return Collections.unmodifiableSet(this.cache);
     }
 
     @Override

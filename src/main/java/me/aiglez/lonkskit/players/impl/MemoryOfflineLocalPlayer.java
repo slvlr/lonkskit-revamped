@@ -60,7 +60,7 @@ public class MemoryOfflineLocalPlayer implements OfflineLocalPlayer {
 
     @Override
     public boolean isOnline() {
-        return false;
+        return this.online != null && this.online.toBukkit() != null && this.online.toBukkit().isOnline();
     }
 
     @Override

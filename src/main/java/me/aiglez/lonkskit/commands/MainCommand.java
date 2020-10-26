@@ -5,11 +5,12 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Subcommand;
-import me.aiglez.lonkskit.WorldProvider;
-import me.aiglez.lonkskit.controllers.Controllers;
+import me.aiglez.lonkskit.LonksKitProvider;
 import me.aiglez.lonkskit.players.LocalPlayer;
-import me.aiglez.lonkskit.struct.HotbarItemStack;
+import me.aiglez.lonkskit.players.OfflineLocalPlayer;
 import org.bukkit.entity.Player;
+
+import java.util.Optional;
 
 @CommandAlias("kitpvp")
 public class MainCommand extends BaseCommand {
@@ -20,7 +21,33 @@ public class MainCommand extends BaseCommand {
     @Default @Subcommand("join")
     @CommandPermission("lonkskit.kitpvp")
     public void onDefault(Player player) {
-        final LocalPlayer localPlayer = LocalPlayer.get(player.getPlayer());
+        final LocalPlayer online = LocalPlayer.get(player.getPlayer());
+        final OfflineLocalPlayer offline = LonksKitProvider.getPlayerFactory().getOfflineLocalPlayer(player.getUniqueId());
+
+        if(online == null) {
+            player.sendMessage("§cThe local player instance (online) was not found");
+            return;
+        }
+
+        online.msg("&aIs Online: {0} | &eName: {1} | &6is Valid: {2}", online.isOnline(), online.getLastKnownName(), online.isValid());
+
+        if(offline == null) {
+            online.msg("&cThe offline instance was not found");
+            return;
+        }
+
+        online.msg("&aIs Online (offline instance): {0}", offline.isOnline());
+        online.msg("(offline) &aIs Online: {0} | &eName: {1}", offline.isOnline(), offline.getLastKnownName());
+
+
+        final Optional<OfflineLocalPlayer> offlineByName = LonksKitProvider.getPlayerFactory().getOfflineLocalPlayer(player.getName());
+        if(!offlineByName.isPresent()) {
+            online.msg("&cThe offline instance by name was not found!");
+            return;
+        }
+
+        online.msg("&4(offline by name) &aIs Online: {0} | &eName: {1}", offline.isOnline(), offline.getLastKnownName());
+        /*
         if(localPlayer.isValid()) {
             localPlayer.msg("&b[LonksKit] &cYou are already in the Kit PvP world.");
             return;
@@ -45,5 +72,7 @@ public class MainCommand extends BaseCommand {
             localPlayer.msg("&b[LonksKit] &cYou have items in your inventory, you won't be able to play, you need to put those items in your enderchest.");
             localPlayer.setSafeStatus(false);
         }
+
+         */
     }
 }

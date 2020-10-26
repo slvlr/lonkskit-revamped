@@ -49,7 +49,7 @@ public class PlayerListeners implements Listener {
     // -------------------------------------------- //
     @EventHandler
     public void onAttack(EntityDamageByEntityEvent e) {
-        if(!(e.getEntity() instanceof Player || e.getDamager() instanceof Player)) return;
+        if(!(e.getEntity() instanceof Player) || !(e.getDamager() instanceof Player)) return;
         final LocalPlayer victim = LocalPlayer.get((Player) e.getEntity());
         final LocalPlayer damager = LocalPlayer.get((Player) e.getDamager());
         if(!victim.isValid() || !damager.isValid()) return;
