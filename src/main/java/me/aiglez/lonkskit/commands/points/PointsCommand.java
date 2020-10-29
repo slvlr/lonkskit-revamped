@@ -1,0 +1,38 @@
+package me.aiglez.lonkskit.commands.points;
+
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.*;
+import me.aiglez.lonkskit.messages.Messages;
+import me.aiglez.lonkskit.players.LocalPlayer;
+
+@CommandAlias("point|points")
+public class PointsCommand extends BaseCommand {
+
+    @Default
+    @Conditions("valid_world")
+    @Syntax("[target]") @Description("Show your or target's points.")
+    public void onPoints(LocalPlayer localPlayer, @Flags("other") @Optional LocalPlayer target) {
+        if(target == null) {
+            localPlayer.msg(Messages.COMMAND_POINTS_SHOW, localPlayer.getPoints());
+        } else {
+            localPlayer.msg(Messages.COMMAND_POINTS_SHOW_OTHER, target.getLastKnownName(), target.getPoints());
+        }
+    }
+
+    @Subcommand("pay")
+    @Conditions("valid_world")
+    @CommandCompletion("@kitpvp_players @range:1-10000")
+    @Syntax("<player> <amount>") @Description("Send the specified amount of points to the target.")
+    public void onPointsPay(LocalPlayer localPlayer, @Flags("other") LocalPlayer target, int amount) {
+        final boolean result = localPlayer.decrementPoints(amount);
+        if(!result) {
+            localPlayer.msg(Messages.COMMAND_POINTS_PAY_FAILED);
+            return;
+        }
+        target.incrementPoints(amount);
+
+        localPlayer.msg(Messages.COMMAND_POINTS_PAY_SENT, amount, target.getLastKnownName());
+        target.msg(Messages.COMMAND_POINTS_PAY_RECEIVED, amount, localPlayer.getLastKnownName());
+    }
+
+}

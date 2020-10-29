@@ -20,7 +20,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 @Plugin(
         name = "LonksKit", version = "1.0.9",
         authors = "AigleZ", apiVersion = "1.16",
-        hardDepends = {"ProtocolLib", "helper", "LibsDisguises"}
+        hardDepends = {"ProtocolLib", "helper", "LibsDisguises", "HolographicDisplays"}
 )
 public final class KitPlugin extends ExtendedJavaPlugin implements Listener {
 
@@ -31,13 +31,14 @@ public final class KitPlugin extends ExtendedJavaPlugin implements Listener {
     private LocalPlayerFactory localPlayerFactory;
     private AbilityFactory abilityFactory;
 
-    private ConfigurationNode conf;
+    private ConfigurationNode conf, lang;
 
     @Override
     public void enable() {
         singleton = this;
         Logger.fine("Loading configuration files...");
         this.conf = loadConfigNode("config.yml");
+        this.lang = loadConfigNode("messages.yml");
 
         Logger.fine("Loading abilities...");
         this.abilityFactory = AbilityFactory.make();
@@ -90,6 +91,8 @@ public final class KitPlugin extends ExtendedJavaPlugin implements Listener {
     public AbilityFactory getAbilityFactory() { return this.abilityFactory; }
 
     public ConfigurationNode getConf() { return conf; }
+
+    public ConfigurationNode getLang() { return lang; }
 
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent e) {

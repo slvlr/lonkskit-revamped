@@ -1,0 +1,60 @@
+package me.aiglez.lonkskit.messages;
+
+import co.aikar.commands.Locales;
+
+import java.util.HashMap;
+
+public enum Messages {
+
+    PLAYER_SAFESTATUS_UPDATED("player.safe-status.updated", "&aYou can now play !"),
+
+    SELECTOR_ERROR("selector.error", "&cAn error occurred while trying to select the kit, please try again."),
+    SELECTOR_SELECTED("selector.selected", "&eYou have selected the kit &b{0}&e."),
+    SELECTOR_NO_ACCESS("selector.no-access", "&cYou don't have access to this kit."),
+
+    SELECTOR_RENT_FAILED("selector.rent.failed", "&cTransaction failed"),
+    SELECTOR_RENT_RENTED("selector.rent.rented", "&aYou have successfully rented the kit &b{0}&a for &e{1} &apoint(s) with &e{2} &aavailable uses."),
+
+    COMMAND_LEAVE_SUCCESSFULLY("command.leave.successfully", "&aYou have been successfully teleported to the main world."),
+    COMMAND_LEAVE_TELEPORT_ISSUE("command.leave.teleport-issue", "&cAn error occurred while trying to teleport you to the main world. Try later."),
+    COMMAND_LEAVE_ERROR("command.leave.error", "&cYou're already in the main world."),
+    COMMAND_LEAVE_MUSTBEATSPAWN("command.leave.must-be-at-spawn", "&cYou must be in the spawn area to execute this command."),
+
+    COMMAND_POINTS_SHOW("command.points.show", "&eYou have {0} point(s)."),
+    COMMAND_POINTS_SHOW_OTHER("command.points.show-other", "&e{0} has {1} point(s)."),
+    COMMAND_POINTS_PAY_FAILED("command.points.pay.invalid", "&cTransaction failed"),
+    COMMAND_POINTS_PAY_SENT("command.points.pay.sent", "&fYou have sent &a{0} &fpoint(s) to &b{1}&f."),
+    COMMAND_POINTS_PAY_RECEIVED("command.points.pay.sent", "&aYou have received {0} &fpoint(s) from &b{1}&a."),
+
+
+    COMMAND_ADMIN_STATS_KILLS_SET("command.admin.stats.kills.set", "&eYou have set &a{0}&e's kills count to &6{1}&e."),
+    COMMAND_ADMIN_STATS_KILLS_GIVE("command.admin.stats.kills.give", "&eYou have added &a{0} &ekills to &6{1}&e."),
+    COMMAND_ADMIN_STATS_KILLS_TAKE("command.admin.stats.kills.take", "&eYou have taken &c{0} &ekills from &c{1}&e."),
+    COMMAND_ADMIN_STATS_KILLS_RESET("command.admin.stats.kills.reset", "&eYou have reset &a{0}&e's kills count."),
+
+    COMMAND_ENGINE_MUST_BE_INT("command.engine.must_be_a_number", "&cArgument must be a number and valid."),
+    COMMAND_ENGINE_PERMISSION_DENIED("command.engine.permission_denied",  "&cYou do not have access to this command.");
+
+    private final String path, fallback;
+    Messages(final String path, final String fallback) {
+        this.path = path;
+        this.fallback = fallback;
+    }
+
+    public String getValue() {
+        return this.fallback;
+    }
+
+    public static void setACFMessages(final Locales locales) {
+        final HashMap<String, String> acfMessages = new HashMap<>();
+        for (final Messages message : values()) {
+            if(message.path.startsWith("command.engine.")) {
+                acfMessages.put(message.path.replaceFirst("command.engine.", ""), message.fallback);
+            }
+        }
+        locales.addMessageStrings(Locales.ENGLISH, acfMessages);
+    }
+
+
+
+}

@@ -8,6 +8,7 @@ import me.aiglez.lonkskit.controllers.Controllers;
 import me.aiglez.lonkskit.events.KitSelectEvent;
 import me.aiglez.lonkskit.kits.Kit;
 import me.aiglez.lonkskit.kits.KitSelectorGUI;
+import me.aiglez.lonkskit.messages.Messages;
 import me.aiglez.lonkskit.players.LocalMetrics;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.players.LocalRent;
@@ -146,7 +147,7 @@ public class MemoryLocalPlayer implements LocalPlayer {
             for (HotbarItemStack hotbarItem : Controllers.PLAYER.getHotbarItems()) {
                 getInventory().addItem(hotbarItem.getItemStack());
             }
-            msg("&b[LonksKit] &aYou can now play!");
+            msg(Messages.PLAYER_SAFESTATUS_UPDATED);
         }
     }
 
@@ -196,6 +197,12 @@ public class MemoryLocalPlayer implements LocalPlayer {
     @Override
     public void msg(String message, Object... replacements) {
         msg(Replaceable.handle(message, replacements));
+    }
+
+    @Override
+    public void msg(Messages message, Object... replacements) {
+        Preconditions.checkNotNull(message, "message may not be null");
+        msg(message.getValue(), replacements);
     }
 
     @Override

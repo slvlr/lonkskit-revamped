@@ -1,6 +1,7 @@
 package me.aiglez.lonkskit.kits;
 
 import me.aiglez.lonkskit.LonksKitProvider;
+import me.aiglez.lonkskit.messages.Messages;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.players.LocalRent;
 import me.aiglez.lonkskit.utils.Logger;
@@ -70,11 +71,11 @@ public class KitSelectorGUI extends PaginatedGui {
                                 .build(() -> {
                                     boolean result = localPlayer.setSelectedKit(kit);
                                     if(!result) {
-                                        localPlayer.msg("&cAn error occurred while trying to select the kit, please try again.");
+                                        localPlayer.msg(Messages.SELECTOR_ERROR);
                                         gui.redraw();
                                         return;
                                     }
-                                    localPlayer.msg("&eYou have selected the kit &b" + kit.getDisplayName());
+                                    localPlayer.msg(Messages.SELECTOR_SELECTED, kit.getDisplayName());
                                     gui.close();
                                 });
                     } else {
@@ -85,11 +86,11 @@ public class KitSelectorGUI extends PaginatedGui {
                                     .build(() -> {
                                         boolean result = localPlayer.setSelectedKit(kit);
                                         if (!result) {
-                                            localPlayer.msg("&cAn error occurred while trying to select the kit, please try again.");
+                                            localPlayer.msg(Messages.SELECTOR_ERROR);
                                             gui.redraw();
                                             return;
                                         }
-                                        localPlayer.msg("&aYou have selected the kit &b" + kit.getDisplayName());
+                                        localPlayer.msg(Messages.SELECTOR_SELECTED, kit.getDisplayName());
                                         gui.close();
                                     });
                             // no access
@@ -100,19 +101,19 @@ public class KitSelectorGUI extends PaginatedGui {
                                         if(kit.isRentable()) {
                                             final boolean transaction = localPlayer.decrementPoints(kit.getRentCost());
                                             if(!transaction) {
-                                                localPlayer.msg("&cTransaction failed.");
+                                                localPlayer.msg(Messages.SELECTOR_RENT_FAILED);
                                                 return;
                                             }
 
                                             final LocalRent newRent = LocalRent.of(localPlayer, kit);
                                             localPlayer.addRent(newRent);
 
-                                            localPlayer.msg("&aSuccessfully rented the kit " + kit.getDisplayName() + " &afor " + kit.getRentCost() + " point(s), available uses: " + kit.getUsesPerRent());
+                                            localPlayer.msg(Messages.SELECTOR_RENT_RENTED, kit.getDisplayName(), kit.getRentCost(), kit.getUsesPerRent());
                                             localPlayer.setSelectedKit(kit);
 
                                             gui.close();
                                         } else {
-                                            localPlayer.msg("&cYou don't have access to this kit");
+                                            localPlayer.msg(Messages.SELECTOR_NO_ACCESS);
                                         }
                                     });
                         }
