@@ -84,10 +84,8 @@ public class CommandsRegistry {
 
             final Optional<OfflineLocalPlayer> offlineLocalPlayer = LonksKitProvider.getPlayerFactory().getOfflineLocalPlayer(name);
             if(offlineLocalPlayer.isPresent()) {
-                Logger.debug("[OfflineLocalPlayer Context] Found for {0}", name);
                 return offlineLocalPlayer.get();
             } else {
-                Logger.debug("[OfflineLocalPlayer Context] Couldn't found for {0}", name);
                 if(optional) {
                     return null;
                 }
@@ -104,10 +102,8 @@ public class CommandsRegistry {
                 final String name = c.popFirstArg();
                 if(name == null) {
                     if(optional) {
-                        Logger.debug("[{0}] Username is not set and it is optional", c.getCmd().getCommand());
                         return null;
                     } else {
-                        Logger.debug("[{0}] Username is not set", c.getCmd().getCommand());
                         throw new InvalidCommandArgument();
                     }
                 }
@@ -115,10 +111,8 @@ public class CommandsRegistry {
                 final Player player = ACFBukkitUtil.findPlayerSmart(c.getIssuer(), name);
                 if (player == null) {
                     if (optional) {
-                        Logger.debug("[{0}] Player with username: {1} was not found, but it's optional ", c.getCmd().getCommand(), name);
                         return null;
                     }
-                    Logger.debug("[{0}] Player with username: {1} was not found", c.getCmd().getCommand(), name);
                     throw new InvalidCommandArgument(false);
                 }
 
@@ -128,7 +122,6 @@ public class CommandsRegistry {
                 if(player == null && !optional) {
                     throw new InvalidCommandArgument("§cThis command is player only", false);
                 }
-                Logger.debug("[{0}] LocalPlayer instance of {1} was found", c.getCmd().getCommand(), player.getName());
                 return LocalPlayer.get(player);
             }
         });
@@ -136,6 +129,9 @@ public class CommandsRegistry {
 
     private void registerConditions() {
         this.acf.getCommandConditions().addCondition(LocalPlayer.class, "valid_world", (context, executionContext, localPlayer) -> {
+            if (localPlayer == null) {
+                return;
+            }
             if(!localPlayer.isValid()) {
                 throw new ConditionFailedException();
             }

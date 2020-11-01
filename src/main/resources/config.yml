@@ -11,3 +11,6 @@ hotbar:
     player-commands:
       - "/kits"
     console-commands: []
+leaderboards:
+  points:
+    location: "-36, 8, 9"

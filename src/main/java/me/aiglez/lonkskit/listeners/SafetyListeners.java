@@ -4,18 +4,37 @@ import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.Various;
 import me.aiglez.lonkskit.utils.items.ItemStackNBT;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class SafetyListeners implements Listener {
 
     public SafetyListeners(KitPlugin plugin) {
         plugin.registerListener(this);
+    }
+
+    // -------------------------------------------- //
+    // BLOCK TELEPORTING BETWEEN WORLDS
+    // -------------------------------------------- //
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    public void onTeleport(PlayerTeleportEvent e) {
+        final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
+        final Location from = e.getFrom(), to = e.getTo();
+
+        if(localPlayer.isValid() && localPlayer.hasSelectedKit()) {
+            localPlayer.msg("&b[LonksKit] &cYou can't teleport you have selected a kit.");
+            e.setCancelled(true);
+        }
+
     }
 
     // -------------------------------------------- //

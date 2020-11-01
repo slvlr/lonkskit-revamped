@@ -6,18 +6,18 @@ import me.aiglez.lonkskit.messages.Messages;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.players.OfflineLocalPlayer;
 
-@CommandAlias("%main_command admin")
-@CommandPermission("lonkskit.admin.stats")
+@CommandAlias("%main_command")
 public class AdminStatsCommand extends BaseCommand {
 
     // -------------------------------------------- //
     // KILLS
     // -------------------------------------------- //
-    @Subcommand("kills")
+    @Subcommand("admin kills")
     @Conditions("valid_world")
     @CommandCompletion("set|give|take|reset @kitpvp_offline_players")
+    @CommandPermission("lonkskit.admin.stats")
     @Syntax("<set|give|take|reset> <target> [amount]")
-    public void onAdminKills(LocalPlayer localPlayer, @Values("set give take reset") String operation, OfflineLocalPlayer target, @Optional Integer amount) {
+    public void onAdminKills(LocalPlayer localPlayer, @Values("set|give|take|reset") String operation, OfflineLocalPlayer target, @Optional Integer amount) {
         switch (operation.toLowerCase()) {
             case "set":
                 if(amount != null && amount > 0) {

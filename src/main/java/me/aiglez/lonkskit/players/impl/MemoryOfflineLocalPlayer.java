@@ -28,7 +28,7 @@ public class MemoryOfflineLocalPlayer implements OfflineLocalPlayer {
     private final LocalMetrics metrics;
     private final List<LocalRent> rents;
 
-    private double points;
+    private int points;
     private String lastKnownName;
     private LocalPlayer online;
 
@@ -79,7 +79,7 @@ public class MemoryOfflineLocalPlayer implements OfflineLocalPlayer {
     public LocalMetrics getMetrics() { return this.metrics; }
 
     @Override
-    public double getPoints() { return this.points; }
+    public int getPoints() { return this.points; }
 
     @Override
     public void incrementPoints(int amount) {

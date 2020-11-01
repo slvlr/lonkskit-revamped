@@ -3,6 +3,7 @@ package me.aiglez.lonkskit.listeners;
 import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.controllers.Controllers;
 import me.aiglez.lonkskit.players.LocalPlayer;
+import me.aiglez.lonkskit.utils.Logger;
 import me.aiglez.lonkskit.utils.Various;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import org.bukkit.Material;
@@ -28,6 +29,7 @@ public class PlayerListeners implements Listener {
     // -------------------------------------------- //
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onJoin(PlayerJoinEvent e) {
+        Logger.debug("Handling join of {0}", e.getPlayer().getName());
         LocalPlayer.get(e.getPlayer()).setBukkit(e.getPlayer());
     }
 
@@ -41,13 +43,14 @@ public class PlayerListeners implements Listener {
 
         });
          */
+        localPlayer.getMetrics().resetKillStreak();
         localPlayer.setBukkit(null);
     }
 
     // -------------------------------------------- //
     // COMBAT TAG
     // -------------------------------------------- //
-    @EventHandler
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onAttack(EntityDamageByEntityEvent e) {
         if(!(e.getEntity() instanceof Player) || !(e.getDamager() instanceof Player)) return;
         final LocalPlayer victim = LocalPlayer.get((Player) e.getEntity());
@@ -61,7 +64,7 @@ public class PlayerListeners implements Listener {
         damager.msg("&b[LonksKit] &cYou have entered in combat with {0}.", victim.getLastKnownName());
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onDeath(PlayerDeathEvent e) {
         final LocalPlayer victim = LocalPlayer.get(e.getEntity());
         victim.getLastAttacker().ifPresent(killer -> Controllers.PLAYER.handleDeathOf(killer, victim));
@@ -76,23 +79,17 @@ public class PlayerListeners implements Listener {
     // -------------------------------------------- //
     // DROP
     // -------------------------------------------- //
-    //@EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onDrop(PlayerDropItemEvent e) {
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
         if(!localPlayer.isValid()) return;
         final ItemStack item = e.getItemDrop().getItemStack();
 
-        if(localPlayer.inArena()) {
-            localPlayer.msg("&b[LonksKit] &cYou can't throw anything in the arena!");
+        if(localPlayer.inArena() || !Various.isThrowable(item)) {
             e.setCancelled(true);
             return;
         }
 
-        if(!Various.isThrowable(item)) {
-            localPlayer.msg("&b[LonksKit] &cYou can't throw that item.");
-            e.setCancelled(true);
-        } else {
-            localPlayer.updateSafeStatus();
-        }
+        localPlayer.updateSafeStatus();
     }
 }

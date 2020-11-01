@@ -14,6 +14,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 public class InteractListeners implements Listener {
 
@@ -24,40 +25,47 @@ public class InteractListeners implements Listener {
     // -------------------------------------------- //
     // BLOCK ITEM MOVING
     // -------------------------------------------- //
-    //@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInventoryMove(InventoryClickEvent e) {
         if(!(e.getWhoClicked() instanceof Player) || e.getClickedInventory() == null) return;
         final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getWhoClicked());
-        if(!localPlayer.isValid() || !localPlayer.isSafe() || localPlayer.inArena()) return;
+        if(!localPlayer.isValid() || !(e.getClickedInventory() instanceof PlayerInventory)) return;
 
-        if(e.getCurrentItem() != null) {
-            if(isLoggingItemStack(e.getCurrentItem())) {
-                e.setResult(Event.Result.DENY);
-                e.setCancelled(true);
-                return;
-            }
+        if(e.getCurrentItem() != null && isHotbarSigned(e.getCurrentItem())) {
+            e.setResult(Event.Result.DENY);
+            e.setCancelled(true);
+            return;
         }
 
-        if(e.getCursor() != null) {
-            if(isLoggingItemStack(e.getCursor())) {
-                e.setResult(Event.Result.DENY);
-                e.setCancelled(true);
-                return;
-            }
+        if(e.getCursor() != null && isHotbarSigned(e.getCursor())) {
+            e.setResult(Event.Result.DENY);
+            e.setCancelled(true);
+            return;
         }
 
         final ItemStack hotbar = (e.getClick() == org.bukkit.event.inventory.ClickType.NUMBER_KEY) ? e.getWhoClicked().getInventory().getItem(e.getHotbarButton()) : e.getCurrentItem();
-        if(hotbar != null && isLoggingItemStack(hotbar)) {
+        if(hotbar != null && isHotbarSigned(hotbar)) {
             e.setResult(Event.Result.DENY);
             e.setCancelled(true);
         }
     }
 
-    //@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInventoryDrag(InventoryDragEvent e) {
         if(!(e.getWhoClicked() instanceof Player)) return;
         final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getWhoClicked());
-        if(!localPlayer.isValid() || !localPlayer.isSafe() || localPlayer.inArena()) return;
+        if(!localPlayer.isValid() || !(e.getInventory() instanceof PlayerInventory)) return;
+
+        if(isHotbarSigned(e.getOldCursor())) {
+            e.setResult(Event.Result.DENY);
+            e.setCancelled(true);
+        }
+
+        if(e.getCursor() != null && isHotbarSigned(e.getCursor())) {
+            e.setResult(Event.Result.DENY);
+            e.setCancelled(true);
+        }
+
 
     }
 
@@ -70,7 +78,7 @@ public class InteractListeners implements Listener {
         if(!localPlayer.isValid() || !e.hasItem()) return;
         final ItemStack item = e.getItem();
 
-        if(isLoggingItemStack(item)) {
+        if(isHotbarSigned(item)) {
             for (HotbarItemStack hotbarItem : Controllers.PLAYER.getHotbarItems()) {
                 if(hotbarItem.getItemStack().isSimilar(item)) {
                     hotbarItem.runCommands(localPlayer);
@@ -82,7 +90,7 @@ public class InteractListeners implements Listener {
 
     }
 
-    private boolean isLoggingItemStack(ItemStack item) {
-        return !ItemStackNBT.hasKey(item, "logging-item");
+    private boolean isHotbarSigned(ItemStack item) {
+        return ItemStackNBT.hasKey(item, "logging-item");
     }
 }

@@ -33,7 +33,6 @@ public class PotionEffectBuilder {
         builder.type(type);
 
         int amplifier = NumberUtils.toInt(split[1], 0);
-        Logger.debug("[Parsing] Amplifier: " + amplifier);
         builder.amplifier(amplifier);
         if(split.length >= 3) {
             String duration = split[2];
@@ -93,7 +92,6 @@ public class PotionEffectBuilder {
 
     public PotionEffect build() {
         int a = amplifier;
-        Logger.debug("[Building] Found amplifier: " + amplifier);
         return new PotionEffect(type, (int) duration, a);
     }
 }

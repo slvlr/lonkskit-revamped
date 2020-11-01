@@ -19,6 +19,12 @@ public interface LocalMetrics {
 
     void updateAll(int kills, int deaths);
 
+    boolean hasKillStreak();
+
+    int getKillStreak();
+
+    void resetKillStreak();
+
     static LocalMetrics newMetrics(OfflineLocalPlayer offlineLocalPlayer) {
         return new MemoryLocalMetrics(offlineLocalPlayer);
     }

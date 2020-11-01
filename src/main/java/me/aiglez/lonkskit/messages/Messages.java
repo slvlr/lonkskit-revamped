@@ -7,6 +7,8 @@ import java.util.HashMap;
 public enum Messages {
 
     PLAYER_SAFESTATUS_UPDATED("player.safe-status.updated", "&aYou can now play !"),
+    PLAYER_METRICS_KILLSTREAK("player.metrics.killstreak", "&e{0} &fgot a killstreak of &a{1}&f."),
+    PLAYER_METRICS_RUINED_KILLSTREAK("player.metrics.killstreak", "&c{0} &fended &e{1}&f's killstreak of &a{2}&f."),
 
     SELECTOR_ERROR("selector.error", "&cAn error occurred while trying to select the kit, please try again."),
     SELECTOR_SELECTED("selector.selected", "&eYou have selected the kit &b{0}&e."),
@@ -19,6 +21,11 @@ public enum Messages {
     COMMAND_LEAVE_TELEPORT_ISSUE("command.leave.teleport-issue", "&cAn error occurred while trying to teleport you to the main world. Try later."),
     COMMAND_LEAVE_ERROR("command.leave.error", "&cYou're already in the main world."),
     COMMAND_LEAVE_MUSTBEATSPAWN("command.leave.must-be-at-spawn", "&cYou must be in the spawn area to execute this command."),
+
+    COMMAND_JOIN_SUCCESSFULLY("command.join.successfully", "&aWelcome into the Kit PVP world."),
+    COMMAND_JOIN_TELEPORT_ISSUE("command.join.teleport-issue", "&cAn error occurred while trying to teleport you to the Kit PvP world. Try later."),
+    COMMAND_JOIN_ERROR("command.join.error", "&cYou're already in the Kit PvP world."),
+    COMMAND_JOIN_UNSAFE("command.join.unsafe", "&cIt seems like you have items in your inventory, put them in your enderchest to be able to play."),
 
     COMMAND_POINTS_SHOW("command.points.show", "&eYou have {0} point(s)."),
     COMMAND_POINTS_SHOW_OTHER("command.points.show-other", "&e{0} has {1} point(s)."),

@@ -6,6 +6,7 @@ import co.aikar.commands.annotation.*;
 import me.aiglez.lonkskit.LonksKitProvider;
 import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.controllers.Controllers;
+import me.aiglez.lonkskit.messages.Messages;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.struct.HotbarItemStack;
 import org.bukkit.command.CommandSender;
@@ -21,13 +22,13 @@ public class MainCommand extends BaseCommand {
     @Syntax("") @Description("Join the Kit PvP world.")
     public void onDefault(LocalPlayer localPlayer) {
         if(localPlayer.isValid()) {
-            localPlayer.msg("&b[LonksKit] &cYou are already in the Kit PvP world.");
+            localPlayer.msg(Messages.COMMAND_JOIN_ERROR);
             return;
         }
 
         localPlayer.toBukkit().teleportAsync(WorldProvider.KP_WORLD.getSpawnLocation()).whenComplete((result, throwable) -> {
             if(result) {
-                localPlayer.msg("&b[LonksKit] &aWelcome in the Kit PvP world !");
+                localPlayer.msg(Messages.COMMAND_JOIN_SUCCESSFULLY);
                 if(localPlayer.isSafe()) {
                     for (HotbarItemStack hotbarItem : Controllers.PLAYER.getHotbarItems()) {
                         localPlayer.toBukkit().getInventory().addItem(hotbarItem.getItemStack());
@@ -36,12 +37,12 @@ public class MainCommand extends BaseCommand {
                 localPlayer.setInArena(false);
 
             } else {
-                localPlayer.msg("&b[LonksKit] &cAn error occurred while trying to teleport you to the Kit PvP world. Try later.");
+                localPlayer.msg(Messages.COMMAND_JOIN_TELEPORT_ISSUE);
             }
         });
 
         if(!localPlayer.toBukkit().getInventory().isEmpty()) {
-            localPlayer.msg("&b[LonksKit] &cYou have items in your inventory, you won't be able to play, you need to put those items in your enderchest.");
+            localPlayer.msg(Messages.COMMAND_JOIN_UNSAFE);
             localPlayer.setSafeStatus(false);
         }
     }
@@ -53,14 +54,14 @@ public class MainCommand extends BaseCommand {
     public static void onHelp(CommandSender sender, CommandHelp help) {
         help.showHelp();
     }
+
     // -------------------------------------------- //
     // STATS
     // -------------------------------------------- //
-    @Subcommand("stat|stats")
-    @Conditions("valid_world")
+    @Subcommand("stats")
     @CommandCompletion("@kitpvp_players")
-    @Syntax("[target]") @Description("Show you/target's statistics.")
-    public void onStats(LocalPlayer localPlayer, @Flags("other") @Optional LocalPlayer target) {
+    @Syntax("[target]") @Description("Show your/target's statistics.")
+    public void onStats(@Conditions("valid_world") LocalPlayer localPlayer, @Conditions("valid_world") @Flags("other") @Optional LocalPlayer target) {
         if(target == null) {
             if(localPlayer.toBukkit().hasPermission("lonkskit.kitpvp.stats")) {
                 localPlayer.msg("&eYour statistics:");
@@ -69,7 +70,7 @@ public class MainCommand extends BaseCommand {
                 localPlayer.msg("&7K/D Ratio: &e{0}", localPlayer.getMetrics().getKDR());
                 localPlayer.msg("&7Points: &e{0}", localPlayer.getPoints());
             } else {
-                localPlayer.msg("&b[LonksKit] &cYou don't have access to this command.");
+                localPlayer.msg(Messages.COMMAND_ENGINE_PERMISSION_DENIED);
             }
         } else {
             if(localPlayer.toBukkit().hasPermission("lonkskit.kitpvp.stats.other")) {
@@ -79,7 +80,7 @@ public class MainCommand extends BaseCommand {
                 localPlayer.msg("&7K/D Ratio: &e{0}", target.getMetrics().getKDR());
                 localPlayer.msg("&7Points: &e{0}", target.getPoints());
             } else {
-                localPlayer.msg("&b[LonksKit] &cYou don't have access to this command.");
+                localPlayer.msg(Messages.COMMAND_ENGINE_PERMISSION_DENIED);
             }
         }
     }
@@ -87,12 +88,10 @@ public class MainCommand extends BaseCommand {
     // -------------------------------------------- //
     // CLEAR KIT
     // -------------------------------------------- //
-    @CommandAlias("clearkit|ck")
-    @Subcommand("clearkit|ck")
-    @Conditions("valid_world")
-    @CommandCompletion("@kitpvp_players")
+    @CommandAlias("clearkit|ck") @Subcommand("clearkit|ck")
+    @CommandCompletion("@kitpvp_players") @Conditions("valid_world")
     @Syntax("[target]") @Description("Clear your or target's selected kit.")
-    public void onClearKit(LocalPlayer localPlayer, @Flags("other") @Optional LocalPlayer target) {
+    public void onClearKit(@Conditions("valid_world") LocalPlayer localPlayer, @Conditions("valid_world") @Flags("other") @Optional LocalPlayer target) {
         if(target == null) {
             if(localPlayer.toBukkit().hasPermission("lonkskit.clearkit")) {
                 localPlayer.setSelectedKit(null);
@@ -101,7 +100,7 @@ public class MainCommand extends BaseCommand {
 
                 localPlayer.msg("&b[LonksKit] &cYou have cleared your kit.");
             } else {
-                localPlayer.msg("&b[LonksKit] &cYou don't have access to this command.");
+                localPlayer.msg(Messages.COMMAND_ENGINE_PERMISSION_DENIED);
             }
         } else {
             if(localPlayer.toBukkit().hasPermission("lonkskit.clearkit.other")) {
@@ -112,7 +111,7 @@ public class MainCommand extends BaseCommand {
                 localPlayer.msg("&b[LonksKit] &cYou have cleared {0}'s kit.", target.getLastKnownName());
                 target.msg("&b[LonksKit] &eYour kit has been cleared by an admin.");
             } else {
-                localPlayer.msg("&b[LonksKit] &cYou don't have access to this command.");
+                localPlayer.msg(Messages.COMMAND_ENGINE_PERMISSION_DENIED);
             }
         }
     }
@@ -120,10 +119,8 @@ public class MainCommand extends BaseCommand {
     // -------------------------------------------- //
     // CLEAR KIT
     // -------------------------------------------- //
-    @CommandAlias("clearcooldown|cc")
-    @Subcommand("clearcooldown|cc")
-    @Conditions("valid_world")
-    @CommandCompletion("@kitpvp_players")
+    @CommandAlias("clearcooldown|cc") @Subcommand("clearcooldown|cc")
+    @CommandCompletion("@kitpvp_players") @Conditions("world")
     @Syntax("[target]") @Description("Clear your or target's cooldowns.")
     public void onClearCooldown(LocalPlayer localPlayer, @Flags("other") @Optional LocalPlayer target) {
         if(target == null) {
@@ -148,8 +145,6 @@ public class MainCommand extends BaseCommand {
 
     private void clearCooldown(LocalPlayer localPlayer) {
         LonksKitProvider.getAbilityFactory().getAbilities()
-                .forEach(ability -> {
-                    ability.getCooldown().setLastTested(localPlayer, (System.currentTimeMillis() - ability.getCooldown().getBase().getTimeout()));
-                });
+                .forEach(ability -> ability.getCooldown().setLastTested(localPlayer, (System.currentTimeMillis() - ability.getCooldown().getBase().getTimeout())));
     }
 }

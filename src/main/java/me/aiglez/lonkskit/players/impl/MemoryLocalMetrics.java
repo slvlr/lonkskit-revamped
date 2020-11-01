@@ -6,7 +6,7 @@ import me.aiglez.lonkskit.players.OfflineLocalPlayer;
 public class MemoryLocalMetrics implements LocalMetrics {
 
     private final OfflineLocalPlayer holder;
-    private int kills, deaths;
+    private int kills, deaths, killstreak;
 
     public MemoryLocalMetrics(OfflineLocalPlayer holder) {
         this(holder, 0, 0);
@@ -16,6 +16,7 @@ public class MemoryLocalMetrics implements LocalMetrics {
         this.holder = holder;
         this.kills = kills;
         this.deaths = deaths;
+
     }
 
     @Override
@@ -25,7 +26,13 @@ public class MemoryLocalMetrics implements LocalMetrics {
     public int getKillsCount() { return kills; }
 
     @Override
-    public void incrementKillsCount() { this.kills++; }
+    public void incrementKillsCount() {
+        this.kills++;
+        int possibleStreak = this.killstreak++;
+        if(isMultipleOfFive(possibleStreak)) {
+            this.killstreak = possibleStreak;
+        }
+    }
 
     @Override
     public int getDeathsCount() { return deaths; }
@@ -36,9 +43,9 @@ public class MemoryLocalMetrics implements LocalMetrics {
     @Override
     public double getKDR() {
         try {
-            return kills / deaths;
+            return this.kills / this.deaths;
         } catch (Exception e) {
-            return Double.NaN;
+            return 0.0;
         }
     }
 
@@ -52,4 +59,15 @@ public class MemoryLocalMetrics implements LocalMetrics {
         this.kills = kills;
         this.deaths = deaths;
     }
+
+    @Override
+    public boolean hasKillStreak() { return this.killstreak != 0; }
+
+    @Override
+    public int getKillStreak() { return this.killstreak; }
+
+    @Override
+    public void resetKillStreak() { this.killstreak = 0; }
+
+    private boolean isMultipleOfFive(int input) { return input % 5 == 0; }
 }

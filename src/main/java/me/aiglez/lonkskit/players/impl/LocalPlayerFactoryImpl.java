@@ -42,7 +42,7 @@ public class LocalPlayerFactoryImpl implements LocalPlayerFactory {
 
         if(found == null) {
             found = new MemoryOfflineLocalPlayer(uniqueId, 0);
-            Logger.debug("The player with unique id {0} was not found in cache creating a new instance");
+            Logger.debug("The player with unique id {0} was not found in cache creating a new instance", uniqueId);
             this.cache.add(found);
         }
 
@@ -124,5 +124,16 @@ public class LocalPlayerFactoryImpl implements LocalPlayerFactory {
             }
         }
         return true;
+    }
+
+    private static Class<?> getCallerClass() {
+        final StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        String clazzName = stackTrace[3].getClassName();
+        try {
+            return Class.forName(clazzName);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

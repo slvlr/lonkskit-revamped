@@ -5,7 +5,9 @@ import com.google.common.reflect.TypeToken;
 import me.aiglez.lonkskit.Constants;
 import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.kits.Kit;
+import me.aiglez.lonkskit.messages.Messages;
 import me.aiglez.lonkskit.players.LocalPlayer;
+import me.aiglez.lonkskit.players.messages.Replaceable;
 import me.aiglez.lonkskit.struct.HotbarItemStack;
 import me.aiglez.lonkskit.utils.Logger;
 import me.aiglez.lonkskit.utils.Various;
@@ -64,7 +66,19 @@ public class PlayerController {
         killer.incrementPoints(Constants.POINTS_PER_KILL);
 
         killer.getMetrics().incrementKillsCount();
+        if(killer.getMetrics().hasKillStreak()) {
+            Various.broadcast(Replaceable.handle(
+                    Messages.PLAYER_METRICS_KILLSTREAK.getValue(), killer.getLastKnownName(), killer.getMetrics().getKillStreak()
+            ));
+        }
+
         victim.getMetrics().incrementDeathsCount();
+        if(victim.getMetrics().hasKillStreak()) {
+            Various.broadcast(Replaceable.handle(
+                    Messages.PLAYER_METRICS_RUINED_KILLSTREAK.getValue(), killer.getLastKnownName(), victim.getLastKnownName(), killer.getMetrics().getKillStreak()
+            ));
+            victim.getMetrics().resetKillStreak();
+        }
 
         killer.setLastAttacker(null);
         victim.setLastAttacker(null);

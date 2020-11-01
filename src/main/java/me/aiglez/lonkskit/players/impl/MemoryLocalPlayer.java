@@ -231,7 +231,7 @@ public class MemoryLocalPlayer implements LocalPlayer {
     }
 
     @Override
-    public double getPoints() {
+    public int getPoints() {
         return this.offline.getPoints();
     }
 
