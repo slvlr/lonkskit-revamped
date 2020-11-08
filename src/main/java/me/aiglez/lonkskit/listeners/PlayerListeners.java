@@ -8,6 +8,7 @@ import me.aiglez.lonkskit.utils.Various;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -17,6 +18,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.projectiles.ProjectileSource;
 
 public class PlayerListeners implements Listener {
 
@@ -52,9 +54,17 @@ public class PlayerListeners implements Listener {
     // -------------------------------------------- //
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onAttack(EntityDamageByEntityEvent e) {
-        if(!(e.getEntity() instanceof Player) || !(e.getDamager() instanceof Player)) return;
+        if(!(e.getEntity() instanceof Player)) return;
         final LocalPlayer victim = LocalPlayer.get((Player) e.getEntity());
-        final LocalPlayer damager = LocalPlayer.get((Player) e.getDamager());
+        LocalPlayer damager = null;
+        if(e.getDamager() instanceof Player) {
+            damager = LocalPlayer.get((Player) e.getDamager());
+        } else if(e.getDamager() instanceof Projectile) {
+            final ProjectileSource shooter = ((Projectile) e.getDamager()).getShooter();
+            if(shooter == null) return;
+            damager = LocalPlayer.get((Player) shooter);
+        } else return;
+
         if(!victim.isValid() || !damager.isValid()) return;
 
         victim.setLastAttacker(damager);
