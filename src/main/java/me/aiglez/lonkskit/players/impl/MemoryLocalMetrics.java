@@ -16,14 +16,13 @@ public class MemoryLocalMetrics implements LocalMetrics {
         this.holder = holder;
         this.kills = kills;
         this.deaths = deaths;
-
     }
 
     @Override
     public OfflineLocalPlayer getHolder() { return holder; }
 
     @Override
-    public int getKillsCount() { return kills; }
+    public int getKillsCount() { return this.kills; }
 
     @Override
     public void incrementKillsCount() {
@@ -35,7 +34,7 @@ public class MemoryLocalMetrics implements LocalMetrics {
     }
 
     @Override
-    public int getDeathsCount() { return deaths; }
+    public int getDeathsCount() { return this.deaths; }
 
     @Override
     public void incrementDeathsCount() { this.deaths++; }

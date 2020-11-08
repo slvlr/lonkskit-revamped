@@ -49,7 +49,6 @@ public class MainCommand extends BaseCommand {
 
     @HelpCommand
     @Subcommand("help")
-    @Conditions("valid_world")
     @Syntax("") @Description("Show the help messages.")
     public static void onHelp(CommandSender sender, CommandHelp help) {
         help.showHelp();
@@ -89,7 +88,7 @@ public class MainCommand extends BaseCommand {
     // CLEAR KIT
     // -------------------------------------------- //
     @CommandAlias("clearkit|ck") @Subcommand("clearkit|ck")
-    @CommandCompletion("@kitpvp_players") @Conditions("valid_world")
+    @CommandCompletion("@kitpvp_players")
     @Syntax("[target]") @Description("Clear your or target's selected kit.")
     public void onClearKit(@Conditions("valid_world") LocalPlayer localPlayer, @Conditions("valid_world") @Flags("other") @Optional LocalPlayer target) {
         if(target == null) {
@@ -120,9 +119,9 @@ public class MainCommand extends BaseCommand {
     // CLEAR KIT
     // -------------------------------------------- //
     @CommandAlias("clearcooldown|cc") @Subcommand("clearcooldown|cc")
-    @CommandCompletion("@kitpvp_players") @Conditions("world")
+    @CommandCompletion("@kitpvp_players")
     @Syntax("[target]") @Description("Clear your or target's cooldowns.")
-    public void onClearCooldown(LocalPlayer localPlayer, @Flags("other") @Optional LocalPlayer target) {
+    public void onClearCooldown(@Conditions("valid_world") LocalPlayer localPlayer, @Conditions("valid_world") @Flags("other") @Optional LocalPlayer target) {
         if(target == null) {
             if(localPlayer.toBukkit().hasPermission("lonkskit.clearcooldown")) {
                 clearCooldown(localPlayer);

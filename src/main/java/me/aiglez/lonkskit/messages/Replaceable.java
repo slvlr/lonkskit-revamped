@@ -1,4 +1,4 @@
-package me.aiglez.lonkskit.players.messages;
+package me.aiglez.lonkskit.messages;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;

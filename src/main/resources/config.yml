@@ -11,6 +11,13 @@ hotbar:
     player-commands:
       - "/kits"
     console-commands: []
+  poits-shop:
+    name: "&bPoints Shop"
+    material: "GOLD_NUGGET"
+    lore: []
+    player-commands: []
+    console-commands:
+      - "/msg {player} Points Shop clicked"
 leaderboards:
   points:
     location: "-36, 8, 9"

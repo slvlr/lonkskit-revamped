@@ -17,11 +17,8 @@ public class KitCommand implements Listener {
     public void onCommand(PlayerCommandPreprocessEvent e) {
         final LocalPlayer localPlayer = LonksKitProvider.getPlayerFactory().getLocalPlayer(e.getPlayer());
         if(e.getMessage().toLowerCase().startsWith("/kits")) {
-            localPlayer.incrementPoints(15);
             localPlayer.openKitSelector();
             e.setCancelled(true);
         }
     }
-
-
 }

@@ -1,6 +1,6 @@
 package me.aiglez.lonkskit.utils;
 
-import me.aiglez.lonkskit.players.messages.Replaceable;
+import me.aiglez.lonkskit.messages.Replaceable;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
