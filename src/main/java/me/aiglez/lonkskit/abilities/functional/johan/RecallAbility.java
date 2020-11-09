@@ -10,7 +10,7 @@ import me.lucko.helper.Events;
 import me.lucko.helper.Schedulers;
 import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.scheduler.Ticks;
-import net.minecraft.server.v1_16_R2.EntityPlayer;
+import net.minecraft.server.v1_16_R3.EntityPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;

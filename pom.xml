@@ -75,8 +75,8 @@
        </dependency>
        <!-- craftbukkit (nms) -->
        <dependency>
-           <groupId>org.spigotmc</groupId>
-           <artifactId>spigot</artifactId>
+           <groupId>org.bukkit</groupId>
+           <artifactId>craftbukkit</artifactId>
            <version>1.16.4-R0.1-SNAPSHOT</version>
            <scope>provided</scope>
        </dependency>
@@ -174,7 +174,7 @@
         </repository>
         <repository>
             <id>codemc-nms-repo</id>
-            <url>https://repo.codemc.io/service/rest/repository/browse/nms/</url>
+            <url>https://repo.codemc.io/repository/nms/</url>
         </repository>
         <repository>
             <id>codemc-repo</id>
