@@ -10,7 +10,6 @@ public class TeleportCommand extends BaseCommand {
     // KIT TELEPORT
     // -------------------------------------------- //
     @CommandAlias("kittp")
-    @Conditions("valid_world")
     @CommandPermission("lonkskit.admin.teleport")
     @CommandCompletion("@kitpvp_players")
     @Syntax("<target>") @Description("Teleports you to the target's location.")
@@ -33,7 +32,6 @@ public class TeleportCommand extends BaseCommand {
     // KIT TELEPORT HERE
     // -------------------------------------------- //
     @CommandAlias("kittphere")
-    @Conditions("valid_world")
     @CommandPermission("lonkskit.admin.teleporthere")
     @CommandCompletion("@kitpvp_players")
     @Syntax("<target>") @Description("Teleports the target to your location.")

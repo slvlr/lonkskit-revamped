@@ -8,7 +8,7 @@ import com.google.common.base.Preconditions;
 import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.LonksKitProvider;
 import me.aiglez.lonkskit.WorldProvider;
-import me.aiglez.lonkskit.commands.admin.AdminStatsCommand;
+import me.aiglez.lonkskit.commands.admin.StatsCommand;
 import me.aiglez.lonkskit.commands.admin.TeleportCommand;
 import me.aiglez.lonkskit.commands.points.PointsCommand;
 import me.aiglez.lonkskit.messages.Messages;
@@ -55,7 +55,7 @@ public class CommandsRegistry {
         acf.registerCommand(new LeaveCommand());
         acf.registerCommand(new TeleportCommand());
         acf.registerCommand(new PointsCommand());
-        acf.registerCommand(new AdminStatsCommand());
+        acf.registerCommand(new StatsCommand());
     }
 
     private void registerReplacements() {

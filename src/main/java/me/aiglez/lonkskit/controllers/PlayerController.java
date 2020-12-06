@@ -91,8 +91,15 @@ public class PlayerController {
                 killer.getLastKnownName()
         );
 
-        Various.broadcast("&7{0} &fwas killed by &c{1} &fusing &b{2}&f.",
-                victim.getLastKnownName(), killer.getLastKnownName(), using.getDisplayName()
-        );
+        if(using != null) {
+            Various.broadcast("&7{0} &fwas killed by &c{1} &fusing &b{2}&f.",
+                    victim.getLastKnownName(), killer.getLastKnownName(), using.getDisplayName()
+            );
+        } else {
+            Various.broadcast("&7{0} &fwas killed by &c{1}&f.",
+                    victim.getLastKnownName(), killer.getLastKnownName()
+            );
+        }
+
     }
 }

@@ -9,9 +9,8 @@ import me.aiglez.lonkskit.players.LocalPlayer;
 public class PointsCommand extends BaseCommand {
 
     @Default
-    @Conditions("valid_world")
     @Syntax("[target]") @Description("Show your or target's points.")
-    public void onPoints(LocalPlayer localPlayer, @Flags("other") @Optional LocalPlayer target) {
+    public void onPoints(@Conditions("valid_world") LocalPlayer localPlayer, @Conditions("valid_world") @Flags("other") @Optional LocalPlayer target) {
         if(target == null) {
             localPlayer.msg(Messages.COMMAND_POINTS_SHOW, localPlayer.getPoints());
         } else {
@@ -20,10 +19,9 @@ public class PointsCommand extends BaseCommand {
     }
 
     @Subcommand("pay")
-    @Conditions("valid_world")
     @CommandCompletion("@kitpvp_players @range:1-10000")
     @Syntax("<player> <amount>") @Description("Send the specified amount of points to the target.")
-    public void onPointsPay(LocalPlayer localPlayer, @Flags("other") LocalPlayer target, int amount) {
+    public void onPointsPay(@Conditions("valid_world") LocalPlayer localPlayer, @Conditions("valid_world") @Flags("other") LocalPlayer target, int amount) {
         if(localPlayer.getPoints() < amount) {
             localPlayer.msg(Messages.COMMAND_POINTS_PAY_NOT_ENOUGH);
             return;

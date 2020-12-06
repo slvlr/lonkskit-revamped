@@ -7,7 +7,7 @@ import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.players.OfflineLocalPlayer;
 
 @CommandAlias("%main_command")
-public class AdminStatsCommand extends BaseCommand {
+public class StatsCommand extends BaseCommand {
 
     // -------------------------------------------- //
     // KILLS
