@@ -70,13 +70,14 @@ public class PlayerListeners implements Listener {
         victim.setLastAttacker(damager);
         damager.setLastAttacker(damager);
 
-        victim.msg("&b[LonksKit] &cYou have entered in combat with {0}.", damager.getLastKnownName());
-        damager.msg("&b[LonksKit] &cYou have entered in combat with {0}.", victim.getLastKnownName());
+        victim.msg("&b[DEBUG] &cYou have entered in combat with {0}.", damager.getLastKnownName());
+        damager.msg("&b[DEBUG] &cYou hav e entered in combat with {0}.", victim.getLastKnownName());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onDeath(PlayerDeathEvent e) {
         final LocalPlayer victim = LocalPlayer.get(e.getEntity());
+        if(!victim.isValid()) return;
         victim.getLastAttacker().ifPresent(killer -> Controllers.PLAYER.handleDeathOf(killer, victim));
 
         e.setShouldDropExperience(false);

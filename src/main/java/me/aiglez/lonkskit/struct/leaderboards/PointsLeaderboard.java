@@ -2,7 +2,6 @@ package me.aiglez.lonkskit.struct.leaderboards;
 
 import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
 import com.google.common.collect.Lists;
-import com.google.common.primitives.Ints;
 import me.aiglez.lonkskit.LonksKitProvider;
 import me.aiglez.lonkskit.messages.Replaceable;
 import me.aiglez.lonkskit.players.OfflineLocalPlayer;
@@ -22,7 +21,15 @@ public class PointsLeaderboard extends Leaderboard<OfflineLocalPlayer> {
 
     @Override
     public void setComparator() {
-        this.comparator = (o1, o2) -> Ints.compare(o1.getPoints(), o2.getPoints());
+        this.comparator = (o1, o2) -> {
+            if(o1.getPoints() > o2.getPoints()) {
+                return 1;
+            } else if(o2.getPoints() > o1.getPoints()) {
+                return 2;
+            } else {
+                return 0;
+            }
+        };
     }
 
     @Override

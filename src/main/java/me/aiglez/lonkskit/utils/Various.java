@@ -5,6 +5,7 @@ import me.aiglez.lonkskit.Constants;
 import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.messages.Replaceable;
 import me.aiglez.lonkskit.players.LocalPlayer;
+import me.lucko.helper.text3.Text;
 import me.lucko.helper.utils.Players;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
@@ -20,7 +21,7 @@ public class Various {
         Preconditions.checkNotNull(message, "message may not be null");
         Players.stream()
                 .filter(player -> player.getWorld().getUID().equals(WorldProvider.KP_WORLD.getUID()))
-                .forEach(player -> player.sendMessage(Replaceable.handle(message, replacements)));
+                .forEach(player -> player.sendMessage(Text.colorize(Replaceable.handle(message, replacements))));
     }
 
     public static boolean isThrowable(ItemStack item) {

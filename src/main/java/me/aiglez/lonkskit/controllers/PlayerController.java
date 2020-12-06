@@ -87,7 +87,7 @@ public class PlayerController {
                 Constants.POINTS_PER_KILL, victim.getLastKnownName()
         );
 
-        victim.msg("&b[LonksKit] &cYou have been killed by {1}.",
+        victim.msg("&b[LonksKit] &cYou have been killed by {0}.",
                 killer.getLastKnownName()
         );
 

@@ -9,6 +9,9 @@ import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.messages.Messages;
 import me.aiglez.lonkskit.players.LocalPlayer;
 
+/**
+ * Handles the leave command
+ */
 @CommandAlias("leave|hub|spawn")
 public class LeaveCommand extends BaseCommand {
 
@@ -31,6 +34,7 @@ public class LeaveCommand extends BaseCommand {
 
                 localPlayer.setSafeStatus(true);
                 localPlayer.setInArena(false);
+                localPlayer.getInventory().clear();
 
             } else {
                 localPlayer.msg(Messages.COMMAND_LEAVE_TELEPORT_ISSUE);

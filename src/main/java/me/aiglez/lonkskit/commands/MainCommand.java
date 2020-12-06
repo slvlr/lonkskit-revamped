@@ -67,6 +67,8 @@ public class MainCommand extends BaseCommand {
                 localPlayer.msg("&7Kills: &b{0}", localPlayer.getMetrics().getKillsCount());
                 localPlayer.msg("&7Deaths: &b{0}", localPlayer.getMetrics().getDeathsCount());
                 localPlayer.msg("&7K/D Ratio: &e{0}", localPlayer.getMetrics().getKDR());
+                localPlayer.msg("&7KillStreak: &e{0}", localPlayer.getMetrics().hasKillStreak() ? "" + localPlayer.getMetrics().getKillStreak() : "&cNone");
+                localPlayer.msg("&7K/D Ratio (Test): &e{0}", (localPlayer.getMetrics().getKillsCount() / localPlayer.getMetrics().getDeathsCount()));
                 localPlayer.msg("&7Points: &e{0}", localPlayer.getPoints());
             } else {
                 localPlayer.msg(Messages.COMMAND_ENGINE_PERMISSION_DENIED);
@@ -76,7 +78,7 @@ public class MainCommand extends BaseCommand {
                 localPlayer.msg("&e{0}'s statistics:", target.getLastKnownName());
                 localPlayer.msg("&7Kills: &b{0}", target.getMetrics().getKillsCount());
                 localPlayer.msg("&7Deaths: &b{0}", target.getMetrics().getDeathsCount());
-                localPlayer.msg("&7K/D Ratio: &e{0}", target.getMetrics().getKDR());
+                localPlayer.msg("&7K/D Ratio (Test): &e{0}", (localPlayer.getMetrics().getKillsCount() / localPlayer.getMetrics().getDeathsCount()));
                 localPlayer.msg("&7Points: &e{0}", target.getPoints());
             } else {
                 localPlayer.msg(Messages.COMMAND_ENGINE_PERMISSION_DENIED);

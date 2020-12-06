@@ -30,6 +30,7 @@ public enum Messages {
     COMMAND_POINTS_SHOW("command.points.show", "&eYou have {0} point(s)."),
     COMMAND_POINTS_SHOW_OTHER("command.points.show-other", "&e{0} has {1} point(s)."),
     COMMAND_POINTS_PAY_FAILED("command.points.pay.invalid", "&cTransaction failed"),
+    COMMAND_POINTS_PAY_NOT_ENOUGH("command.points.pay.not-enough", "&cYou don't have enough points!"),
     COMMAND_POINTS_PAY_SENT("command.points.pay.sent", "&fYou have sent &a{0} &fpoint(s) to &b{1}&f."),
     COMMAND_POINTS_PAY_RECEIVED("command.points.pay.sent", "&aYou have received {0} &fpoint(s) from &b{1}&a."),
 
@@ -38,6 +39,12 @@ public enum Messages {
     COMMAND_ADMIN_STATS_KILLS_GIVE("command.admin.stats.kills.give", "&eYou have added &a{0} &ekills to &6{1}&e."),
     COMMAND_ADMIN_STATS_KILLS_TAKE("command.admin.stats.kills.take", "&eYou have taken &c{0} &ekills from &c{1}&e."),
     COMMAND_ADMIN_STATS_KILLS_RESET("command.admin.stats.kills.reset", "&eYou have reset &a{0}&e's kills count."),
+
+    COMMAND_ADMIN_STATS_DEATHS_SET("command.admin.stats.deaths.set", "&eYou have set &a{0}&e's deaths count to &6{1}&e."),
+    COMMAND_ADMIN_STATS_DEATHS_GIVE("command.admin.stats.deaths.give", "&eYou have added &a{0} &edeaths to &6{1}&e."),
+    COMMAND_ADMIN_STATS_DEATHS_TAKE("command.admin.stats.deaths.take", "&eYou have taken &c{0} &edeaths from &c{1}&e."),
+    COMMAND_ADMIN_STATS_DEATHS_RESET("command.admin.stats.deaths.reset", "&eYou have reset &a{0}&e's deaths count."),
+
 
     COMMAND_ENGINE_MUST_BE_INT("command.engine.must_be_a_number", "&cArgument must be a number and valid."),
     COMMAND_ENGINE_PERMISSION_DENIED("command.engine.permission_denied",  "&cYou do not have access to this command.");
