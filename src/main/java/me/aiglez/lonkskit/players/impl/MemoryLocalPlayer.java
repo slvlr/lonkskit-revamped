@@ -91,20 +91,20 @@ public class MemoryLocalPlayer implements LocalPlayer {
     }
 
     @Override
-    public boolean setSelectedKit(Kit kit) {
+    public void setSelectedKit(Kit kit) {
         if(!isSafe()) {
-            return false;
+            return;
         }
         if(kit == null) {
             this.selectedKit = null;
-            return true;
+            return;
         }
 
         this.selectedKit = kit;
         Events.call(new KitSelectEvent(kit, this));
         if(!isOnline()) {
             Logger.severe("Player not found: " + (toBukkit() == null));
-            return false;
+            return;
         }
         final Player player = toBukkit();
 
@@ -123,9 +123,9 @@ public class MemoryLocalPlayer implements LocalPlayer {
             player.getInventory().addItem(this.selectedKit.getInventoryContent().toArray(new ItemStack[0]));
         } catch (ArrayIndexOutOfBoundsException e) {
             e.printStackTrace();
-            return false;
+            return;
         }
-        return true;
+        return;
     }
 
     @Override
@@ -160,6 +160,9 @@ public class MemoryLocalPlayer implements LocalPlayer {
     @Override
     public void openKitSelector() {
         Preconditions.checkNotNull(this.bukkit, "player is offline");
+        if(!this.safe) {
+            return;
+        }
         new KitSelectorGUI(this).open();
     }
 
@@ -238,6 +241,11 @@ public class MemoryLocalPlayer implements LocalPlayer {
     @Override
     public void incrementPoints(int amount) {
         this.offline.incrementPoints(amount);
+    }
+
+    @Override
+    public void setPoints(int amount) {
+        this.offline.setPoints(amount);
     }
 
     @Override

@@ -11,11 +11,14 @@ public class LonksKitProvider {
         return KitPlugin.getSingleton().getKitFactory();
     }
 
-    public static LocalPlayerFactory getPlayerFactory() { return KitPlugin.getSingleton().getPlayerFactory(); }
+    public static LocalPlayerFactory getPlayerFactory() {
+        return KitPlugin.getSingleton().getPlayerFactory();
+    }
 
-    public static AbilityFactory getAbilityFactory() {return KitPlugin.getSingleton().getAbilityFactory();}
+    public static AbilityFactory getAbilityFactory() {
+        return KitPlugin.getSingleton().getAbilityFactory();
+    }
 
     private LonksKitProvider() {
-        throw new UnsupportedOperationException();
     }
 }

@@ -26,6 +26,11 @@ public class MainCommand extends BaseCommand {
             return;
         }
 
+        if(!localPlayer.toBukkit().getInventory().isEmpty()) {
+            localPlayer.msg(Messages.COMMAND_JOIN_UNSAFE);
+            localPlayer.setSafeStatus(false);
+        }
+
         localPlayer.toBukkit().teleportAsync(WorldProvider.KP_WORLD.getSpawnLocation()).whenComplete((result, throwable) -> {
             if(result) {
                 localPlayer.msg(Messages.COMMAND_JOIN_SUCCESSFULLY);
@@ -33,18 +38,16 @@ public class MainCommand extends BaseCommand {
                     for (HotbarItemStack hotbarItem : Controllers.PLAYER.getHotbarItems()) {
                         localPlayer.toBukkit().getInventory().addItem(hotbarItem.getItemStack());
                     }
+                } else {
+                    localPlayer.msg("&bDebug - &7You have already items in your inventory.");
                 }
                 localPlayer.setInArena(false);
 
             } else {
                 localPlayer.msg(Messages.COMMAND_JOIN_TELEPORT_ISSUE);
+                localPlayer.setSafeStatus(true);
             }
         });
-
-        if(!localPlayer.toBukkit().getInventory().isEmpty()) {
-            localPlayer.msg(Messages.COMMAND_JOIN_UNSAFE);
-            localPlayer.setSafeStatus(false);
-        }
     }
 
     @HelpCommand
@@ -61,14 +64,13 @@ public class MainCommand extends BaseCommand {
     @CommandCompletion("@kitpvp_players")
     @Syntax("[target]") @Description("Show your/target's statistics.")
     public void onStats(@Conditions("valid_world") LocalPlayer localPlayer, @Conditions("valid_world") @Flags("other") @Optional LocalPlayer target) {
-        if(target == null) {
+        if(target == null || target.getUniqueId().equals(localPlayer.getUniqueId())) {
             if(localPlayer.toBukkit().hasPermission("lonkskit.kitpvp.stats")) {
                 localPlayer.msg("&eYour statistics:");
                 localPlayer.msg("&7Kills: &b{0}", localPlayer.getMetrics().getKillsCount());
                 localPlayer.msg("&7Deaths: &b{0}", localPlayer.getMetrics().getDeathsCount());
                 localPlayer.msg("&7K/D Ratio: &e{0}", localPlayer.getMetrics().getKDR());
                 localPlayer.msg("&7KillStreak: &e{0}", localPlayer.getMetrics().hasKillStreak() ? "" + localPlayer.getMetrics().getKillStreak() : "&cNone");
-                localPlayer.msg("&7K/D Ratio (Test): &e{0}", (localPlayer.getMetrics().getKillsCount() / localPlayer.getMetrics().getDeathsCount()));
                 localPlayer.msg("&7Points: &e{0}", localPlayer.getPoints());
             } else {
                 localPlayer.msg(Messages.COMMAND_ENGINE_PERMISSION_DENIED);
@@ -78,7 +80,8 @@ public class MainCommand extends BaseCommand {
                 localPlayer.msg("&e{0}'s statistics:", target.getLastKnownName());
                 localPlayer.msg("&7Kills: &b{0}", target.getMetrics().getKillsCount());
                 localPlayer.msg("&7Deaths: &b{0}", target.getMetrics().getDeathsCount());
-                localPlayer.msg("&7K/D Ratio (Test): &e{0}", (localPlayer.getMetrics().getKillsCount() / localPlayer.getMetrics().getDeathsCount()));
+                localPlayer.msg("&7K/D Ratio: &e{0}", target.getMetrics().getKDR());
+                localPlayer.msg("&7KillStreak: &e{0}", target.getMetrics().hasKillStreak() ? "" + target.getMetrics().getKillStreak() : "&cNone");
                 localPlayer.msg("&7Points: &e{0}", target.getPoints());
             } else {
                 localPlayer.msg(Messages.COMMAND_ENGINE_PERMISSION_DENIED);
@@ -95,22 +98,32 @@ public class MainCommand extends BaseCommand {
     public void onClearKit(@Conditions("valid_world") LocalPlayer localPlayer, @Conditions("valid_world") @Flags("other") @Optional LocalPlayer target) {
         if(target == null) {
             if(localPlayer.toBukkit().hasPermission("lonkskit.clearkit")) {
+                if(!localPlayer.isSafe()) {
+                    localPlayer.msg("&cYou can't clear your kit! You have items in your inventory");
+                    return;
+                }
                 localPlayer.setSelectedKit(null);
                 localPlayer.getInventory().clear();
                 localPlayer.toBukkit().getActivePotionEffects().forEach(activePe -> localPlayer.toBukkit().removePotionEffect(activePe.getType()));
 
-                localPlayer.msg("&b[LonksKit] &cYou have cleared your kit.");
+                localPlayer.msg("&cYou have cleared your kit.");
+                localPlayer.toBukkit().teleportAsync(WorldProvider.KP_WORLD.getSpawnLocation());
             } else {
                 localPlayer.msg(Messages.COMMAND_ENGINE_PERMISSION_DENIED);
             }
         } else {
             if(localPlayer.toBukkit().hasPermission("lonkskit.clearkit.other")) {
+                if(!target.isSafe()) {
+                    localPlayer.msg("&cYou can't clear his kit! He has items in his inventory");
+                    return;
+                }
                 target.setSelectedKit(null);
                 target.getInventory().clear();
                 target.toBukkit().getActivePotionEffects().forEach(activePe -> target.toBukkit().removePotionEffect(activePe.getType()));
 
-                localPlayer.msg("&b[LonksKit] &cYou have cleared {0}'s kit.", target.getLastKnownName());
-                target.msg("&b[LonksKit] &eYour kit has been cleared by an admin.");
+                localPlayer.msg("&cYou have cleared {0}'s kit.", target.getLastKnownName());
+                target.msg("&eYour kit has been cleared by an admin.");
+                target.toBukkit().teleportAsync(WorldProvider.KP_WORLD.getSpawnLocation());
             } else {
                 localPlayer.msg(Messages.COMMAND_ENGINE_PERMISSION_DENIED);
             }
@@ -130,16 +143,16 @@ public class MainCommand extends BaseCommand {
                 localPlayer.msg("&b[LonksKit] &cYou have cleared your cooldowns.");
 
             } else {
-                localPlayer.msg("&b[LonksKit] &cYou don't have access to this command.");
+                localPlayer.msg(Messages.COMMAND_ENGINE_PERMISSION_DENIED);
             }
         } else {
             if(localPlayer.toBukkit().hasPermission("lonkskit.clearcooldown.other")) {
                 clearCooldown(target);
-
                 localPlayer.msg("&b[LonksKit] &cYou have cleared {0}'s cooldowns.", target.getLastKnownName());
+
                 target.msg("&b[LonksKit] &eYour cooldowns have been cleared by an admin.");
             } else {
-                localPlayer.msg("&b[LonksKit] &cYou don't have access to this command.");
+                localPlayer.msg(Messages.COMMAND_ENGINE_PERMISSION_DENIED);
             }
         }
     }

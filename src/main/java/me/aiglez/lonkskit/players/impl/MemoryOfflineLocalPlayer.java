@@ -83,14 +83,20 @@ public class MemoryOfflineLocalPlayer implements OfflineLocalPlayer {
 
     @Override
     public void incrementPoints(int amount) {
-        this.points =+ amount;
+        this.points = this.points + amount;
         if(this.points < 0) this.points = 0;
+    }
+
+    @Override
+    public void setPoints(int amount) {
+        if(amount < 0) this.points = 0;
+        this.points = amount;
     }
 
     @Override
     public boolean decrementPoints(int amount) {
         if(amount < 0 || amount > this.points) return false;
-        this.points =- amount;
+        this.points = this.points - amount;
         return true;
     }
 

@@ -8,6 +8,7 @@ import co.aikar.commands.annotation.Syntax;
 import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.messages.Messages;
 import me.aiglez.lonkskit.players.LocalPlayer;
+import me.aiglez.lonkskit.utils.Logger;
 
 /**
  * Handles the leave command
@@ -28,6 +29,10 @@ public class LeaveCommand extends BaseCommand {
             return;
         }
 
+        if(!localPlayer.isSafe()) {
+            Logger.warn("The player {0} tried to go to the hub but he is not safe", localPlayer.getLastKnownName());
+            return;
+        }
         localPlayer.toBukkit().teleportAsync(WorldProvider.MAIN_WORLD.getSpawnLocation()).whenComplete((result, throwable) -> {
             if(result) {
                 localPlayer.msg(Messages.COMMAND_LEAVE_SUCCESSFULLY);

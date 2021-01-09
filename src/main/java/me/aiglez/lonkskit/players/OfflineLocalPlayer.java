@@ -29,6 +29,8 @@ public interface OfflineLocalPlayer extends LocalRenter, GsonSerializable {
 
     void incrementPoints(int amount);
 
+    void setPoints(int amount);
+
     boolean decrementPoints(int amount);
 
     static OfflineLocalPlayer deserialize(JsonElement element) {

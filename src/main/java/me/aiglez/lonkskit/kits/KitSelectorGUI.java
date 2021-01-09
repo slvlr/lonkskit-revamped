@@ -69,12 +69,7 @@ public class KitSelectorGUI extends PaginatedGui {
                         return ItemStackBuilder
                                 .of(holder.buildItem(kit, State.RENTED, localRent.getLeftUses()))
                                 .build(() -> {
-                                    boolean result = localPlayer.setSelectedKit(kit);
-                                    if(!result) {
-                                        localPlayer.msg(Messages.SELECTOR_ERROR);
-                                        gui.redraw();
-                                        return;
-                                    }
+                                    localPlayer.setSelectedKit(kit);
                                     localPlayer.msg(Messages.SELECTOR_SELECTED, kit.getDisplayName());
                                     gui.close();
                                 });
@@ -84,12 +79,7 @@ public class KitSelectorGUI extends PaginatedGui {
                             return ItemStackBuilder
                                     .of(holder.buildItem(kit, State.PERMANENT_ACCESS, 0))
                                     .build(() -> {
-                                        boolean result = localPlayer.setSelectedKit(kit);
-                                        if (!result) {
-                                            localPlayer.msg(Messages.SELECTOR_ERROR);
-                                            gui.redraw();
-                                            return;
-                                        }
+                                        localPlayer.setSelectedKit(kit);
                                         localPlayer.msg(Messages.SELECTOR_SELECTED, kit.getDisplayName());
                                         gui.close();
                                     });

@@ -32,7 +32,7 @@ public interface LocalPlayer extends OfflineLocalPlayer, LocalMessager, LocalRen
 
     boolean hasSelectedKit();
 
-    boolean setSelectedKit(Kit kit);
+    void setSelectedKit(Kit kit);
 
     boolean inArena();
 
