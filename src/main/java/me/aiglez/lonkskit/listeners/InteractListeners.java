@@ -81,8 +81,7 @@ public class InteractListeners implements Listener {
         if(isHotbarSigned(item)) {
             for (HotbarItemStack hotbarItem : Controllers.PLAYER.getHotbarItems()) {
                 if(hotbarItem.getItemStack().isSimilar(item)) {
-                    localPlayer.msg("You clicked on a hotbar item");
-                    hotbarItem.runCommands(localPlayer);
+                    localPlayer.openKitSelector();
                     return;
                 }
             }

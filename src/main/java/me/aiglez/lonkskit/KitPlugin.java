@@ -15,7 +15,7 @@ import me.lucko.helper.plugin.ExtendedJavaPlugin;
 import me.lucko.helper.plugin.ap.Plugin;
 
 @Plugin(
-        name = "LonksKit", version = "1.0.9",
+        name = "LonksKit", version  = "1.0.9",
         authors = "AigleZ", apiVersion = "1.16",
         hardDepends = {"ProtocolLib", "helper", "LibsDisguises", "HolographicDisplays"}
 )

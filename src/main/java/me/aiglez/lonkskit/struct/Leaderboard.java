@@ -1,3 +1,4 @@
+
 package me.aiglez.lonkskit.struct;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
@@ -12,7 +13,6 @@ import me.lucko.helper.Schedulers;
 import me.lucko.helper.scheduler.Ticks;
 import me.lucko.helper.text3.Text;
 import org.bukkit.Location;
-
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;

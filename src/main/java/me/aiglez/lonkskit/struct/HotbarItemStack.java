@@ -5,7 +5,6 @@ import me.aiglez.lonkskit.kits.KitSelectorGUI;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.Helper;
 import org.bukkit.inventory.ItemStack;
-
 import java.util.List;
 
 public class HotbarItemStack {
@@ -35,3 +34,4 @@ public class HotbarItemStack {
 
     public ItemStack getItemStack() { return item; }
 }
+

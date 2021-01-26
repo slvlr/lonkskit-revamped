@@ -8,14 +8,13 @@ import me.aiglez.lonkskit.players.OfflineLocalPlayer;
 import me.aiglez.lonkskit.struct.Leaderboard;
 import me.aiglez.lonkskit.utils.Logger;
 import org.bukkit.Location;
-
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class PointsLeaderboard extends Leaderboard<OfflineLocalPlayer> {
 
     public PointsLeaderboard(Location location) {
-        super("points", location, 50, TimeUnit.SECONDS, "&a{0} &7- &e{1} &7point(s)");
+        super("points", location, 2, TimeUnit.SECONDS, "&a{0} &7- &e{1} &7point(s)");
         this.cache = Lists.newLinkedList();
     }
 

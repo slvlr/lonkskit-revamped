@@ -1,7 +1,6 @@
 package me.aiglez.lonkskit.messages;
 
 import co.aikar.commands.Locales;
-
 import java.util.HashMap;
 
 public enum Messages {
