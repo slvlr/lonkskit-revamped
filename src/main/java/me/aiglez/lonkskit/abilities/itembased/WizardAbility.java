@@ -9,16 +9,20 @@ import me.lucko.helper.Events;
 import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.metadata.Metadata;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Snowball;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author AigleZ
+ * @author Fucking AigleZ
  * @date 04/10/2020
  */
 public class WizardAbility extends ItemStackAbility {
@@ -63,9 +67,10 @@ public class WizardAbility extends ItemStackAbility {
 
                     if(explosionLocation != null) {
                         WorldProvider.KP_WORLD.createExplosion(explosionLocation,
-                                configuration.getNode("explosion-power").getFloat(1f)
-                                , false, false);
+                                Float.intBitsToFloat(getConfiguration().getNode("explosion-power").getInt(4))
+                                , false, false, (Entity) e.getEntity().getShooter());;
                     }
+
                     Metadata.provideForEntity(e.getEntity()).remove(MetadataProvider.SNOWBALL_EXPLODE);
                 });
         }

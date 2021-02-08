@@ -16,9 +16,8 @@ import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.config.objectmapping.ObjectMappingException;
 import org.bukkit.Material;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class PlayerController {
 
@@ -36,17 +35,18 @@ public class PlayerController {
 
             final String name = child.getNode("name").getString("");
             final Material material = Material.matchMaterial(child.getNode("material").getString("STONE"));
+            final int order = child.getNode("order").getInt();
 
             try {
                 final List<String> lore = child.getNode("lore").getList(new TypeToken<String>() {});
                 final List<String> playerCommands = child.getNode("lore").getList(new TypeToken<String>() {});
                 final List<String> consoleCommands = child.getNode("lore").getList(new TypeToken<String>() {});
-
+                
                 final HotbarItemStack hotbarItem = new HotbarItemStack(
                         ItemStackBuilder.of(material).name(name).lore(lore).withNBT("logging-item").build(),
                         playerCommands,
-                        consoleCommands
-                );
+                        consoleCommands,
+                        name, order);
 
                 loggingItems.add(hotbarItem);
 
@@ -58,7 +58,7 @@ public class PlayerController {
     }
 
     public Set<HotbarItemStack> getHotbarItems() {
-        return Collections.unmodifiableSet(this.loggingItems);
+        return this.loggingItems.stream().sorted((hotbarItemStack, t1) -> Math.min(t1.getOrder(), hotbarItemStack.getOrder())).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     public void handleDeathOf(LocalPlayer killer, LocalPlayer victim) {

@@ -5,6 +5,7 @@ import me.lucko.helper.metadata.Metadata;
 import me.lucko.helper.metadata.MetadataKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityEvent;
 import org.bukkit.event.player.PlayerEvent;
 
@@ -21,6 +22,15 @@ public class AbilityPredicates {
             return localPlayer.hasSelectedKit() && localPlayer.getNullableSelectedKit().hasAbility(ability);
         };
     }
+
+
+    public static <T extends EntityDeathEvent> Predicate<T> hasAbilityV(Ability ability) {
+        return e -> {
+            final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getEntity());
+            return localPlayer.hasSelectedKit() && localPlayer.getNullableSelectedKit().hasAbility(ability);
+        };
+    }
+
 
     public static <T extends EntityEvent> Predicate<T> possiblyHasAbility(Ability ability) {
         return e -> {
@@ -46,7 +56,7 @@ public class AbilityPredicates {
     }
 
 
-    // IMAAAD START
+    // JOHAN START
     public static <T extends EntityEvent> Predicate<T> isKillerhaveAbility(Ability ability) {
         return e -> {
             if(!(e.getEntity() instanceof Player)) return false;
@@ -69,7 +79,7 @@ public class AbilityPredicates {
         };
     }
 
-    //IMAD END :)
+    //JOHAN END :)
 
     // -------------------------------------------- //
     // METADATA
@@ -86,7 +96,7 @@ public class AbilityPredicates {
     }
 
     public static <T extends EntityEvent> Predicate<T> entityHasMetadata(MetadataKey<?> metadataKey) {
-        return e -> Metadata.provideForPlayer((Player) e.getEntity()).has(metadataKey);
+        return e -> Metadata.provideForEntity(e.getEntity()).has(metadataKey);
     }
     // -------------------------------------------- //
     // MISC

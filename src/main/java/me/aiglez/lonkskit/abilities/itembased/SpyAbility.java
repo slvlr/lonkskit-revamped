@@ -1,5 +1,4 @@
 package me.aiglez.lonkskit.abilities.itembased;
-
 import com.destroystokyo.paper.event.player.PlayerStopSpectatingEntityEvent;
 import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
@@ -19,14 +18,11 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-
-/**
- * @author AigleZ
- * @date 10/10/2020
- */
 public class SpyAbility extends ItemStackAbility {
 
     public SpyAbility(YAMLConfigurationLoader yamlConfigurationLoader) throws IOException {
@@ -56,17 +52,41 @@ public class SpyAbility extends ItemStackAbility {
                     applyEffects(localPlayer);
 
                     // spectator - start
+
                     Schedulers.sync()
                             .runLater(() -> {
-                                localPlayer.getMetadata().put(MetadataProvider.SPY_PLAYER, ExpiringValue.of(true, 1, TimeUnit.SECONDS));
-                                localPlayer.toBukkit().setGameMode(GameMode.SPECTATOR);
-                                localPlayer.toBukkit().setSpectatorTarget(arrow);
-                                }, 2L);
+                                if (!e.getProjectile().isOnGround()) {
+                                    localPlayer.getMetadata().put(MetadataProvider.SPY_PLAYER, ExpiringValue.of(true, 100, TimeUnit.SECONDS));
+                                    localPlayer.toBukkit().setGameMode(GameMode.SPECTATOR);
+                                    localPlayer.toBukkit().setSpectatorTarget(arrow);
+                                }
+                                if (e.getProjectile().getLocation().getY() <= 0) e.getEntity().setHealth(0);
+                            }, 2L);
+                    Schedulers.async()
+                            .runRepeating(t -> {
+                                if (arrow.isDead() || !arrow.isValid()){
+                                    t.stop();
+                                    t.close();
+                                }else {
+                                    if (arrow.getLocation().getY() <= 0){
+                                        ((Player)arrow.getShooter()).setHealth(0);
+                                        LocalPlayer.get(((Player)arrow.getShooter())).setInKP(true);
+                                        LocalPlayer.get(((Player)arrow.getShooter())).setSelectedKit(null);
+                                        ((Player)arrow.getShooter()).setGameMode(GameMode.SURVIVAL);
+                                        arrow.remove();
+                                        t.stop();
+                                        t.close();
+                                    }
+                                }
+                            },10L,10L);
                     // spectator - end
 
                     localPlayer.msg("&6(Spy - Debug) &eYou are now spying on " + arrow.getName());
                 });
 
+        Events.subscribe(PlayerMoveEvent.class)
+                .filter(e -> e.getPlayer().getLocation().getY() <= 0)
+                .handler(e -> e.getPlayer().setHealth(0));
 
         Events.subscribe(PlayerInteractEvent.class)
                 .filter(AbilityPredicates.hasAbility(this))
@@ -75,7 +95,6 @@ public class SpyAbility extends ItemStackAbility {
                     e.getPlayer().sendMessage("§6(Spy - Debug) §cYou can't interact while spying!");
                     e.setCancelled(true);
                 });
-
         Events.subscribe(PlayerStopSpectatingEntityEvent.class)
                 .filter(AbilityPredicates.hasAbility(this))
                 .filter(AbilityPredicates.hasMetadata(MetadataProvider.SPY_PLAYER))
@@ -84,7 +103,6 @@ public class SpyAbility extends ItemStackAbility {
                         e.getPlayer().sendMessage("§6(Spy - Debug) §eYou stopped spectating ur self (useless)");
                         return;
                     }
-                    e.getPlayer().sendMessage("§6(Spy - Debug) §cWait until the arrow lands!");
                     e.setCancelled(true);
                 });
 
@@ -93,18 +111,39 @@ public class SpyAbility extends ItemStackAbility {
                 .filter(EventFilters.entityHasMetadata(MetadataProvider.SPY_ARROW))
                 .handler(e -> {
                     long start = System.currentTimeMillis();
-
                     final Arrow arrow = (Arrow) e.getEntity();
+                    arrow.setDamage(0);
                     if(arrow.getShooter() == null) {
                         return;
                     }
-
                     final LocalPlayer localPlayer = LocalPlayer.get((Player) arrow.getShooter());
+                    Schedulers.sync().runLater(() -> {
+                        try {
+                            if (localPlayer.toBukkit().getGameMode() == GameMode.SPECTATOR){
+                                localPlayer.getMetadata().remove(MetadataProvider.SPY_PLAYER);
+                                if (localPlayer.toBukkit().getSpectatorTarget() != null){
+                                    localPlayer.toBukkit().setSpectatorTarget(null);
+                                }
+                                localPlayer.toBukkit().setGameMode(GameMode.SURVIVAL);
+                                if (e.getHitEntity() != null) localPlayer.toBukkit().teleport(e.getHitEntity().getLocation().add(0D, 1D, 0D));
+                                else if (e.getHitBlock() != null) localPlayer.toBukkit().teleport(e.getHitBlock().getLocation().add(0D, 1D, 0D));
 
-                    localPlayer.getMetadata().remove(MetadataProvider.SPY_PLAYER);
-                    localPlayer.toBukkit().setSpectatorTarget(null);
-                    localPlayer.toBukkit().setGameMode(GameMode.SURVIVAL);
-                    localPlayer.toBukkit().teleport(arrow.getLocation().subtract(0D, 1D, 0D));
+                            }
+                        }catch (IllegalStateException ignored){}
+
+                    },10L);
+                    try {
+                        if (localPlayer.toBukkit().getGameMode() == GameMode.SPECTATOR){
+                            localPlayer.getMetadata().remove(MetadataProvider.SPY_PLAYER);
+                            if (localPlayer.toBukkit().getSpectatorTarget() != null){
+                                localPlayer.toBukkit().setSpectatorTarget(null);
+                            }
+                            localPlayer.toBukkit().setGameMode(GameMode.SURVIVAL);
+                            if (e.getHitEntity() != null) localPlayer.toBukkit().teleport(e.getHitEntity().getLocation().add(0D, 1D, 0D));
+                            else if (e.getHitBlock() != null) localPlayer.toBukkit().teleport(e.getHitBlock().getLocation().add(0D, 1D, 0D));
+
+                        }
+                    }catch (IllegalStateException ignored){}
 
                     localPlayer.msg("&6(Spy - Debug) &aYour arrow has landed (handle time: {0}ms)",
                             System.currentTimeMillis() - start);
@@ -116,8 +155,8 @@ public class SpyAbility extends ItemStackAbility {
                     final LocalPlayer localPlayer = LocalPlayer.get(e.getEntity());
                     localPlayer.getMetadata().remove(MetadataProvider.SPY_PLAYER);
                     localPlayer.toBukkit().setSpectatorTarget(null);
-                    localPlayer.toBukkit().setGameMode(GameMode.SURVIVAL);
                 });
-
+        Events.subscribe(PlayerRespawnEvent.class)
+                .handler(e -> e.getPlayer().setGameMode(GameMode.SURVIVAL));
     }
 }

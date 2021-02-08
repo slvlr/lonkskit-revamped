@@ -34,5 +34,10 @@ public class MemoryLocalRent implements LocalRent {
     public void incrementUses() { this.uses++; }
 
     @Override
+    public void decrementUses() {
+        this.uses--;
+    }
+
+    @Override
     public boolean isValid() { return this.rentedKit != null && this.uses < this.rentedKit.getUsesPerRent(); }
 }

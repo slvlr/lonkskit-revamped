@@ -3,9 +3,11 @@ package me.aiglez.lonkskit;
 import me.aiglez.lonkskit.abilities.factory.AbilityFactory;
 import me.aiglez.lonkskit.commands.CommandsRegistry;
 import me.aiglez.lonkskit.commands.KitCommand;
+import me.aiglez.lonkskit.commands.admin.SpawnLocCommand;
 import me.aiglez.lonkskit.controllers.Controllers;
 import me.aiglez.lonkskit.kits.KitFactory;
 import me.aiglez.lonkskit.listeners.AbilityListeners;
+import me.aiglez.lonkskit.listeners.FeaturesListeners;
 import me.aiglez.lonkskit.listeners.InteractListeners;
 import me.aiglez.lonkskit.listeners.PlayerListeners;
 import me.aiglez.lonkskit.players.LocalPlayerFactory;
@@ -14,9 +16,11 @@ import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.plugin.ExtendedJavaPlugin;
 import me.lucko.helper.plugin.ap.Plugin;
 
+import java.util.Objects;
+
 @Plugin(
         name = "LonksKit", version  = "1.0.9",
-        authors = "AigleZ", apiVersion = "1.16",
+        authors = {"AigleZ","Johan"}, apiVersion = "1.16",
         hardDepends = {"ProtocolLib", "helper", "LibsDisguises", "HolographicDisplays"}
 )
 public final class KitPlugin extends ExtendedJavaPlugin {
@@ -73,6 +77,7 @@ public final class KitPlugin extends ExtendedJavaPlugin {
         new AbilityListeners(this);
         new InteractListeners(this);
         new PlayerListeners(this);
+        new FeaturesListeners(this);
     }
 
     private void registerCommands() {

@@ -15,7 +15,7 @@ public interface LocalMetrics {
 
     void incrementDeathsCount();
 
-    double getKDR();
+    float getKDR();
 
     void updateAll(int kills, int deaths);
 

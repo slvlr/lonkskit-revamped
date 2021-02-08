@@ -1,5 +1,6 @@
 package me.aiglez.lonkskit.abilities.itembased;
 
+import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
@@ -9,6 +10,7 @@ import me.lucko.helper.Schedulers;
 import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.metadata.ExpiringValue;
 import me.lucko.helper.scheduler.Ticks;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -33,7 +35,9 @@ public class TigerAbility extends ItemStackAbility {
         applyEffects(localPlayer);
 
         localPlayer.getMetadata().put(MetadataProvider.PLAYER_DOUBLE_DAMAGE, ExpiringValue.of(true, 10L, TimeUnit.SECONDS));
-        localPlayer.toBukkit().chat(configuration.getNode("messages", "start").getString(""));
+        for (Player pl : WorldProvider.KP_WORLD.getPlayers()) {
+            pl.sendMessage(ChatColor.translateAlternateColorCodes('&',configuration.getNode("messages", "start").getString("")));
+        }
         Schedulers.async()
                 .runLater(() -> localPlayer.getMetadata().remove(MetadataProvider.PLAYER_DOUBLE_DAMAGE),
                         Ticks.from(configuration.getNode("duration").getLong(10L), TimeUnit.SECONDS))

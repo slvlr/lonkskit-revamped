@@ -23,7 +23,6 @@ public abstract class Leaderboard<T> {
     protected final long refreshRateTicks;
     protected Hologram hologram;
     protected List<TextLine> lines;
-    protected Comparator<T> comparator;
     protected List<T> cache;
 
     public static final int SIZE = 10;
@@ -37,9 +36,7 @@ public abstract class Leaderboard<T> {
         this.refreshRateTicks = Ticks.from(refreshRate, timeUnit);
         this.format = Text.colorize(format);
 
-        setComparator();
         Logger.debug("Creating a hologram [{0}] with refresh rate of ({1} {2}) at [{3}]", this.name, refreshRate, timeUnit.name(), Locations.toString(location));
-
         this.hologram = HologramsAPI.createHologram(KitPlugin.getSingleton(), location);
         this.hologram.appendTextLine("§8§m--------------------------");
         this.lines = Lists.newArrayList();
@@ -56,14 +53,10 @@ public abstract class Leaderboard<T> {
 
         Schedulers.builder()
                 .sync()
-                .after(11)
-                .every(this.refreshRateTicks + 1)
+                .after(12)
+                .every(this.refreshRateTicks + 2)
                 .run(this::reloadView);
     }
-
-
-
-    public abstract void setComparator();
 
     public abstract void reloadCache();
 

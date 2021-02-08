@@ -3,12 +3,21 @@ package me.aiglez.lonkskit.abilities.itembased;
 import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
+import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.aiglez.lonkskit.utils.Various;
+import me.lucko.helper.Events;
 import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
+import me.lucko.helper.metadata.Metadata;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.TNTPrimed;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class KamikazeAbility extends ItemStackAbility {
 
@@ -28,26 +37,31 @@ public class KamikazeAbility extends ItemStackAbility {
 
         applyEffects(localPlayer);
 
-        WorldProvider.KP_WORLD.createExplosion(
-                localPlayer.getLocation(),
-                0F,
-                false,
-                false,
-                localPlayer.toBukkit()
-        );
-        final double damage = Math.min(localPlayer.toBukkit().getHealth(), 0.5D);
-        localPlayer.msg("&4(Kamikaze - Debug) &cYou have exploded! (HP left: {0})", damage);
+//            WorldProvider.KP_WORLD.createExplosion(
+//                    localPlayer.getLocation(),
+//                    0F,
+//                    false,
+//                    false,
+//                    localPlayer.toBukkit()
+//            );
+        TNTPrimed tntPrimed = WorldProvider.KP_WORLD.spawn(localPlayer.getLocation(), TNTPrimed.class,tnt -> {
+            tnt.setFuseTicks(2);
+            tnt.setYield(4);
+            Metadata.provideForEntity(tnt).put(MetadataProvider.KAMIKAZ,true);
+        });
 
-        // damage
+        final double damage = Math.max(localPlayer.toBukkit().getHealth(), 0.5D);
+        localPlayer.msg("&4(Kamikaze - Debug) &cYou have exploded! (HP left: {0})", damage);
         localPlayer.toBukkit().setHealth(0D);
+        // damage
         WorldProvider.KP_WORLD.getNearbyPlayers(localPlayer.getLocation(),
                 configuration.getNode("radius", "x-axis").getDouble(5D),
                 configuration.getNode("radius", "y-axis").getDouble(5D),
                 configuration.getNode("radius", "z-axis").getDouble(5D))
                 .stream().filter(player -> !player.getUniqueId().equals(localPlayer.getUniqueId()))
-                .forEach(player -> {
-                    Various.damage(LocalPlayer.get(player), damage, true);
-                });
+                .forEach(player -> player.setHealth(player.getHealth() - damage < 0.5 ? 0 :  player.getHealth() - damage ));
+
+
         // damage
 
         localPlayer.msg(configuration.getNode("messages", "exploded"));
@@ -59,5 +73,14 @@ public class KamikazeAbility extends ItemStackAbility {
     }
 
     @Override
-    public void registerListeners() { }
+    public void registerListeners() {
+        Events.subscribe(EntityDamageByEntityEvent.class)
+                .filter(e -> e.getDamager() instanceof TNTPrimed)
+                .filter(e -> e.getEntity() instanceof Player)
+                .filter(e -> Metadata.getForEntity(e.getDamager()).get().has(MetadataProvider.KAMIKAZ))
+                .handler(e -> {
+                    e.setCancelled(true);
+                    e.getEntity().sendMessage("WELL");
+                });
+    }
 }

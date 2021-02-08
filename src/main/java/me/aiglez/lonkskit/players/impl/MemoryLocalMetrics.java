@@ -40,12 +40,8 @@ public class MemoryLocalMetrics implements LocalMetrics {
     public void incrementDeathsCount() { this.deaths++; }
 
     @Override
-    public double getKDR() {
-        try {
-            return this.kills / this.deaths;
-        } catch (Exception e) {
-            return 0.0;
-        }
+    public float getKDR() {
+        return getKillsCount() / getDeathsCount();
     }
 
     @Override

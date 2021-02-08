@@ -14,6 +14,7 @@ import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.cooldown.Cooldown;
 import me.lucko.helper.cooldown.CooldownMap;
 import me.lucko.helper.function.chain.Chain;
+import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Material;
@@ -25,21 +26,17 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public abstract class ItemStackAbility implements Ability, Listener {
 
     private final ItemStack item;
-
+    public static final List<Material> ABILITY_ITEMS = new ArrayList<>();
     protected final String name;
     protected final CooldownMap<LocalPlayer> cooldown;
     protected final Set<PotionEffect> potionEffects;
-
     private final YAMLConfigurationLoader configurationLoader;
     protected ConfigurationNode configuration;
 
@@ -94,6 +91,8 @@ public abstract class ItemStackAbility implements Ability, Listener {
                     .apply(builder -> enchants.forEach(builder::enchant))
                     .breakable(false)
                     .build();
+            ABILITY_ITEMS.add(this.item.getType());
+
         } catch (ObjectMappingException e) {
             throw new AbilityRegisterException(name, "Couldn't map an object (LIST) // " + e.getMessage());
         }

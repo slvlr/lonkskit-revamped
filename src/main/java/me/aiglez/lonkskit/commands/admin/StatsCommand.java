@@ -4,6 +4,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import me.aiglez.lonkskit.messages.Messages;
 import me.aiglez.lonkskit.players.LocalPlayer;
+import me.aiglez.lonkskit.players.LocalRent;
 import me.aiglez.lonkskit.players.OfflineLocalPlayer;
 
 @CommandAlias("%main_command")

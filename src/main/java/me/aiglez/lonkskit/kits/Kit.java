@@ -43,4 +43,10 @@ public interface Kit {
     List<ItemStack> getInventoryContent();
 
     Map<EquipmentSlot, ItemStack> getInventoryArmors();
+
+    boolean isCustom();
+
+    void incrementUses();
+
+    void decrementUses();
 }

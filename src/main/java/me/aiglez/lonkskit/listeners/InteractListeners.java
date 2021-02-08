@@ -1,20 +1,31 @@
 package me.aiglez.lonkskit.listeners;
 
 import me.aiglez.lonkskit.KitPlugin;
+import me.aiglez.lonkskit.abilities.ItemStackAbility;
+import me.aiglez.lonkskit.commands.MainCommand;
 import me.aiglez.lonkskit.controllers.Controllers;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.struct.HotbarItemStack;
+import me.aiglez.lonkskit.utils.Various;
+import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.aiglez.lonkskit.utils.items.ItemStackNBT;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+
+import java.util.Arrays;
+import java.util.Objects;
 
 public class InteractListeners implements Listener {
 
@@ -25,29 +36,39 @@ public class InteractListeners implements Listener {
     // -------------------------------------------- //
     // BLOCK ITEM MOVING
     // -------------------------------------------- //
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onInventoryMove(InventoryClickEvent e) {
+
         if(!(e.getWhoClicked() instanceof Player) || e.getClickedInventory() == null) return;
         final LocalPlayer localPlayer = LocalPlayer.get((Player) e.getWhoClicked());
         if(!localPlayer.isValid() || !(e.getClickedInventory() instanceof PlayerInventory)) return;
-
-        if(e.getCurrentItem() != null && isHotbarSigned(e.getCurrentItem())) {
-            e.setResult(Event.Result.DENY);
-            e.setCancelled(true);
-            return;
+        if (e.getInventory().getType() == InventoryType.ENDER_CHEST){
+            if (e.getCurrentItem() != null){
+                if (!Various.isThrowable(e.getCurrentItem())){
+                    e.setCancelled(true);
+                    return;
+                }
+            }
         }
+            if (e.getInventory().getType() == InventoryType.ENDER_CHEST || e.getInventory().getType() == InventoryType.CHEST) {
+                if (e.getCurrentItem() != null && isHotbarSigned(e.getCurrentItem())) {
+                    e.setResult(Event.Result.DENY);
+                    e.setCancelled(true);
+                    return;
+                }
 
-        if(e.getCursor() != null && isHotbarSigned(e.getCursor())) {
-            e.setResult(Event.Result.DENY);
-            e.setCancelled(true);
-            return;
-        }
+                if (e.getCursor() != null && isHotbarSigned(e.getCursor())) {
+                    e.setResult(Event.Result.DENY);
+                    e.setCancelled(true);
+                    return;
+                }
 
-        final ItemStack hotbar = (e.getClick() == org.bukkit.event.inventory.ClickType.NUMBER_KEY) ? e.getWhoClicked().getInventory().getItem(e.getHotbarButton()) : e.getCurrentItem();
-        if(hotbar != null && isHotbarSigned(hotbar)) {
-            e.setResult(Event.Result.DENY);
-            e.setCancelled(true);
-        }
+                final ItemStack hotbar = (e.getClick() == org.bukkit.event.inventory.ClickType.NUMBER_KEY) ? e.getWhoClicked().getInventory().getItem(e.getHotbarButton()) : e.getCurrentItem();
+                if (hotbar != null && isHotbarSigned(hotbar)) {
+                    e.setResult(Event.Result.DENY);
+                    e.setCancelled(true);
+                }
+            }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -59,35 +80,34 @@ public class InteractListeners implements Listener {
         if(isHotbarSigned(e.getOldCursor())) {
             e.setResult(Event.Result.DENY);
             e.setCancelled(true);
+            return;
         }
 
         if(e.getCursor() != null && isHotbarSigned(e.getCursor())) {
             e.setResult(Event.Result.DENY);
             e.setCancelled(true);
+            return;
         }
 
 
     }
 
-    // -------------------------------------------- //
-    // HOTBAR ITEMS
-    // -------------------------------------------- //
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onInteract(PlayerInteractEvent e) {
-        final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
-        if(!localPlayer.isValid() || !e.hasItem()) return;
-        final ItemStack item = e.getItem();
-
-        if(isHotbarSigned(item)) {
-            for (HotbarItemStack hotbarItem : Controllers.PLAYER.getHotbarItems()) {
-                if(hotbarItem.getItemStack().isSimilar(item)) {
-                    localPlayer.openKitSelector();
-                    return;
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onSoupHealing(PlayerInteractEvent event) {
+        if (event.getItem() != null && event.getItem().getType() != Material.AIR) {
+            if (event.getItem().getType() == Material.MUSHROOM_STEW && (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
+                if (event.getPlayer().getHealth() == 20D) {
+                    event.getPlayer().sendMessage("[Debug] You're full HP");
+                } else if (event.getPlayer().getHealth() + KitPlugin.getSingleton().getConf().getNode("soup-healing").getInt() <= 20.0D) {
+                    event.getPlayer().setHealth(event.getPlayer().getHealth() + (double) KitPlugin.getSingleton().getConf().getNode("soup-healing").getInt());
+                    event.getPlayer().sendMessage("[Debug] Added " + KitPlugin.getSingleton().getConf().getNode("soup-healing").getInt());
+                    event.getPlayer().getInventory().setItemInMainHand(null);
+                } else {
+                    event.getPlayer().setHealth(20.0D);
+                    event.getPlayer().getInventory().setItemInMainHand(null);
                 }
             }
-            e.setCancelled(true);
         }
-
     }
 
     private boolean isHotbarSigned(ItemStack item) {

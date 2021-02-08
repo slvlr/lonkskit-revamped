@@ -12,6 +12,7 @@ import me.lucko.helper.metadata.Metadata;
 import me.lucko.helper.metadata.SoftValue;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 
@@ -30,12 +31,12 @@ public class HulkAbility extends FunctionalAbility {
 
     @Override
     public void registerListeners() {
-        Events.subscribe(PlayerInteractEntityEvent.class)
+        Events.subscribe(PlayerInteractEntityEvent.class, EventPriority.HIGHEST)
                 .filter(AbilityPredicates.hasAbility(this))
                 .handler(e -> {
+
                     final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
                     final Entity rightClicked = e.getRightClicked();
-
                     final Player bukkit = localPlayer.toBukkit();
                     Logger.debug("Fired");
                     if(bukkit.getPassengers().isEmpty()) {

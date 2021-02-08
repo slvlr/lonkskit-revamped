@@ -4,6 +4,10 @@ import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.abilities.Ability;
 import me.aiglez.lonkskit.abilities.functional.*;
 import me.aiglez.lonkskit.abilities.functional.johan.*;
+import me.aiglez.lonkskit.abilities.functional.johan.disguises.CreeperAbility;
+import me.aiglez.lonkskit.abilities.functional.johan.disguises.MooshroomAbility;
+import me.aiglez.lonkskit.abilities.functional.johan.disguises.SnowmanAbility;
+import me.aiglez.lonkskit.abilities.functional.johan.disguises.SpiderAbility;
 import me.aiglez.lonkskit.abilities.itembased.*;
 import me.aiglez.lonkskit.abilities.itembased.johan.*;
 import me.aiglez.lonkskit.exceptions.AbilityFileNotFoundException;
@@ -39,7 +43,7 @@ public class AbilityFactoryImpl implements AbilityFactory {
 
     @Override
     public void registerAbilities() {
-        int aiglez = 0, imad = 0;
+        int aiglez = 0, johan = 0;
         try {
             Logger.debug("[Abilities] registering functional abilities...");
             registerAbility("hothead", new HotheadAbility(yamlConfigurationLoader("hothead")));
@@ -58,7 +62,16 @@ public class AbilityFactoryImpl implements AbilityFactory {
             registerAbility("killer", new KillerAbility(yamlConfigurationLoader("killer")));
             registerAbility("recall", new RecallAbility(yamlConfigurationLoader("recall")));
             registerAbility("turtle", new TurtleAbility(yamlConfigurationLoader("turtle")));
-            imad += 7;
+            registerAbility("spider",new SpiderAbility(yamlConfigurationLoader("spider")));
+            registerAbility("cowboy",new CowboyAbility(yamlConfigurationLoader("cowboy")));
+            registerAbility("tele",new TeleAbility(yamlConfigurationLoader("tele")));
+            registerAbility("assassin",new Assassin(yamlConfigurationLoader("assassin")));
+            registerAbility("snowman",new SnowmanAbility(yamlConfigurationLoader("snowman")));
+            registerAbility("creeper",new CreeperAbility(yamlConfigurationLoader("creeper")));
+            registerAbility("mooshroom",new MooshroomAbility(yamlConfigurationLoader("mooshroom")));
+            registerAbility("spartan",new SpartanAbility(yamlConfigurationLoader("spartan")));
+            registerAbility("demoman",new DemomanAbility(yamlConfigurationLoader("demoman")));
+            johan += 15;
             // Johan - end
 
             Logger.debug("[Abilities] registering itemstack abilities...");
@@ -93,7 +106,7 @@ public class AbilityFactoryImpl implements AbilityFactory {
             registerAbility("snake", new SnakeAbility(yamlConfigurationLoader("snake")));
             registerAbility("wraith", new WraithAbility(yamlConfigurationLoader("wraith")));
             registerAbility("sonic", new SonicAbility(yamlConfigurationLoader("sonic")));
-            imad += 8;
+            johan += 8;
             // johan - end
 
         } catch (AbilityRegisterException | AbilityFileNotFoundException | IOException e) {
@@ -101,7 +114,7 @@ public class AbilityFactoryImpl implements AbilityFactory {
         }
 
         Logger.fine(ChatColor.GREEN + "Registered a total of {0} abilities. (aiglez: {1} | johan: {2})",
-                abilities.size(), aiglez, imad
+                abilities.size(), aiglez, johan
         );
     }
 
@@ -115,7 +128,7 @@ public class AbilityFactoryImpl implements AbilityFactory {
         }
     }
 
-    private ConfigurationNode getFileByName(String name) {
+    public static ConfigurationNode getFileByName(String name) {
         final File abilityFile = new File(KitPlugin.getSingleton().getDataFolder() + File.separator + "abilities", name + ".yml");
         if(!abilityFile.exists()) {
             throw new AbilityFileNotFoundException(name);

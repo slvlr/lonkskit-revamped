@@ -14,6 +14,8 @@ public interface LocalRent {
 
     void incrementUses();
 
+    void decrementUses();
+
     boolean isValid();
 
     default int getLeftUses() {

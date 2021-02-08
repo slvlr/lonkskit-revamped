@@ -86,7 +86,7 @@ public class PotionEffectBuilder {
 
     public PotionEffectBuilder amplifier(int amplifier) {
         Preconditions.checkArgument(amplifier > 0, "Potion amplifier may not be inferior to 1");
-        this.amplifier = amplifier;
+        this.amplifier = amplifier - 1;
         return this;
     }
 

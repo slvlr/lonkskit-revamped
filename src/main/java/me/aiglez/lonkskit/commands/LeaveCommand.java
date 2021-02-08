@@ -10,10 +10,13 @@ import me.aiglez.lonkskit.messages.Messages;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.Logger;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 /**
  * Handles the leave command
  */
-@CommandAlias("leave|hub|spawn")
+@CommandAlias("leave|hub|lobby")
 public class LeaveCommand extends BaseCommand {
 
     @Default
@@ -33,13 +36,22 @@ public class LeaveCommand extends BaseCommand {
             Logger.warn("The player {0} tried to go to the hub but he is not safe", localPlayer.getLastKnownName());
             return;
         }
+        if (MainCommand.check(localPlayer)){
+            localPlayer.msg("&4You can't teleport to any other worlds cause you have a 'Throwable' item");
+            return;
+        }
+        if (localPlayer.hasSelectedKit()){
+            localPlayer.msg("First clear your kit ");
+            return;
+        }
         localPlayer.toBukkit().teleportAsync(WorldProvider.MAIN_WORLD.getSpawnLocation()).whenComplete((result, throwable) -> {
             if(result) {
                 localPlayer.msg(Messages.COMMAND_LEAVE_SUCCESSFULLY);
-
+                localPlayer.setInKP(false);
                 localPlayer.setSafeStatus(true);
                 localPlayer.setInArena(false);
                 localPlayer.getInventory().clear();
+                localPlayer.setSelectedKit(null);
 
             } else {
                 localPlayer.msg(Messages.COMMAND_LEAVE_TELEPORT_ISSUE);

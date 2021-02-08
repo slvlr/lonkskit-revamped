@@ -58,4 +58,9 @@ public interface LocalPlayer extends OfflineLocalPlayer, LocalMessager, LocalRen
         if(LonksKitProvider.getPlayerFactory() == null) throw new UnsupportedOperationException("The player factory isn't initialized yet!");
         return LonksKitProvider.getPlayerFactory().getLocalPlayer(player);
     }
+
+    boolean wasInKP();
+
+    void setInKP(boolean value);
+
 }

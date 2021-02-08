@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
 public class MemoryLocalPlayer implements LocalPlayer {
 
     private final OfflineLocalPlayer offline;
-
+    private boolean inKP;
     private Player bukkit;
     private Kit selectedKit;
     private boolean safe, inArena;
@@ -145,7 +145,8 @@ public class MemoryLocalPlayer implements LocalPlayer {
         if(isOnline() && getInventory().isEmpty()) {
             setSafeStatus(true);
             for (HotbarItemStack hotbarItem : Controllers.PLAYER.getHotbarItems()) {
-                getInventory().addItem(hotbarItem.getItemStack());
+                if (!getInventory().contains(hotbarItem.getItemStack()))
+                    getInventory().addItem(hotbarItem.getItemStack());
             }
             msg(Messages.PLAYER_SAFESTATUS_UPDATED);
         }
@@ -184,6 +185,16 @@ public class MemoryLocalPlayer implements LocalPlayer {
     public MetadataMap getMetadata() {
         Preconditions.checkNotNull(this.bukkit, "player is offline");
         return Metadata.provideForPlayer(this.bukkit);
+    }
+
+    @Override
+    public boolean wasInKP() {
+        return this.inKP;
+    }
+
+    @Override
+    public void setInKP(boolean value){
+        this.inKP = value;
     }
 
     @Override

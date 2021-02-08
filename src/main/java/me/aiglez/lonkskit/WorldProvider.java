@@ -13,6 +13,7 @@ public class WorldProvider {
     @Nonnull
     public static final World KP_WORLD = Helper.world("kitpvp").orElseThrow(() -> new IllegalStateException("Couldn't find any world matching the name [kitpvp]"));
     public static final World MAIN_WORLD = Bukkit.getWorld("world");
+    public static final World MAIN = Helper.world("towny").orElse(Helper.world("Towny").orElseThrow(() -> new IllegalStateException("Couldn't find any world matching the name [towny/Towny]")));
 
     public static boolean inKPWorld(LocalPlayer localPlayer) {
         Preconditions.checkNotNull(localPlayer, "local player may not be null");

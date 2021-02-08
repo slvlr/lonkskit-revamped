@@ -11,11 +11,15 @@ public class HotbarItemStack {
 
     private final ItemStack item;
     private final List<String> playerCommands, consoleCommands;
+    private final String name;
+    private final int order;
 
-    public HotbarItemStack(final ItemStack item, List<String> playerCommands, List<String> consoleCommands) {
+    public HotbarItemStack(final ItemStack item, List<String> playerCommands, List<String> consoleCommands, String name, int order) {
+        this.order = order;
         Preconditions.checkNotNull(item, "item may not be null");
         Preconditions.checkNotNull(playerCommands, "player commands may not be null");
         Preconditions.checkNotNull(consoleCommands, "console commands may not be null");
+        this.name = name;
         this.item = item;
         this.playerCommands = playerCommands;
         this.consoleCommands = consoleCommands;
@@ -33,5 +37,9 @@ public class HotbarItemStack {
     }
 
     public ItemStack getItemStack() { return item; }
+
+    public int getOrder() {
+        return order;
+    }
 }
 

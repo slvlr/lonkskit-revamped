@@ -81,7 +81,7 @@ public class KitFactoryImpl implements KitFactory {
             }
 
             final ConfigurationNode node = ConfigFactory.yaml().load(file);
-            boolean registerResult = tryRegisterKit(getKitByNode(node).get());
+            boolean registerResult = tryRegisterKit(getKitByNode(node). get());
             if(!registerResult) {
                 Logger.warn("Couldn't load kit at " + file.getName());
             }
@@ -134,6 +134,7 @@ public class KitFactoryImpl implements KitFactory {
         final boolean rentable = node.getNode("rent", "rentable").getBoolean(false);
         final int rentCost = node.getNode("rent", "cost").getInt(0);
         final int usesPerRent = node.getNode("rent", "uses").getInt(0);
+        final boolean isCustom = node.getNode("isCustom").getBoolean();
 
         Set<PotionEffect> potionEffects = null;
         try {
@@ -173,7 +174,7 @@ public class KitFactoryImpl implements KitFactory {
                 rentable,
                 rentCost,
                 usesPerRent,
-                potionEffects,
+                isCustom, potionEffects,
                 abilities
         );
 

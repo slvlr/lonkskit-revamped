@@ -23,8 +23,8 @@ public class MemoryKit implements Kit {
 
     private final boolean rentable;
     private final int     rentCost;
-    private final int     usesPerRent;
-
+    private int     usesPerRent;
+    private final boolean isCustom;
     private final Set<PotionEffect> potionEffects;
     private final Set<Ability>      abilities;
 
@@ -33,8 +33,8 @@ public class MemoryKit implements Kit {
 
     public MemoryKit(final String backendName, final String displayName, final List<ItemStack> inventoryContent,
                      final Map<EquipmentSlot, ItemStack> inventoryArmor, final KitSelectorHolder selectorHolder,
-                     final boolean rentable, final int rentCost, final int usesPerCost, final Set<PotionEffect> potionEffects, final Set<Ability> abilities) {
-
+                     final boolean rentable, final int rentCost, final int usesPerCost, boolean isCustom, final Set<PotionEffect> potionEffects, final Set<Ability> abilities) {
+        this.isCustom = isCustom;
         Preconditions.checkNotNull(backendName);
         Preconditions.checkNotNull(displayName);
         Preconditions.checkNotNull(inventoryContent);
@@ -118,6 +118,19 @@ public class MemoryKit implements Kit {
 
     @Override
     public Map<EquipmentSlot, ItemStack> getInventoryArmors() { return Collections.unmodifiableMap(this.inventoryArmor); }
+
+    @Override
+    public boolean isCustom() {
+        return this.isCustom;
+    }
+
+    @Override
+    public void incrementUses() { this.usesPerRent++; }
+
+    @Override
+    public void decrementUses() {
+        this.usesPerRent--;
+    }
 
     @Override
     public String toString() {
