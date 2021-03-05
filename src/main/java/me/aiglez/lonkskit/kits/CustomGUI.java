@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class CustomGUI extends PaginatedGui {
     private static final PaginatedGuiBuilder SETTINGS;
     static {
-        final MenuScheme scheme = new MenuScheme(StandardSchemeMappings.EMPTY);
+        final MenuScheme scheme = new MenuScheme(StandardSchemeMappings.HARDENED_CLAY);
         final List<Integer> itemSlots = new MenuScheme()
                 .mask("111111111")
                 .mask("111111111")
@@ -111,13 +111,9 @@ public class CustomGUI extends PaginatedGui {
                                                 localPlayer.msg(Messages.SELECTOR_RENT_FAILED);
                                                 return;
                                             }
-
                                             final LocalRent newRent = LocalRent.of(localPlayer, kit);
                                             localPlayer.addRent(newRent);
-
                                             localPlayer.msg(Messages.SELECTOR_RENT_RENTED, kit.getDisplayName(), kit.getRentCost(), kit.getUsesPerRent());
-                                            localPlayer.setSelectedKit(kit);
-
                                             gui.close();
                                         } else {
                                             localPlayer.msg(Messages.SELECTOR_NO_ACCESS);

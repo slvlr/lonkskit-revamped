@@ -32,7 +32,7 @@ public class Assassin extends FunctionalAbility {
                         AtomicInteger i = new AtomicInteger(getConfiguration().getNode("charge-time").getInt());
                         Schedulers.sync().runRepeating(t -> {
                             if (localPlayer.toBukkit().isSneaking()) {
-                                if (i.get() <= 0) {
+                                if (i.get() < 0) {
                                     applyEffects(localPlayer);
                                     localPlayer.msg("&aPotion effects Activated!");
                                     t.stop();
@@ -45,7 +45,6 @@ public class Assassin extends FunctionalAbility {
                                 t.close();
                             }
                             i.decrementAndGet();
-
                         },0L,20L);
                 });
     }

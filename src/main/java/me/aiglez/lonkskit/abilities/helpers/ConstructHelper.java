@@ -26,7 +26,7 @@ public class ConstructHelper {
         int maxX, maxY, maxZ;
 
         minY = base.getY();
-        maxY = minY + WALL_TALL - 1;
+        maxY = minY + WALL_TALL + 1;
 
         final int direction = Math.round(yaw / 90f);
         if(direction % 2 == 0) { // Direction = (0 || 2)
@@ -46,17 +46,27 @@ public class ConstructHelper {
                 for (int z = minZ; z <= maxZ; z++) {
                     final Block block = WorldProvider.KP_WORLD.getBlockAt(x, y, z);
                     blockCount++;
-                    if (canBuildOnTop(block, null)) {
-                        blocks.add(block);
-                    } else {
-                        Logger.debug("[WallBuilder] You can't build there, found block type {0}", block.getType());
-                    }
+                    blocks.add(block);
+//                    if (canBuildOnTop(block, null)) {
+//
+//                    } else {
+//                        Logger.debug("[WallBuilder] You can't build there, found block type {0}", block.getType());
+//                    }
                 }
             }
         }
+
         Logger.debug("[WallBuilder] Block Count: {0}  ||  Buildable Blocks Count {1}", blockCount, blocks.size());
         if(blockCount == blocks.size()) {
-            blocks.forEach(block -> block.setType(WALL_MATERIAL));
+            blocks.stream().filter(block -> canBuildOnTop(block,Material.AIR)).forEach(block -> block.setType(WALL_MATERIAL));
+            Schedulers
+                    .sync()
+                    .runLater(() -> {
+                        blocks.stream().filter(block -> canBuildOnTop(block,Material.AIR)).forEach(block -> {
+                            block.setType(Material.AIR);
+                            Schedulers.sync().runLater(() -> block.getState().update(),2L);
+                        });
+                    },200L);
             return true;
         } else {
             return false;
@@ -67,8 +77,6 @@ public class ConstructHelper {
         final int x = location.getBlockX();
         final int y = location.getBlockY();
         final int z = location.getBlockZ();
-
-        if(!canBuildDome(x, y, z)) return false;
 
         //Bottom
         for(int i = x-1; i <= x+1; i++)
@@ -127,6 +135,7 @@ public class ConstructHelper {
                     final Block block = WorldProvider.KP_WORLD.getBlockAt(i, j, k);
                     if(block.getType() == DOME_MATERIAL)
                         block.setType(Material.AIR);
+                    Schedulers.sync().runLater(() -> block.getState().update(),2L);
                 }
             //Top
             for(int i = x-1; i <= x+1; i++)
@@ -135,6 +144,7 @@ public class ConstructHelper {
                     final Block block = WorldProvider.KP_WORLD.getBlockAt(i, j, k);
                     if(block.getType() == DOME_MATERIAL)
                         block.setType(Material.AIR);
+                    Schedulers.sync().runLater(() -> block.getState().update(),2L);
                 }
             //Side 1
             for(int i = x-1; i <= x+1; i++)
@@ -143,6 +153,7 @@ public class ConstructHelper {
                     final Block block = WorldProvider.KP_WORLD.getBlockAt(i, j, k);
                     if(block.getType() == DOME_MATERIAL)
                         block.setType(Material.AIR);
+                    Schedulers.sync().runLater(() -> block.getState().update(),2L);
                 }
             //Side 3
             for(int i = x-1; i <= x+1; i++)
@@ -151,6 +162,7 @@ public class ConstructHelper {
                     final Block block = WorldProvider.KP_WORLD.getBlockAt(i, j, k);
                     if(block.getType() == DOME_MATERIAL)
                         block.setType(Material.AIR);
+                    Schedulers.sync().runLater(() -> block.getState().update(),2L);
                 }
             //Side 2
             for(int k = z-1; k <= z+1; k++)
@@ -159,6 +171,7 @@ public class ConstructHelper {
                     final Block block = WorldProvider.KP_WORLD.getBlockAt(i, j, k);
                     if(block.getType() == DOME_MATERIAL)
                         block.setType(Material.AIR);
+                    Schedulers.sync().runLater(() -> block.getState().update(),2L);
                 }
             //Side 4
             for(int k = z-1; k <= z+1; k++)
@@ -167,6 +180,7 @@ public class ConstructHelper {
                     final Block block = WorldProvider.KP_WORLD.getBlockAt(i, j, k);
                     if(block.getType() == DOME_MATERIAL)
                         block.setType(Material.AIR);
+                    Schedulers.sync().runLater(() -> block.getState().update(),2L);
                 }
         }, wait);
 

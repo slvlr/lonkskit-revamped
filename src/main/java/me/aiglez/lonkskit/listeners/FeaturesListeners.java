@@ -1,51 +1,39 @@
 package me.aiglez.lonkskit.listeners;
 
 import com.google.common.collect.Maps;
-import lombok.Getter;
+import com.google.common.reflect.TypeToken;
 import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.abilities.Ability;
-import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
-import me.aiglez.lonkskit.abilities.factory.AbilityFactory;
 import me.aiglez.lonkskit.abilities.factory.AbilityFactoryImpl;
-import me.aiglez.lonkskit.abilities.functional.johan.disguises.SpiderAbility;
 import me.aiglez.lonkskit.abilities.itembased.DemomanAbility;
-import me.aiglez.lonkskit.abilities.itembased.DomeBuilderAbility;
-import me.aiglez.lonkskit.abilities.itembased.johan.SonicAbility;
-import me.aiglez.lonkskit.abilities.itembased.johan.TeleAbility;
 import me.aiglez.lonkskit.commands.MainCommand;
 import me.aiglez.lonkskit.messages.Replaceable;
 import me.aiglez.lonkskit.players.LocalPlayer;
-import me.aiglez.lonkskit.utils.MetadataProvider;
-import me.lucko.helper.Helper;
+import me.aiglez.lonkskit.utils.Various;
 import me.lucko.helper.Schedulers;
-import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
+import me.lucko.helper.config.objectmapping.ObjectMappingException;
 import me.lucko.helper.cooldown.Cooldown;
 import me.lucko.helper.cooldown.CooldownMap;
-import me.lucko.helper.metadata.Metadata;
-import org.apache.commons.compress.utils.Lists;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.entity.Spider;
+import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class FeaturesListeners implements Listener {
     public FeaturesListeners(KitPlugin plugin){plugin.registerListener(this);}
     public static final Material teleM = Material.matchMaterial(AbilityFactoryImpl.getFileByName("tele").getNode("item", "material").getString("STONE"));
     private static final CooldownMap<LocalPlayer> cooldown = CooldownMap.create(Cooldown.of(AbilityFactoryImpl.getFileByName("tele").getNode("cooldown").getInt(10),TimeUnit.SECONDS));
-    private static final Ability demo = Ability.get("demoman");
-    private static final Map<LocalPlayer,Integer> killstreaks = Maps.newHashMap();
+    public static final Map<Block,LocalPlayer> demoBlocks = new HashMap<>();
+    public static final Map<LocalPlayer,Integer> killstreaks = Maps.newHashMap();
     //----------------------------------------//
     //     BUILD/BREAK BLOCKS                 //
     //----------------------------------------//
@@ -74,7 +62,18 @@ public class FeaturesListeners implements Listener {
                                 });
                             }
                         }
-                        e.getPlayer().sendMessage(ChatColor.BOLD + "" + ChatColor.DARK_AQUA + "You Can't Place Ability Items");
+                        if (e.getBlock().getType() == Material.STONE_PRESSURE_PLATE && LocalPlayer.get(e.getPlayer()).hasSelectedKit()) {
+                            if (LocalPlayer.get(e.getPlayer()).getNullableSelectedKit().hasAbility(DemomanAbility.INSTANCE)) {
+                                System.out.println(e.getBlockAgainst().getType());
+                                if (Various.assertNotSurroundedWithCactus(e.getBlock()) && DemomanAbility.getInterdit().contains(e.getBlockAgainst().getType())) {
+                                    demoBlocks.put(e.getBlock(),LocalPlayer.get(e.getPlayer()));
+                                    e.getPlayer().sendMessage("block added to the list");
+                                }else e.setCancelled(true);
+                            }else e.setCancelled(true);
+                        }else {
+                            e.getPlayer().sendMessage(ChatColor.BOLD + "" + ChatColor.DARK_AQUA + "You Can't Place Ability Items");
+                            e.setCancelled(true);
+                        }
                     }else {
                         LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
                         if (MainCommand.builders.containsKey(localPlayer)){
@@ -91,9 +90,11 @@ public class FeaturesListeners implements Listener {
                         e.getPlayer().sendMessage(ChatColor.BOLD + "" + ChatColor.DARK_AQUA + "You don't have permission to build blocks");
                         return;
                     }else {
-                        if (localPlayer.getNullableSelectedKit().hasAbility(demo)){
-                            Metadata.provideForBlock(e.getBlock()).put(MetadataProvider.DEMO_BLOCK,true);
-                        }else e.setCancelled(true);
+                        if (Various.assertNotSurroundedWithCactus(e.getBlock())) {
+                            demoBlocks.put(e.getBlock(),LocalPlayer.get(e.getPlayer()));
+                            e.getPlayer().sendMessage("block added to the list");
+                        }
+                        else e.setCancelled(true);
                     }
                 }
                 if (!MainCommand.builders.get(localPlayer)) {
@@ -102,9 +103,11 @@ public class FeaturesListeners implements Listener {
                         e.getPlayer().sendMessage(ChatColor.BOLD + "" + ChatColor.DARK_AQUA + "You don't have permission to build blocks");
                         return;
                     }else {
-                        if (localPlayer.getNullableSelectedKit().hasAbility(demo)){
-                            Metadata.provideForBlock(e.getBlock()).put(MetadataProvider.DEMO_BLOCK,true);
-                        }else e.setCancelled(true);
+                        if (Various.assertNotSurroundedWithCactus(e.getBlock())) {
+                            demoBlocks.put(e.getBlock(),LocalPlayer.get(e.getPlayer()));
+                            e.getPlayer().sendMessage("block added to the list");
+                        }
+                        else e.setCancelled(true);
                     }
                 }
                 if (ItemStackAbility.ABILITY_ITEMS.contains(e.getBlock().getType())) {
@@ -112,8 +115,12 @@ public class FeaturesListeners implements Listener {
                         e.setCancelled(true);
                         e.getPlayer().sendMessage(ChatColor.BOLD + "" + ChatColor.DARK_AQUA + "You Can't Place Ability Items");
                     }else {
-                        if (localPlayer.getNullableSelectedKit().hasAbility(demo)){
-                            Metadata.provideForBlock(e.getBlock()).put(MetadataProvider.DEMO_BLOCK,true);
+                        if (localPlayer.getNullableSelectedKit().hasAbility(DemomanAbility.INSTANCE)){
+                            if (Various.assertNotSurroundedWithCactus(e.getBlock()) && DemomanAbility.getInterdit().contains(e.getBlockAgainst().getType())) {
+                                demoBlocks.put(e.getBlock(),LocalPlayer.get(e.getPlayer()));
+                                e.getPlayer().sendMessage("block added to the list");
+                            }
+                            else e.setCancelled(true);
                         }else e.setCancelled(true);
                     }
                     }
@@ -170,7 +177,7 @@ public class FeaturesListeners implements Listener {
                 }
                 if (killstreaks.containsKey(victim)){
                     if (killstreaks.get(victim) >= 5){
-                        WorldProvider.KP_WORLD.getPlayers().forEach(player -> player.sendMessage(ChatColor.translateAlternateColorCodes('&',Replaceable.handle("&6[&bLonksKits&6]&a {0} ended {1}'s killstreak of {2}!",killer.getLastKnownName(),victim.getLastKnownName(),killstreaks.get(victim)))));
+                        WorldProvider.KP_WORLD.getPlayers().forEach(player -> player.sendMessage(ChatColor.translateAlternateColorCodes('&',Replaceable.handle("&7{0} &aended &c{1}'s &akillstreak of {2} using &b{3}!",killer.getLastKnownName(),victim.getLastKnownName(),killstreaks.get(victim),killer.getNullableSelectedKit() == null ? "Without Kit" : killer.getNullableSelectedKit().getDisplayName()))));
                         killstreaks.replace(victim,0);
                     }
                 }else {
@@ -178,7 +185,16 @@ public class FeaturesListeners implements Listener {
                 }
                 killstreaks.replace(killer,killstreaks.get(killer) + 1);
                 killstreaks.replace(victim,0);
+                if (demoBlocks.containsValue(victim)){
+                    FeaturesListeners.demoBlocks.entrySet().stream().filter(a -> a.getValue() == victim).forEach(block -> {
+                        Schedulers.sync().runLater(() -> {
+                            block.getKey().setBlockData(Material.AIR.createBlockData());
+                            Schedulers.sync().runLater(() -> block.getKey().getState().update(true),2L);
+                        },3L);
+                    });
+                }
             }
         }
     }
+
 }

@@ -7,7 +7,7 @@ public class Controllers {
     public static final LeaderboardController LEADERBOARD = new LeaderboardController();
 
     public static void initControllers() {
-        PLAYER.loadHotbarItems();
         LEADERBOARD.makePointsLeaderboard();
+        PLAYER.loadHotbarItems();
     }
 }

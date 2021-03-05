@@ -1,10 +1,10 @@
 package me.aiglez.lonkskit.abilities.factory;
 
 import me.aiglez.lonkskit.abilities.Ability;
-
 import java.util.Optional;
 import java.util.Set;
 
+@SuppressWarnings("ALL")
 public interface AbilityFactory {
 
     Optional<Ability> getAbility(String name);

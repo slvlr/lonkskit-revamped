@@ -11,16 +11,14 @@ import me.lucko.helper.event.filter.EventFilters;
 import me.lucko.helper.metadata.ExpiringValue;
 import me.lucko.helper.metadata.Metadata;
 import me.lucko.helper.metadata.SoftValue;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityShootBowEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 public class SpyAbility extends ItemStackAbility {
@@ -62,7 +60,7 @@ public class SpyAbility extends ItemStackAbility {
                                 }
                                 if (e.getProjectile().getLocation().getY() <= 0) e.getEntity().setHealth(0);
                             }, 2L);
-                    Schedulers.async()
+                    Schedulers.sync()
                             .runRepeating(t -> {
                                 if (arrow.isDead() || !arrow.isValid()){
                                     t.stop();
@@ -85,8 +83,11 @@ public class SpyAbility extends ItemStackAbility {
                 });
 
         Events.subscribe(PlayerMoveEvent.class)
-                .filter(e -> e.getPlayer().getLocation().getY() <= 0)
-                .handler(e -> e.getPlayer().setHealth(0));
+                .filter(e -> e.getPlayer().getLocation().getY() < 1)
+                .handler(e -> {
+                    LocalPlayer.get(e.getPlayer()).getMetadata().remove(MetadataProvider.SPY_PLAYER);
+                    e.getPlayer().setGameMode(GameMode.SURVIVAL);
+                });
 
         Events.subscribe(PlayerInteractEvent.class)
                 .filter(AbilityPredicates.hasAbility(this))
@@ -149,14 +150,24 @@ public class SpyAbility extends ItemStackAbility {
                             System.currentTimeMillis() - start);
                 });
 
-        Events.subscribe(PlayerDeathEvent.class)
-                .filter(AbilityPredicates.possiblyHasMetadata(MetadataProvider.SPY_ARROW))
+      Events.subscribe(PlayerRespawnEvent.class)
+                .filter(e -> e.getPlayer().getGameMode() == GameMode.SPECTATOR)
                 .handler(e -> {
-                    final LocalPlayer localPlayer = LocalPlayer.get(e.getEntity());
-                    localPlayer.getMetadata().remove(MetadataProvider.SPY_PLAYER);
-                    localPlayer.toBukkit().setSpectatorTarget(null);
+                    Schedulers
+                            .builder()
+                            .sync()
+                            .after(20L)
+                            .run(() -> {
+                                LocalPlayer.get(e.getPlayer()).getMetadata().remove(MetadataProvider.SPY_PLAYER);
+                                if (e.getPlayer().getGameMode() == GameMode.SPECTATOR ) {
+                                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "gamemode survival " + e.getPlayer().getName());
+                                    System.out.println("YEP SPY");
+
+                                }
+                            });
                 });
-        Events.subscribe(PlayerRespawnEvent.class)
-                .handler(e -> e.getPlayer().setGameMode(GameMode.SURVIVAL));
+
+
+
     }
 }

@@ -116,13 +116,9 @@ public class KitSelectorGUI extends PaginatedGui {
                                                 localPlayer.msg(Messages.SELECTOR_RENT_FAILED);
                                                 return;
                                             }
-
                                             final LocalRent newRent = LocalRent.of(localPlayer, kit);
                                             localPlayer.addRent(newRent);
-
                                             localPlayer.msg(Messages.SELECTOR_RENT_RENTED, kit.getDisplayName(), kit.getRentCost(), kit.getUsesPerRent());
-                                            localPlayer.setSelectedKit(kit);
-
                                             gui.close();
                                         } else {
                                             localPlayer.msg(Messages.SELECTOR_NO_ACCESS);
@@ -139,7 +135,7 @@ public class KitSelectorGUI extends PaginatedGui {
 
         PERMANENT_ACCESS,
         NO_ACCESS,
-        RENTED;
+        RENTED
 
     }
 }

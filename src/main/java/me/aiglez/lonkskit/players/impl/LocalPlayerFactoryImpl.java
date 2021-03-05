@@ -74,13 +74,14 @@ public class LocalPlayerFactoryImpl implements LocalPlayerFactory {
         }
         try {
             final Reader reader = new FileReader(this.cacheFile);
-            final HashSet<OfflineLocalPlayer> loaded = GsonProvider.prettyPrinting().fromJson(reader, setType);
+            final HashSet<OfflineLocalPlayer> loaded = GsonProvider.standard().fromJson(reader,setType);
 
             this.cache.addAll(loaded);
 
             Logger.fine("Loaded " + this.cache.size() + " player(s).");
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.warn("Error with Cache File");
+            e.getCause().printStackTrace();
             return false;
         }
         return true;
@@ -100,7 +101,7 @@ public class LocalPlayerFactoryImpl implements LocalPlayerFactory {
                 ).build();
 
                 // TODO: eventually change this to {@link GsonProvider#standard} later
-                GsonProvider.prettyPrinting().toJson(element, writer);
+                GsonProvider.standard().toJson(element, writer);
                 writer.close();
 
                 Logger.fine("Saved " + cache.size() + " player(s).");

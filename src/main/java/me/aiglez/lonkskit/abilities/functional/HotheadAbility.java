@@ -7,7 +7,6 @@ import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
-
 import java.io.IOException;
 
 /**
@@ -33,10 +32,9 @@ public class HotheadAbility extends FunctionalAbility {
                             configuration.getNode("radius", "y-axis").getDouble(1D),
                             configuration.getNode("radius", "z-axis").getDouble(1D))
                             .forEach(player -> {
-                                if(player.getUniqueId().equals(localPlayer.getUniqueId())) {
-                                    return;
+                                if(!localPlayer.getUniqueId().equals(player.getUniqueId())) {
+                                    player.setFireTicks(40);
                                 }
-                                player.setFireTicks(40);
                             });
                 });
 

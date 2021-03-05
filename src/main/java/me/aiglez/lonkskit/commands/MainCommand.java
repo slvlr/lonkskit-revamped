@@ -9,9 +9,11 @@ import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.abilities.itembased.DemomanAbility;
 import me.aiglez.lonkskit.abilities.itembased.johan.CowboyAbility;
 import me.aiglez.lonkskit.controllers.Controllers;
+import me.aiglez.lonkskit.listeners.FeaturesListeners;
 import me.aiglez.lonkskit.messages.Messages;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.struct.HotbarItemStack;
+import me.aiglez.lonkskit.utils.Logger;
 import me.aiglez.lonkskit.utils.Various;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.libraryaddict.disguise.DisguiseAPI;
@@ -176,16 +178,30 @@ public class MainCommand extends BaseCommand {
                     localPlayer.msg("&4You can't clear kit cause you have a 'Throwable' item");
                     return;
                 }
-                DisguiseAPI.undisguiseToAll(localPlayer.toBukkit());
+                try {
+                    DisguiseAPI.undisguiseToAll(localPlayer.toBukkit());
+                }catch (NoClassDefFoundError ex){
+                    Logger.warn("Can't find DisguiseAPI !");
+                }
                 if (CowboyAbility.cowboys.containsKey(localPlayer)){
                     CowboyAbility.cowboys.entrySet().stream().filter(a -> a.getKey() == localPlayer).findAny().ifPresent(x -> {
                         x.getValue().setHealth(0);
                         CowboyAbility.cowboys.remove(x.getKey());
                     });
                 }
+                localPlayer.getMetadata().clear();
                 localPlayer.setSelectedKit(null);
                 localPlayer.getInventory().clear();
                 localPlayer.toBukkit().getActivePotionEffects().forEach(activePe -> localPlayer.toBukkit().removePotionEffect(activePe.getType()));
+                localPlayer.toBukkit().getPassengers().clear();
+                if (FeaturesListeners.demoBlocks.containsValue(localPlayer)){
+                    FeaturesListeners.demoBlocks.entrySet().stream().filter(a -> a.getValue() == localPlayer).forEach(block -> {
+                        Schedulers.sync().runLater(() -> {
+                            block.getKey().setBlockData(Material.AIR.createBlockData());
+                            Schedulers.sync().runLater(() -> block.getKey().getState().update(true),2L);
+                        },3L);
+                    });
+                }
                 for (HotbarItemStack hotbarItem : Controllers.PLAYER.getHotbarItems().stream().sorted(Comparator.comparingInt(HotbarItemStack::getOrder)).collect(Collectors.toList())) {
                     if (!localPlayer.toBukkit().getInventory().contains(hotbarItem.getItemStack())) {
                         localPlayer.toBukkit().getInventory().addItem(hotbarItem.getItemStack());

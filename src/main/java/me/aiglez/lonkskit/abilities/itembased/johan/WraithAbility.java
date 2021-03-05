@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 public class WraithAbility extends ItemStackAbility {
 
-    private Map<UUID, Location> map = new HashMap<>();
+    private final Map<UUID, Location> map = new HashMap<>();
     private final List<LocalPlayer> wraithPlayers = new ArrayList<>();
 
     public WraithAbility(YAMLConfigurationLoader configurationLoader) throws IOException {

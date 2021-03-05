@@ -98,15 +98,13 @@ public class DisguiseAbilities extends FunctionalAbility {
 
     public static boolean nearWeb(Location loc) {
         double range = .3;
-        if (loc.add(0, 0, 0).getBlock().getType().equals(Material.COBWEB)
+        return loc.add(0, 0, 0).getBlock().getType().equals(Material.COBWEB)
                 || loc.add(range, 0, 0).getBlock().getType().equals(Material.COBWEB)
                 || loc.add(-range, 0, 0).getBlock().getType().equals(Material.COBWEB)
                 || loc.add(range, 0, range).getBlock().getType().equals(Material.COBWEB)
                 || loc.add(-range, 0, range).getBlock().getType().equals(Material.COBWEB)
                 || loc.add(-range, 0, -range).getBlock().getType().equals(Material.COBWEB)
                 || loc.add(0, 0, range).getBlock().getType().equals(Material.COBWEB)
-                || loc.add(0, 0, -range).getBlock().getType().equals(Material.COBWEB))
-            return true;
-        return false;
+                || loc.add(0, 0, -range).getBlock().getType().equals(Material.COBWEB);
     }
 }

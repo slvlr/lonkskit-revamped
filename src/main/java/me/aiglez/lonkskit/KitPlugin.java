@@ -3,7 +3,6 @@ package me.aiglez.lonkskit;
 import me.aiglez.lonkskit.abilities.factory.AbilityFactory;
 import me.aiglez.lonkskit.commands.CommandsRegistry;
 import me.aiglez.lonkskit.commands.KitCommand;
-import me.aiglez.lonkskit.commands.admin.SpawnLocCommand;
 import me.aiglez.lonkskit.controllers.Controllers;
 import me.aiglez.lonkskit.kits.KitFactory;
 import me.aiglez.lonkskit.listeners.AbilityListeners;
@@ -15,8 +14,6 @@ import me.aiglez.lonkskit.utils.Logger;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.plugin.ExtendedJavaPlugin;
 import me.lucko.helper.plugin.ap.Plugin;
-
-import java.util.Objects;
 
 @Plugin(
         name = "LonksKit", version  = "1.0.9",

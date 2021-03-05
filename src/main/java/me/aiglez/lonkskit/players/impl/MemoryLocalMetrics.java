@@ -41,7 +41,7 @@ public class MemoryLocalMetrics implements LocalMetrics {
 
     @Override
     public float getKDR() {
-        return getKillsCount() / getDeathsCount();
+        return (float) getKillsCount() / (float) getDeathsCount();
     }
 
     @Override

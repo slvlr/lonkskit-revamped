@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.struct.Leaderboard;
 import me.aiglez.lonkskit.struct.leaderboards.PointsLeaderboard;
+import me.aiglez.lonkskit.struct.leaderboards.StatsLeaderboard;
 import me.aiglez.lonkskit.utils.Locations;
 import me.aiglez.lonkskit.utils.Logger;
 import me.lucko.helper.config.ConfigurationNode;
@@ -26,6 +27,7 @@ public class LeaderboardController {
         final Optional<Location> location = Locations.fromString(this.config.getNode("points", "location").getString(""));
         if(location.isPresent()) {
             this.leaderboards.add(new PointsLeaderboard(location.get()));
+            this.leaderboards.add(new StatsLeaderboard(location.get().add(5,0,5)));
         } else {
             Logger.severe("An error occurred while trying to load the points leaderboard, the location is invalid!");
         }

@@ -13,12 +13,15 @@ import me.lucko.helper.metadata.SoftValue;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 
 import java.io.IOException;
 
 /**
+ * @see me.aiglez.lonkskit.abilities.Ability
  * @author AigleZ
  * @date 11/10/2020
  */
@@ -34,7 +37,6 @@ public class HulkAbility extends FunctionalAbility {
         Events.subscribe(PlayerInteractEntityEvent.class, EventPriority.HIGHEST)
                 .filter(AbilityPredicates.hasAbility(this))
                 .handler(e -> {
-
                     final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
                     final Entity rightClicked = e.getRightClicked();
                     final Player bukkit = localPlayer.toBukkit();
@@ -45,19 +47,25 @@ public class HulkAbility extends FunctionalAbility {
 
                         Metadata.provideForEntity(rightClicked).put(MetadataProvider.HULK_PICKED_UP, SoftValue.of(true));
                         localPlayer.msg("&eYou have picked up {0}", rightClicked.getName());
-                    } else {
-                        final Entity passenger = bukkit.getPassengers().get(0);
-                        if(passenger == null) {
-                            localPlayer.msg("&cPassenger at index 0 was not found!");
-                            return;
-                        }
-
-                        eject(bukkit, passenger);
-
-                        boolean remove = Metadata.provideForEntity(passenger).remove(MetadataProvider.HULK_PICKED_UP);
-                        localPlayer.msg("&cYou have ejected {0} (remove result: {1})", passenger.getName(), remove);
                     }
                     e.setCancelled(true);
+                });
+        Events.subscribe(PlayerInteractEvent.class)
+                .filter(AbilityPredicates.hasAbility(this))
+                .filter(e -> e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK)
+                .filter(e -> !e.getPlayer().getPassengers().isEmpty())
+                .handler(e -> {
+                    final Entity passenger = e.getPlayer().getPassengers().get(0);
+                    LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
+                    if(passenger == null) {
+                        localPlayer.msg("&cPassenger at index 0 was not found!");
+                        return;
+                    }
+
+                    eject(e.getPlayer(), passenger);
+
+                    boolean remove = Metadata.provideForEntity(passenger).remove(MetadataProvider.HULK_PICKED_UP);
+                    localPlayer.msg("&cYou have ejected {0} (remove result: {1})", passenger.getName(), remove);
                 });
 
         Events.subscribe(PlayerToggleSneakEvent.class)

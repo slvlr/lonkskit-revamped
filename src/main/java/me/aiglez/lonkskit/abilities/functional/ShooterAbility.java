@@ -6,7 +6,6 @@ import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.Events;
 import me.lucko.helper.Schedulers;
 import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.Arrow;
@@ -15,15 +14,11 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -134,7 +129,7 @@ public class ShooterAbility extends FunctionalAbility {
                         amount = -newAmount;
                         if (amount == 0) {
                             return false;
-                        };
+                        }
                     }
                 }
             }

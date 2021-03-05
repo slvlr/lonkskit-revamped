@@ -1,9 +1,8 @@
 package me.aiglez.lonkskit.utils;
 
-import me.aiglez.lonkskit.messages.Replaceable;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-
+import me.aiglez.lonkskit.messages.Replaceable;
 public class Logger {
 
     public static void severe(String message, Object... replacements) {

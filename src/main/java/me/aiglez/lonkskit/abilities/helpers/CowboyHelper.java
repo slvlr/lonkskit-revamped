@@ -19,7 +19,7 @@ public class CowboyHelper extends EntityHorse {
         super(EntityTypes.HORSE,((CraftWorld)location.getWorld()).getHandle());
         this.setPosition(location.getX(),location.getY(),location.getZ());
         this.setInvulnerable(true);
-        this.setGoalTarget((EntityLiving) ((CraftPlayer)player).getHandle(), EntityTargetEvent.TargetReason.CUSTOM,true);
+        this.setGoalTarget(((CraftPlayer)player).getHandle(), EntityTargetEvent.TargetReason.CUSTOM,true);
 //        Horse horse = (Horse) this.getBukkitEntity().getHandle();
 //        horse.getInventory().setSaddle(new ItemStack(org.bukkit.Material.SADDLE, 1));
 //        horse.getInventory().setArmor(new org.bukkit.inventory.ItemStack(Material.DIAMOND_HORSE_ARMOR, 1));

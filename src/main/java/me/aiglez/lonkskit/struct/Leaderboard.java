@@ -13,7 +13,7 @@ import me.lucko.helper.Schedulers;
 import me.lucko.helper.scheduler.Ticks;
 import me.lucko.helper.text3.Text;
 import org.bukkit.Location;
-import java.util.Comparator;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -46,7 +46,7 @@ public abstract class Leaderboard<T> {
         this.hologram.appendTextLine("§8§m--------------------------");
 
         Schedulers.builder()
-                .async()
+                .sync()
                 .after(10)
                 .every(this.refreshRateTicks)
                 .run(this::reloadCache);
@@ -60,6 +60,6 @@ public abstract class Leaderboard<T> {
 
     public abstract void reloadCache();
 
-    public abstract void reloadView();
+    public abstract Hologram reloadView();
 
 }

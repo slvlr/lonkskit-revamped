@@ -23,6 +23,7 @@ import org.bukkit.Particle;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Trident;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -50,8 +51,23 @@ public class PlayerListeners implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Logger.debug("Handling join of {0}", e.getPlayer().getName());
         LocalPlayer.get(e.getPlayer()).setBukkit(e.getPlayer());
+        if (LocalPlayer.get(e.getPlayer()).wasInKP()){
+            LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
+            localPlayer.setLastAttacker(null);
+            localPlayer.setSelectedKit(null);
+            localPlayer.getInventory().clear();
+            localPlayer.toBukkit().getActivePotionEffects().forEach(activePe -> localPlayer.toBukkit().removePotionEffect(activePe.getType()));
+            localPlayer.toBukkit().getPassengers().clear();
+            for (HotbarItemStack hotbarItem : Controllers.PLAYER.getHotbarItems().stream().sorted(Comparator.comparingInt(HotbarItemStack::getOrder)).collect(Collectors.toList())) {
+                if (!localPlayer.toBukkit().getInventory().contains(hotbarItem.getItemStack())) {
+                    localPlayer.toBukkit().getInventory().addItem(hotbarItem.getItemStack());
+                }
+            }
+            localPlayer.msg("&cYou have cleared your kit.");
+        }
 
     }
+
 
 
     @EventHandler
@@ -96,17 +112,26 @@ public class PlayerListeners implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onLeave(PlayerQuitEvent e) {
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
-
-        localPlayer.getLastAttacker().ifPresent(damager -> {
-            Controllers.PLAYER.handleDeathOf(damager, localPlayer);
-            localPlayer.toBukkit().setHealth(0D);;
-        });
-
+        if (localPlayer.isValid()) {
+            localPlayer.toBukkit().setHealth(0);
+            FeaturesListeners.killstreaks.replace(localPlayer,0);
+            localPlayer.setInKP(true);
+            localPlayer.getLastAttacker();
+        }
         if (MainCommand.builders.containsKey(localPlayer)){
             MainCommand.builders.replace(localPlayer,false);
         }
         localPlayer.getMetrics().resetKillStreak();
         localPlayer.setBukkit(null);
+        if (FeaturesListeners.demoBlocks.containsValue(localPlayer)){
+            FeaturesListeners.demoBlocks.entrySet().stream().filter(a -> a.getValue() == localPlayer).forEach(block -> {
+                Schedulers.sync().runLater(() -> {
+                    block.getKey().setBlockData(Material.AIR.createBlockData());
+                    Schedulers.sync().runLater(() -> block.getKey().getState().update(true),2L);
+                    FeaturesListeners.demoBlocks.remove(block.getKey());
+                },3L);
+            });
+        }
     }
 
     // -------------------------------------------- //
@@ -131,8 +156,7 @@ public class PlayerListeners implements Listener {
         damager.setLastAttacker(damager);
 
         victim.msg("&b[DEBUG] &cYou have entered in combat with {0}.", damager.getLastKnownName());
-        damager.msg("&b[DEBUG] &cYou hav e entered in combat with {0}.", victim.getLastKnownName());
-
+        damager.msg("&b[DEBUG] &cYou have entered in combat with {0}.", victim.getLastKnownName());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
@@ -189,10 +213,6 @@ public class PlayerListeners implements Listener {
         localPlayer.updateSafeStatus();
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onLaunchTrident(PlayerLaunchProjectileEvent e){
-        if (e.getProjectile().getType() == EntityType.TRIDENT) e.setCancelled(true);
-    }
 
 
 }

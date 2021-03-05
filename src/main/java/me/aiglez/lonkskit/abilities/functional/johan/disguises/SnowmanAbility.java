@@ -24,6 +24,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import static me.aiglez.lonkskit.abilities.functional.johan.DisguiseAbilities.snowmen;
 import static me.aiglez.lonkskit.abilities.functional.johan.DisguiseAbilities.victimsOfSnow;
@@ -40,7 +41,7 @@ public class SnowmanAbility extends FunctionalAbility {
         Events.subscribe(PlayerInteractEvent.class)
                 .filter(AbilityPredicates.hasAbility(this))
                 .filter(PlayerInteractEvent::hasItem)
-                .filter(e -> e.getItem() instanceof Snowball)
+                .filter(e -> Objects.requireNonNull(e.getItem()).getType() == Material.SNOWBALL)
                 .handler(e -> {
                     LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
                     applyEffects(localPlayer);
@@ -49,10 +50,9 @@ public class SnowmanAbility extends FunctionalAbility {
                     Metadata.provideForEntity(snowball).put(MetadataProvider.SNOWMAN,Boolean.TRUE);
                 });
         Events.subscribe(ProjectileHitEvent.class)
-                .filter(e -> snowmen.contains((Player) e.getEntity().getShooter()))
                 .filter(e -> e.getEntity() instanceof Snowball && e.getHitEntity() instanceof Player)
                 .filter(AbilityPredicates.entityHasMetadata(MetadataProvider.SNOWMAN))
-                .handler(e ->{
+                .handler(e -> {
                     Player victim = (Player) e.getHitEntity();
                     assert victim != null;
                     int duration = 7 * 20;

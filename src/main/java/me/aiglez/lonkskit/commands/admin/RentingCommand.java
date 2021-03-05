@@ -11,22 +11,28 @@ import me.aiglez.lonkskit.players.impl.MemoryLocalRent;
 @CommandAlias("%main_command")
 public class RentingCommand extends BaseCommand {
     @Subcommand("admin renting")
-    @CommandCompletion("show|remove|add @kitpvp_offline_players @kit")
+    @CommandCompletion("show|remove|add @kitpvp_offline_players @kit @range:1-100")
     @CommandPermission("lonkskit.admin.renting")
-    @Syntax("<show|remove|add> <target> [kit]")
-    public void onAdminRenting(LocalPlayer localPlayer, @Values("show|remove|add") String operation, OfflineLocalPlayer target, @Optional Kit kit){
+    @Syntax("<show|remove|add> <target> [kit] [amount]")
+    public void onAdminRenting(LocalPlayer localPlayer, @Values("show|remove|add") String operation, OfflineLocalPlayer target, @Optional Kit kit,@Optional Integer amount){
         if (operation.equalsIgnoreCase("show")){
             if (target != null){
                 if (kit != null){
-                    localPlayer.msg("renting of " + target.getLastKnownName() + " :");
                     target.getRent(kit).ifPresent(localRent -> {
-                        localPlayer.msg("&4uses till now : " + localRent.getUses());
-                        localPlayer.msg("&4left uses : " + localRent.getLeftUses());
+                        localPlayer.msg("&7{0} is currently renting &b{1}:",target.getLastKnownName(),kit.getDisplayName());//
+                        localPlayer.msg("&cTimes used: " + localRent.getUses());
+                        localPlayer.msg("&aUses left: " + localRent.getLeftUses());
                     });
                     if (!target.getRent(kit).isPresent()){
-                        localPlayer.msg("the player don't rent the kit : " + kit.getDisplayName());
+                        localPlayer.msg("&7{0} is not renting &b{1}.",target.getLastKnownName(),kit.getDisplayName());
                     }
-                }else localPlayer.msg("&5the kit is null");
+                }else {
+                    localPlayer.msg("&7{0} is renting the following kits: ",target.getLastKnownName());
+                    for (LocalRent rent:
+                         target.getRents()) {
+                        localPlayer.msg("&b" + rent.getRented().getDisplayName() + " --> " + rent.getLeftUses() + " Uses left");
+                    }
+                }
             }else localPlayer.msg("&5Player not found 404");
         }
         if (operation.equalsIgnoreCase("remove")){
@@ -35,13 +41,15 @@ public class RentingCommand extends BaseCommand {
                     target.removeRent(LocalRent.of(target,kit));
                     localPlayer.msg("kit Rent is deleted successfully");
                 }else localPlayer.msg("kit is null");
-            }else localPlayer.msg("Target == null");
+            }else localPlayer.msg("Target is null");
         }
         if (operation.equalsIgnoreCase("add")){
             if (target != null){
                 if (kit != null){
-                    target.addRent(new MemoryLocalRent(target,kit));
-                    localPlayer.msg("kit Rent added successfully");
+                    if (kit.isRentable()) {
+                        target.addRent(new MemoryLocalRent(target, kit, kit.getUsesPerRent() - amount));
+                        localPlayer.msg("kit Rent added successfully");
+                    }else localPlayer.msg("&4The kit is not rentable check the config file");
                 }else localPlayer.msg("kit is null");
             }else localPlayer.msg("Target == null");
         }

@@ -44,7 +44,13 @@ public class Various {
         return block.getRelative(BlockFace.UP).getType() != Material.CACTUS &&
                 block.getRelative(BlockFace.DOWN).getType() != Material.CACTUS &&
                 block.getRelative(BlockFace.EAST).getType() != Material.CACTUS &&
-                block.getRelative(BlockFace.WEST).getType() != Material.CACTUS;
+                block.getRelative(BlockFace.WEST).getType() != Material.CACTUS &&
+                block.getLocation().add(1,0,0).getBlock().getType() != Material.CACTUS &&
+                block.getLocation().subtract(1,0,0).getBlock().getType() != Material.CACTUS &&
+                block.getLocation().add(0,1,0).getBlock().getType() != Material.CACTUS &&
+                block.getLocation().subtract(0,1,0).getBlock().getType() != Material.CACTUS &&
+                block.getLocation().add(0,0,1).getBlock().getType() != Material.CACTUS &&
+                block.getLocation().subtract(0,0,1).getBlock().getType() != Material.CACTUS ;
     }
 
     public static Vector makeFinite(Vector original) {

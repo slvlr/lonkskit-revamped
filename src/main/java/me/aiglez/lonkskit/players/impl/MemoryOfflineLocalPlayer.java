@@ -29,7 +29,7 @@ public class MemoryOfflineLocalPlayer implements OfflineLocalPlayer {
     private final List<LocalRent> rents;
 
     private int points;
-    private String lastKnownName;
+    private final String lastKnownName;
     private LocalPlayer online;
 
 

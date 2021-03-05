@@ -1,0 +1,183 @@
+[
+  {
+    "unique-id": "1a3bac4d-3a1a-4b7a-b704-578a0aea5a5b",
+    "points": 0,
+    "metrics": {
+      "deaths": 0,
+      "kills": 0
+    },
+    "rents": []
+  },
+  {
+    "unique-id": "65aa4bbe-bd1d-4a77-8609-329acd2ddf72",
+    "points": 0,
+    "metrics": {
+      "deaths": 0,
+      "kills": 0
+    },
+    "rents": []
+  },
+  {
+    "unique-id": "b0e2a330-289d-47f0-ad67-af4d06abe9ea",
+    "points": 970,
+    "metrics": {
+      "deaths": 71,
+      "kills": 58
+    },
+    "rents": [
+      {
+        "uses": 0,
+        "kit": "anvil"
+      }
+    ]
+  },
+  {
+    "unique-id": "5d27d8cf-1b1d-4eeb-96ea-c637da0502d8",
+    "points": 100,
+    "metrics": {
+      "deaths": 0,
+      "kills": 0
+    },
+    "rents": []
+  },
+  {
+    "unique-id": "fdfaed55-edff-4faf-947d-fcd72370ef4e",
+    "points": 0,
+    "metrics": {
+      "deaths": 0,
+      "kills": 0
+    },
+    "rents": []
+  },
+  {
+    "unique-id": "4b89c6f6-923e-4fbe-8b52-9eb7cd59cf53",
+    "points": 0,
+    "metrics": {
+      "deaths": 0,
+      "kills": 0
+    },
+    "rents": []
+  },
+  {
+    "unique-id": "d96ff3a5-13b2-4d8e-9536-bdae193932e0",
+    "points": 0,
+    "metrics": {
+      "deaths": 0,
+      "kills": 0
+    },
+    "rents": []
+  },
+  {
+    "unique-id": "32cfe58e-3d13-4309-a38f-1752afff150f",
+    "points": 0,
+    "metrics": {
+      "deaths": 0,
+      "kills": 0
+    },
+    "rents": []
+  },
+  {
+    "unique-id": "c2b93ff3-58c6-4af0-83cb-28c6fc0f5c69",
+    "points": 1085,
+    "metrics": {
+      "deaths": 74,
+      "kills": 53
+    },
+    "rents": []
+  },
+  {
+    "unique-id": "78cd3f6f-d41b-4d69-bdc2-9ef6cb292ee1",
+    "points": 0,
+    "metrics": {
+      "deaths": 0,
+      "kills": 0
+    },
+    "rents": []
+  },
+  {
+    "unique-id": "434bb380-6301-4394-bb04-dcda6dce6529",
+    "points": 15,
+    "metrics": {
+      "deaths": 0,
+      "kills": 0
+    },
+    "rents": []
+  },
+  {
+    "unique-id": "f89cf480-f3d6-49a3-a964-ac6163325bd9",
+    "points": 83,
+    "metrics": {
+      "deaths": 18,
+      "kills": 12
+    },
+    "rents": [
+      {
+        "uses": 0,
+        "kit": "archer"
+      }
+    ]
+  },
+  {
+    "unique-id": "22ab8eb1-5025-4395-8d96-f994c74645f6",
+    "points": 5,
+    "metrics": {
+      "deaths": 2,
+      "kills": 1
+    },
+    "rents": []
+  },
+  {
+    "unique-id": "9df2d7ab-30e5-4c0a-be55-cd6244815cc5",
+    "points": 0,
+    "metrics": {
+      "deaths": 0,
+      "kills": 0
+    },
+    "rents": []
+  },
+  {
+    "unique-id": "53c4728b-e889-433f-8cb4-2000b78b1c48",
+    "points": 39,
+    "metrics": {
+      "deaths": 0,
+      "kills": 0
+    },
+    "rents": []
+  },
+  {
+    "unique-id": "82dfef2c-97d1-4b3a-858f-02513d12c1e4",
+    "points": 90,
+    "metrics": {
+      "deaths": 152,
+      "kills": 21
+    },
+    "rents": [
+      {
+        "uses": 4,
+        "kit": "archer"
+      },
+      {
+        "uses": 0,
+        "kit": "dragon"
+      }
+    ]
+  },
+  {
+    "unique-id": "95c49ce2-d410-4fe0-8a33-6b71d8f1bd77",
+    "points": 5,
+    "metrics": {
+      "deaths": 9,
+      "kills": 2000004
+    },
+    "rents": []
+  },
+  {
+    "unique-id": "259b5957-4b41-4340-bcc1-447f5ca7b3e0",
+    "points": 0,
+    "metrics": {
+      "deaths": 0,
+      "kills": 0
+    },
+    "rents": []
+  }
+]

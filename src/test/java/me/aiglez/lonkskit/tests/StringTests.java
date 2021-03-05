@@ -47,4 +47,5 @@ public class StringTests {
     public double square(double num) {
         return num * num;
     }
+
 }

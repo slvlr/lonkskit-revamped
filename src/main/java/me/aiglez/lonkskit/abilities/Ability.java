@@ -5,6 +5,7 @@ import me.aiglez.lonkskit.LonksKitProvider;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.cooldown.CooldownMap;
+import org.bukkit.Material;
 
 import java.io.IOException;
 
