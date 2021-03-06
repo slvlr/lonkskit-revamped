@@ -1,7 +1,8 @@
-package me.aiglez.lonkskit.kits;
+package me.aiglez.lonkskit.guis;
 
 import me.aiglez.lonkskit.LonksKitProvider;
 import me.aiglez.lonkskit.commands.MainCommand;
+import me.aiglez.lonkskit.kits.KitSelectorHolder;
 import me.aiglez.lonkskit.messages.Messages;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.players.LocalRent;
@@ -84,7 +85,7 @@ public class KitSelectorGUI extends PaginatedGui {
                                                         localRent.getOfflineLocalPlayer().removeRent(localRent);
                                                     }
 
-                                                }else  localPlayer.msg("&eUses lEFT = " + localRent.getLeftUses());
+                                                }else  localPlayer.msg("&eUses left = " + localRent.getLeftUses());
                                             }else  localPlayer.msg("&3enter the kitpvp world to select a kit");
                                         }else localPlayer.msg("&3clear your kit then choose another one");
                                     }else localPlayer.msg("&4You can't choose a kit cause you have a 'Throwable' item");

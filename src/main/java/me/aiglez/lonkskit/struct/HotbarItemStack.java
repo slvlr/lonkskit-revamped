@@ -1,7 +1,7 @@
 package me.aiglez.lonkskit.struct;
 
 import com.google.common.base.Preconditions;
-import me.aiglez.lonkskit.kits.KitSelectorGUI;
+import me.aiglez.lonkskit.guis.KitSelectorGUI;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.Helper;
 import org.bukkit.inventory.ItemStack;

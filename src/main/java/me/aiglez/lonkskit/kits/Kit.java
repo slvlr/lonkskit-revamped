@@ -1,5 +1,6 @@
 package me.aiglez.lonkskit.kits;
 
+import com.google.common.collect.Lists;
 import me.aiglez.lonkskit.abilities.Ability;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -40,13 +41,17 @@ public interface Kit {
     // -------------------------------------------- //
     // Inventory
     // -------------------------------------------- //
-    List<ItemStack> getInventoryContent();
+    List<ItemStack> getInventoryContent(final int level);
 
-    Map<EquipmentSlot, ItemStack> getInventoryArmors();
+    Map<EquipmentSlot, ItemStack> getInventoryArmors(final int level);
 
     boolean isCustom();
 
     void incrementUses();
 
     void decrementUses();
+
+    Map<Integer,List<ItemStack>> getInventories();
+
+    Map<Integer,Map<EquipmentSlot, ItemStack>> getArmors();
 }

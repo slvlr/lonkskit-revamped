@@ -4,14 +4,15 @@ import me.aiglez.lonkskit.messages.Replaceable;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.*;
+
 public class StringTests {
 
     @Test
-    public void testReplaceable() {
-        String test = "Hello {1}, welcome at {0}, {zd}, {8}";
-        String handled = Replaceable.handle(test, "AigleZ", "Server.com");
-        Assert.assertNotNull(handled);
-        System.out.println(handled);
+    public void testReplaceable() throws IOException {
+
+
+
     }
 
     @Test

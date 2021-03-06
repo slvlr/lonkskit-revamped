@@ -9,6 +9,8 @@ import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.abilities.itembased.DemomanAbility;
 import me.aiglez.lonkskit.abilities.itembased.johan.CowboyAbility;
 import me.aiglez.lonkskit.controllers.Controllers;
+import me.aiglez.lonkskit.kits.Kit;
+import me.aiglez.lonkskit.kits.KitRank;
 import me.aiglez.lonkskit.listeners.FeaturesListeners;
 import me.aiglez.lonkskit.messages.Messages;
 import me.aiglez.lonkskit.players.LocalPlayer;
@@ -140,6 +142,7 @@ public class MainCommand extends BaseCommand {
                         localPlayer.msg("&aYou have enabled kitpvp building mode for &6" + target.getLastKnownName());
                         target.msg("&a" + localPlayer.getLastKnownName() + "&a has enabled your kitpvp building mode.");
                     }
+                    
                 }else {
                     builders.put(target,true);
                     localPlayer.msg("&aYou have enabled kitpvp building mode for &6" + target.getLastKnownName());
@@ -195,12 +198,10 @@ public class MainCommand extends BaseCommand {
                 localPlayer.toBukkit().getActivePotionEffects().forEach(activePe -> localPlayer.toBukkit().removePotionEffect(activePe.getType()));
                 localPlayer.toBukkit().getPassengers().clear();
                 if (FeaturesListeners.demoBlocks.containsValue(localPlayer)){
-                    FeaturesListeners.demoBlocks.entrySet().stream().filter(a -> a.getValue() == localPlayer).forEach(block -> {
-                        Schedulers.sync().runLater(() -> {
-                            block.getKey().setBlockData(Material.AIR.createBlockData());
-                            Schedulers.sync().runLater(() -> block.getKey().getState().update(true),2L);
-                        },3L);
-                    });
+                    FeaturesListeners.demoBlocks.entrySet().stream().filter(a -> a.getValue() == localPlayer).forEach(block -> Schedulers.sync().runLater(() -> {
+                        block.getKey().setBlockData(Material.AIR.createBlockData());
+                        Schedulers.sync().runLater(() -> block.getKey().getState().update(true),2L);
+                    },3L));
                 }
                 for (HotbarItemStack hotbarItem : Controllers.PLAYER.getHotbarItems().stream().sorted(Comparator.comparingInt(HotbarItemStack::getOrder)).collect(Collectors.toList())) {
                     if (!localPlayer.toBukkit().getInventory().contains(hotbarItem.getItemStack())) {
@@ -263,6 +264,12 @@ public class MainCommand extends BaseCommand {
         }
     }
 
+    @CommandAlias("rankup|rp") @Subcommand("rankup|rp")
+    @CommandCompletion("@kit")
+    public void rankUp(LocalPlayer localPlayer, Kit kit){
+        localPlayer.addRank(new KitRank(localPlayer,kit));
+        System.out.println(localPlayer.getRank(kit).get().getLevel());
+    }
 
     private void clearCooldown(LocalPlayer localPlayer) {
         LonksKitProvider.getAbilityFactory().getAbilities()

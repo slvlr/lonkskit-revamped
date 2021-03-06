@@ -1,16 +1,24 @@
 package me.aiglez.lonkskit.kits;
 
 import com.google.common.reflect.TypeToken;
+import me.aiglez.lonkskit.LonksKitProvider;
+import me.aiglez.lonkskit.guis.KitSelectorGUI;
+import me.aiglez.lonkskit.kits.impl.KitFactoryImpl;
+import me.aiglez.lonkskit.messages.Replaceable;
+import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.aiglez.lonkskit.utils.items.ItemStackParser;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.config.objectmapping.ObjectMappingException;
+import net.sf.cglib.core.CollectionUtils;
+import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -88,6 +96,55 @@ public class KitSelectorHolder {
         return new Builder(node);
     }
 
+    public static ItemStack buildItemR(final Kit kit, final KitSelectorGUI.State state, int usesLeft, final LocalPlayer localPlayer) {
+        final List<String> lore1 =
+                KitFactoryImpl.getLores().get(kit);
+        switch (state) {
+            case NO_ACCESS:
+                if(kit.isRentable()) {
+                    return ItemStackBuilder.of(kit.getSelectorHolder().material)
+                            .name(ChatColor.RED + kit.getSelectorHolder().displayName)
+                            .lore(lore1)
+                            .lore("&7")
+                            .lore("&7Access: §cNo Permission")
+                            .lore("&7Click to rent this kit for &b" + kit.getRentCost() + " &7point(s), with &b" + kit.getUsesPerRent() + " &7use(s).")
+                            .color(kit.getSelectorHolder().color)
+                            .build();
+                } else {
+                    return ItemStackBuilder.of(kit.getSelectorHolder().material)
+                            .name(ChatColor.RED + kit.getSelectorHolder().displayName)
+                            .lore(lore1)
+                            .lore("&7")
+                            .lore("&7Access: &cNo Permission")
+                            .lore("&cThis kit cannot be rented !")
+                            .color(kit.getSelectorHolder().color)
+                            .build();
+                }
+
+            case PERMANENT_ACCESS:
+                return ItemStackBuilder.of(kit.getSelectorHolder().material)
+                        .name(ChatColor.GREEN + kit.getSelectorHolder().displayName)
+                        .lore(lore1)
+                        .lore("&7")
+                        .lore("&7Access: &ePermanent")
+                        .lore("&7Click to select this kit.")
+                        .color(kit.getSelectorHolder().color)
+                        .build();
+
+            case RENTED:
+                return ItemStackBuilder.of(kit.getSelectorHolder().material)
+                        .name(ChatColor.GREEN + kit.getSelectorHolder().displayName)
+                        .lore(lore1)
+                        .lore("&7")
+                        .lore("&7Access: &aRented")
+                        .lore("&7Click to select this kit.")
+                        .lore("&7You have &b" + usesLeft + " &7use(s) left.")
+                        .color(kit.getSelectorHolder().color)
+                        .build();
+        }
+        // what else ??
+        return null;
+    }
     public static class Builder {
 
         private final ConfigurationNode node;
@@ -105,6 +162,8 @@ public class KitSelectorHolder {
                     ItemStackParser.getColorByName(node.getNode("color").getString())
             );
         }
+
+
 
     }
 }

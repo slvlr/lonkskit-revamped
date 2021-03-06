@@ -152,20 +152,18 @@ public class SpyAbility extends ItemStackAbility {
 
       Events.subscribe(PlayerRespawnEvent.class)
                 .filter(e -> e.getPlayer().getGameMode() == GameMode.SPECTATOR)
-                .handler(e -> {
-                    Schedulers
-                            .builder()
-                            .sync()
-                            .after(20L)
-                            .run(() -> {
-                                LocalPlayer.get(e.getPlayer()).getMetadata().remove(MetadataProvider.SPY_PLAYER);
-                                if (e.getPlayer().getGameMode() == GameMode.SPECTATOR ) {
-                                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "gamemode survival " + e.getPlayer().getName());
-                                    System.out.println("YEP SPY");
+                .handler(e -> Schedulers
+                        .builder()
+                        .sync()
+                        .after(20L)
+                        .run(() -> {
+                            LocalPlayer.get(e.getPlayer()).getMetadata().remove(MetadataProvider.SPY_PLAYER);
+                            if (e.getPlayer().getGameMode() == GameMode.SPECTATOR ) {
+                                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "gamemode survival " + e.getPlayer().getName());
+                                System.out.println("YEP SPY");
 
-                                }
-                            });
-                });
+                            }
+                        }));
 
 
 

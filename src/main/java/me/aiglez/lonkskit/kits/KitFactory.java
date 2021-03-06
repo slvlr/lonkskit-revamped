@@ -1,5 +1,6 @@
 package me.aiglez.lonkskit.kits;
 
+import me.aiglez.lonkskit.guis.KitSelectorGUI;
 import me.aiglez.lonkskit.kits.impl.KitFactoryImpl;
 import org.bukkit.inventory.ItemStack;
 
@@ -11,6 +12,7 @@ public interface KitFactory {
     Set<Kit> getRegisteredKits();
 
     SortedSet<Kit> getSortedKitsBySlots();
+
 
     Optional<Kit> getKit(String backendName);
 

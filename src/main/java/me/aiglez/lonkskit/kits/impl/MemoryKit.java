@@ -8,6 +8,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
+import scala.Int;
 
 import java.util.Collections;
 import java.util.List;
@@ -17,8 +18,8 @@ import java.util.Set;
 public class MemoryKit implements Kit {
 
     private final String backendName, displayName;
-    private final List<ItemStack> inventoryContent;
-    private final Map<EquipmentSlot, ItemStack> inventoryArmor;
+    private final Map<Integer,List<ItemStack>> inventoryContent;
+    private final Map<Integer,Map<EquipmentSlot, ItemStack>> inventoryArmor;
     private final KitSelectorHolder selectorHolder;
 
     private final boolean rentable;
@@ -31,8 +32,8 @@ public class MemoryKit implements Kit {
     private boolean enabled;
 
 
-    public MemoryKit(final String backendName, final String displayName, final List<ItemStack> inventoryContent,
-                     final Map<EquipmentSlot, ItemStack> inventoryArmor, final KitSelectorHolder selectorHolder,
+    public MemoryKit(final String backendName, final String displayName, final Map<Integer, List<ItemStack>> inventoryContent,
+                     final Map<Integer, Map<EquipmentSlot, ItemStack>> inventoryArmor, final KitSelectorHolder selectorHolder,
                      final boolean rentable, final int rentCost, final int usesPerCost, boolean isCustom, final Set<PotionEffect> potionEffects, final Set<Ability> abilities) {
         this.isCustom = isCustom;
         Preconditions.checkNotNull(backendName);
@@ -114,10 +115,10 @@ public class MemoryKit implements Kit {
     }
 
     @Override
-    public List<ItemStack> getInventoryContent() { return Collections.unmodifiableList(this.inventoryContent); }
+    public List<ItemStack> getInventoryContent(final int level) { return Collections.unmodifiableList(this.inventoryContent.get(level)); }
 
     @Override
-    public Map<EquipmentSlot, ItemStack> getInventoryArmors() { return Collections.unmodifiableMap(this.inventoryArmor); }
+    public Map<EquipmentSlot, ItemStack> getInventoryArmors(final int level) { return this.inventoryArmor.get(level); }
 
     @Override
     public boolean isCustom() {
@@ -130,6 +131,15 @@ public class MemoryKit implements Kit {
     @Override
     public void decrementUses() {
         this.usesPerRent--;
+    }
+
+    @Override
+    public Map<Integer, List<ItemStack>> getInventories() {
+        return this.inventoryContent;
+    }
+    @Override
+    public Map<Integer,Map<EquipmentSlot, ItemStack>> getArmors() {
+        return this.inventoryArmor;
     }
 
     @Override

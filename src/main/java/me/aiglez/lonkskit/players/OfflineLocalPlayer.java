@@ -13,7 +13,7 @@ import me.lucko.helper.gson.GsonSerializable;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface OfflineLocalPlayer extends LocalRenter, GsonSerializable {
+public interface OfflineLocalPlayer extends LocalRenter, GsonSerializable, LocalRanks{
 
     UUID getUniqueId();
 

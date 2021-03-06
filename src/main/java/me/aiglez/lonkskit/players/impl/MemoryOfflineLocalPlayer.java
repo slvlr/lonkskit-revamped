@@ -3,8 +3,10 @@ package me.aiglez.lonkskit.players.impl;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
+import me.aiglez.lonkskit.LonksKitProvider;
 import me.aiglez.lonkskit.exceptions.OfflinePlayerLoadException;
 import me.aiglez.lonkskit.kits.Kit;
+import me.aiglez.lonkskit.kits.KitRank;
 import me.aiglez.lonkskit.players.LocalMetrics;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.players.LocalRent;
@@ -27,7 +29,7 @@ public class MemoryOfflineLocalPlayer implements OfflineLocalPlayer {
     private final UUID uniqueId;
     private final LocalMetrics metrics;
     private final List<LocalRent> rents;
-
+    private final List<KitRank> kitRanks;
     private int points;
     private final String lastKnownName;
     private LocalPlayer online;
@@ -38,7 +40,7 @@ public class MemoryOfflineLocalPlayer implements OfflineLocalPlayer {
         this.uniqueId = uniqueId;
         this.metrics = LocalMetrics.newMetrics(this);
         this.rents = Lists.newArrayList();
-
+        this.kitRanks = LonksKitProvider.getKitFactory().getEnabledKits().stream().map(kit -> new KitRank(this,kit,1)).collect(Collectors.toList());
         this.points = points;
 
         Logger.debug("Fetching the username of player with uuid {0}", this.uniqueId);
@@ -146,6 +148,43 @@ public class MemoryOfflineLocalPlayer implements OfflineLocalPlayer {
                                 ).collect(Collectors.toList())
                         ).build()
                 )
+                .add("ranks",JsonBuilder.array()
+                    .addAll(
+                            this.kitRanks.stream().map(rank -> JsonBuilder.object()
+                                    .add("kit",rank.getKit().getBackendName())
+                                    .add("level",rank.getLevel())
+                                    .build()
+                            ).collect(Collectors.toList())
+                    ).build()
+
+                )
                 .build();
+    }
+
+    @Override
+    public List<KitRank> getRanks() {
+        return this.kitRanks;
+    }
+
+    @Override
+    public Optional<KitRank> getRank(Kit kit) {
+        return kitRanks.stream().filter(kitRank -> kitRank.getKit().equals(kit)).findAny();
+    }
+
+    @Override
+    public boolean hasRank(Kit kit) {
+        return kitRanks.stream().anyMatch(kitRank -> kitRank.getKit().equals(kit));
+    }
+
+    @Override
+    public KitRank addRank(KitRank rank) {
+        if (!this.kitRanks.contains(rank))
+            this.kitRanks.add(rank);
+        return rank;
+    }
+
+    @Override
+    public boolean removeRank(KitRank rank) {
+        return this.kitRanks.remove(rank);
     }
 }

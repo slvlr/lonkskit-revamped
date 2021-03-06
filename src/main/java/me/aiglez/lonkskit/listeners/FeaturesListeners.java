@@ -186,12 +186,10 @@ public class FeaturesListeners implements Listener {
                 killstreaks.replace(killer,killstreaks.get(killer) + 1);
                 killstreaks.replace(victim,0);
                 if (demoBlocks.containsValue(victim)){
-                    FeaturesListeners.demoBlocks.entrySet().stream().filter(a -> a.getValue() == victim).forEach(block -> {
-                        Schedulers.sync().runLater(() -> {
-                            block.getKey().setBlockData(Material.AIR.createBlockData());
-                            Schedulers.sync().runLater(() -> block.getKey().getState().update(true),2L);
-                        },3L);
-                    });
+                    FeaturesListeners.demoBlocks.entrySet().stream().filter(a -> a.getValue() == victim).forEach(block -> Schedulers.sync().runLater(() -> {
+                        block.getKey().setBlockData(Material.AIR.createBlockData());
+                        Schedulers.sync().runLater(() -> block.getKey().getState().update(true),2L);
+                    },3L));
                 }
             }
         }

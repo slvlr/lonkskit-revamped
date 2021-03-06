@@ -1,8 +1,9 @@
-package me.aiglez.lonkskit.kits;
-
+package me.aiglez.lonkskit.guis;
 
 import me.aiglez.lonkskit.LonksKitProvider;
 import me.aiglez.lonkskit.commands.MainCommand;
+import me.aiglez.lonkskit.kits.KitRank;
+import me.aiglez.lonkskit.kits.KitSelectorHolder;
 import me.aiglez.lonkskit.messages.Messages;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.players.LocalRent;
@@ -14,12 +15,15 @@ import me.lucko.helper.menu.paginated.PaginatedGuiBuilder;
 import me.lucko.helper.menu.scheme.MenuScheme;
 import me.lucko.helper.menu.scheme.StandardSchemeMappings;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
+
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class CustomGUI extends PaginatedGui {
+public class ShopGUI extends PaginatedGui {
     private static final PaginatedGuiBuilder SETTINGS;
+    private final LocalPlayer localPlayer;
     static {
         final MenuScheme scheme = new MenuScheme(StandardSchemeMappings.HARDENED_CLAY);
         final List<Integer> itemSlots = new MenuScheme()
@@ -39,42 +43,31 @@ public class CustomGUI extends PaginatedGui {
                 .mask("100000000")
                 .getMaskedIndexes().get(0);
 
-        SETTINGS = PaginatedGuiBuilder.create().title("Custom Kit Selector")
+        SETTINGS = PaginatedGuiBuilder.create().title("&lRank up Selector")
                 .itemSlots(itemSlots)
                 .scheme(scheme)
                 .nextPageSlot(nextPageSlot).previousPageSlot(previousPageSlot);
     }
-    private final LocalPlayer localPlayer;
-    public CustomGUI(LocalPlayer localPlayer) {
+    public ShopGUI(LocalPlayer localPlayer) {
         super(getContent(localPlayer), localPlayer.toBukkit(), SETTINGS);
         this.localPlayer = localPlayer;
     }
     private static Function<PaginatedGui,List<Item>> getContent(LocalPlayer localPlayer) {
-        return gui -> LonksKitProvider.getKitFactory().getCustomKits().stream()
+        return gui -> LonksKitProvider.getKitFactory().getEnabledKits().stream()
                 .map(kit -> {
-                    final KitSelectorHolder holder = kit.getSelectorHolder();
-                    if (!holder.display()) {
-                        Logger.severe("A weird error occurred (kit selector holder not found for kit " + kit.getBackendName() + ")");
-                        return ItemStackBuilder.of(Material.ITEM_FRAME).build(() -> localPlayer.msg("Hi"));
-                    }
-
-                    // has rented the kit
+//                    if (!holder.display()) {
+//                        Logger.severe("A weird error occurred (kit selector holder not found for kit " + kit.getBackendName() + ")");
+//                        return ItemStackBuilder.of(Material.ITEM_FRAME).build(() -> localPlayer.msg("Hi"));
+//                    }
                     if (localPlayer.hasRented(kit)) {
                         final LocalRent localRent = localPlayer.getRent(kit).orElseThrow(() -> new IllegalStateException("A weird error has occurred, LocalPlayer#hasRented returns true, but LocalPlayer#getRent returns nothing!"));
                         return ItemStackBuilder
-                                .of(holder.buildItem(kit, KitSelectorGUI.State.RENTED, localRent.getLeftUses()))
+                                .of(KitSelectorHolder.buildItemR(kit, KitSelectorGUI.State.RENTED, localRent.getLeftUses(), localPlayer))
                                 .build(() -> {
                                     if (!MainCommand.check(localPlayer)) {
                                         if (!localPlayer.hasSelectedKit()) {
                                             if (localPlayer.isValid()) {
-                                                if (localPlayer.toBukkit().hasPermission("lonkskit.customkits")) {
-                                                    if (localRent.getLeftUses() > 0) {
-                                                        localPlayer.setSelectedKit(kit);
-                                                        localPlayer.msg(Messages.SELECTOR_SELECTED, kit.getDisplayName());
-                                                        gui.close();
-                                                        localRent.incrementUses();
-                                                    }else localPlayer.msg("left : " + localRent.getLeftUses());
-                                                }else localPlayer.msg("You don't have permission");
+                                                localPlayer.getRank(kit).get().increaseLevel();
                                             } else localPlayer.msg("&3enter the kitpvp world to select a kit");
                                         } else localPlayer.msg("&3clear your kit then choose another one");
                                     } else
@@ -84,16 +77,14 @@ public class CustomGUI extends PaginatedGui {
                         // has permanent access
                         if (localPlayer.hasAccess(kit)) {
                             return ItemStackBuilder
-                                    .of(holder.buildItem(kit, KitSelectorGUI.State.PERMANENT_ACCESS, 0))
+                                    .of(KitSelectorHolder.buildItemR(kit, KitSelectorGUI.State.PERMANENT_ACCESS, 0, localPlayer))
                                     .build(() -> {
                                         if (!MainCommand.check(localPlayer)) {
                                             if (!localPlayer.hasSelectedKit()) {
                                                 if (localPlayer.isValid()) {
-                                                    if (localPlayer.toBukkit().hasPermission("lonkskit.customkits")) {
                                                         localPlayer.setSelectedKit(kit);
                                                         localPlayer.msg(Messages.SELECTOR_SELECTED, kit.getDisplayName());
                                                         gui.close();
-                                                    }else localPlayer.msg("You don't have permission");
                                                 } else
                                                     localPlayer.msg("&3you should join the kitpvp world to select a kit");
                                             } else localPlayer.msg("&3clear your kit then choose another one");
@@ -103,7 +94,7 @@ public class CustomGUI extends PaginatedGui {
                             // no access
                         } else {
                             return ItemStackBuilder
-                                    .of(holder.buildItem(kit, KitSelectorGUI.State.NO_ACCESS, 0))
+                                    .of(KitSelectorHolder.buildItemR(kit, KitSelectorGUI.State.NO_ACCESS, 0, localPlayer))
                                     .build(() -> {
                                         if (kit.isRentable()) {
                                             final boolean transaction = localPlayer.decrementPoints(kit.getRentCost());
@@ -120,10 +111,9 @@ public class CustomGUI extends PaginatedGui {
                                         }
                                     });
                         }
+
+
                     }
-                })
-                .collect(Collectors.toList());
+                }).collect(Collectors.toList());
     }
-
-
 }

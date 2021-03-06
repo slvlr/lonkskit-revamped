@@ -1,7 +1,9 @@
 package me.aiglez.lonkskit.kits.impl;
 
+import com.google.common.collect.Maps;
 import com.google.common.primitives.Ints;
 import com.google.common.reflect.TypeToken;
+import me.aiglez.lonkskit.Constants;
 import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.LonksKitProvider;
 import me.aiglez.lonkskit.abilities.Ability;
@@ -11,6 +13,7 @@ import me.aiglez.lonkskit.kits.KitSelectorHolder;
 import me.aiglez.lonkskit.utils.Logger;
 import me.aiglez.lonkskit.utils.PotionEffectBuilder;
 import me.aiglez.lonkskit.utils.items.ItemStackParser;
+import me.lucko.helper.Services;
 import me.lucko.helper.config.ConfigFactory;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.config.objectmapping.ObjectMappingException;
@@ -27,7 +30,7 @@ public class KitFactoryImpl implements KitFactory {
 
     private final Set<Kit> kits;
     private final SortedSet<Kit> orderedKits;
-
+    private static final Map<Kit,List<String>> lores = Maps.newHashMap();
     public KitFactoryImpl() {
         this.kits = new HashSet<>();
         this.orderedKits = new TreeSet<>((o1, o2) -> Ints.compare(o1.getSelectorHolder().slot(), o2.getSelectorHolder().slot()));
@@ -55,7 +58,7 @@ public class KitFactoryImpl implements KitFactory {
     public boolean tryRegisterKit(Kit kit) {
         if(kit == null) return false;
         if(kit.getBackendName() != null && kit.getDisplayName() != null && kit.getSelectorHolder() != null
-                && kit.getInventoryArmors() != null && kit.getInventoryContent() != null) {
+                && kit.getArmors()!= null && kit.getInventories() != null) {
             return kits.add(kit);
         }
         return false;
@@ -81,7 +84,7 @@ public class KitFactoryImpl implements KitFactory {
             }
 
             final ConfigurationNode node = ConfigFactory.yaml().load(file);
-            boolean registerResult = tryRegisterKit(getKitByNode(node). get());
+            boolean registerResult = tryRegisterKit(getKitByNode(node).get());
             if(!registerResult) {
                 Logger.warn("Couldn't load kit at " + file.getName());
             }
@@ -107,28 +110,36 @@ public class KitFactoryImpl implements KitFactory {
 
         final boolean enabled = node.getNode("enabled").getBoolean(true);
 
-        List<ItemStack> inventoryContent;
-        Map<EquipmentSlot, ItemStack> inventoryArmor;
+        final Map<Integer,List<ItemStack>> inventoryContents = Maps.newHashMap();
+        final Map<Integer,Map<EquipmentSlot, ItemStack>> inventoryArmors = Maps.newHashMap();
         try {
-            inventoryContent = Chain.start(node.getNode("inventory", "content").getList(new TypeToken<String>() {}))
-                    .map(list -> list.stream().map(ItemStackParser::parseByString).collect(Collectors.toList()))
-                    .map(optionals -> optionals.stream().filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList()))
-                    .orElseIfNull(Collections.emptyList()).endOrNull();
-
-            inventoryArmor = Chain.start(node.getNode("inventory", "armor").getValue(new TypeToken<Map<EquipmentSlot, String>>() {}))
-                    .map(map -> {
-                        Map<EquipmentSlot, ItemStack> rt = new HashMap<>();
-                        map.forEach((equipmentSlot, unparsed) -> {
-                            final Optional<ItemStack> parsed = ItemStackParser.parseByString(unparsed);
-                            parsed.ifPresent(itemStack -> rt.put(equipmentSlot, itemStack));
-                        });
-                        return rt;
-                    })
-                    .orElseIfNull(Collections.emptyMap()).endOrNull();
+            for (int i = 1; i <= 100 ; i++){
+                try {
+                    final ConfigurationNode inventoryNode = node.getNode("upgrades","level" + i , "inventory","content");
+                    System.out.println(inventoryNode.getValueType().name());
+                    
+                    inventoryContents.put(i,inventoryNode.getList(TypeToken.of(String.class)).stream()
+                            .map(ItemStackParser::parseByString).filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList()));
+//                        .map(list -> list.stream().map(ItemStackParser::parseByString).collect(Collectors.toSet()))
+//                        .map(optionals -> optionals.stream().filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList()))
+//                        .orElseIfNull(Collections.emptyList()).endOrNull());
+                    System.out.println(inventoryContents.values());
+                    inventoryArmors.put(i,Chain.start(node.getNode("upgrades","level" + i ,"armor").getValue(new TypeToken<Map<EquipmentSlot, String>>() {}))
+                            .map(map -> {
+                                Map<EquipmentSlot, ItemStack> rt = new HashMap<>();
+                                map.forEach((equipmentSlot, unparsed) -> {
+                                    final Optional<ItemStack> parsed = ItemStackParser.parseByString(unparsed);
+                                    parsed.ifPresent(itemStack -> rt.put(equipmentSlot, itemStack));
+                                });
+                                return rt;
+                            })
+                            .orElseIfNull(Collections.emptyMap()).endOrNull());
+                }catch (ArrayIndexOutOfBoundsException | NullPointerException ignored){}
+            }
         } catch (ObjectMappingException e) {
             Logger.severe("Couldn't map an object (LIST) // " + e.getMessage());
-            inventoryContent = Collections.emptyList();
-            inventoryArmor = Collections.emptyMap();
+            inventoryContents.clear();
+            inventoryArmors.clear();
         }
 
         final boolean rentable = node.getNode("rent", "rentable").getBoolean(false);
@@ -168,8 +179,8 @@ public class KitFactoryImpl implements KitFactory {
         final Kit newKit = new MemoryKit(
                 backendName,
                 displayName,
-                inventoryContent,
-                inventoryArmor,
+                inventoryContents,
+                inventoryArmors,
                 kitSelectorHolder,
                 rentable,
                 rentCost,
@@ -177,8 +188,22 @@ public class KitFactoryImpl implements KitFactory {
                 isCustom, potionEffects,
                 abilities
         );
+        final List<String> lore = new LinkedList<>();
+        for (int i = 1; i <= node.getNode("upgrades").getChildrenMap().keySet().size() ; i++){
+            try {
+                lore.addAll(
+                        node.getNode("upgrades","level" + i,"lore").getList(TypeToken.of(String.class))
+                );
+            } catch (ObjectMappingException e) {
+                KitPlugin.getSingleton().getLogger().warning("Can't read lore list of " + newKit.getDisplayName());
+            }
+        }
 
         if(newKit != null) newKit.setEnabled(enabled);
         return Optional.of(newKit);
+    }
+
+    public static Map<Kit, List<String>> getLores() {
+        return lores;
     }
 }

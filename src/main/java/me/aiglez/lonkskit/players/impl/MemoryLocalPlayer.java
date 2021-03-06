@@ -7,7 +7,8 @@ import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.controllers.Controllers;
 import me.aiglez.lonkskit.events.KitSelectEvent;
 import me.aiglez.lonkskit.kits.Kit;
-import me.aiglez.lonkskit.kits.KitSelectorGUI;
+import me.aiglez.lonkskit.kits.KitRank;
+import me.aiglez.lonkskit.guis.KitSelectorGUI;
 import me.aiglez.lonkskit.messages.Messages;
 import me.aiglez.lonkskit.messages.Replaceable;
 import me.aiglez.lonkskit.players.LocalMetrics;
@@ -107,25 +108,20 @@ public class MemoryLocalPlayer implements LocalPlayer {
             return;
         }
         final Player player = toBukkit();
-
         player.getInventory().clear();
         player.getActivePotionEffects().forEach(activePotion -> player.removePotionEffect(activePotion.getType()));
         player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
         player.setExp(0f);
         player.setLevel(0);
         if(player.isFlying()) player.setFlying(false);
-
         player.addPotionEffects(this.selectedKit.getPotionEffects());
-
-        this.selectedKit.getInventoryArmors().forEach((equipmentSlot, item) -> player.getInventory().setItem(equipmentSlot, item));
-
-        try {
-            player.getInventory().addItem(this.selectedKit.getInventoryContent().toArray(new ItemStack[0]));
-        } catch (ArrayIndexOutOfBoundsException e) {
-            e.printStackTrace();
-            return;
+        if (!this.offline.getRank(kit).isPresent()){
+            this.offline.addRank(new KitRank(this,kit));
         }
-        return;
+        this.selectedKit.getInventoryArmors(this.offline.getRank(kit).get().getLevel()).forEach((equipmentSlot, item) -> player.getInventory().setItem(equipmentSlot, item));
+
+        this.selectedKit.getInventoryContent(this.offline.getRank(kit).get().getLevel()).forEach(item -> this.getInventory().addItem(item));
+
     }
 
     @Override
@@ -195,6 +191,11 @@ public class MemoryLocalPlayer implements LocalPlayer {
     @Override
     public void setInKP(boolean value){
         this.inKP = value;
+    }
+
+    @Override
+    public KitRank getKitRank() {
+        return null;
     }
 
     @Override
@@ -293,5 +294,30 @@ public class MemoryLocalPlayer implements LocalPlayer {
     @Override
     public JsonElement serialize() {
         return this.offline.serialize();
+    }
+
+    @Override
+    public List<KitRank> getRanks() {
+        return this.offline.getRanks();
+    }
+
+    @Override
+    public Optional<KitRank> getRank(Kit kit) {
+        return this.offline.getRank(kit);
+    }
+
+    @Override
+    public boolean hasRank(Kit kit) {
+        return this.offline.hasRank(kit);
+    }
+
+    @Override
+    public KitRank addRank(KitRank rank) {
+        return this.offline.addRank(rank);
+    }
+
+    @Override
+    public boolean removeRank(KitRank rank) {
+        return this.offline.removeRank(rank);
     }
 }

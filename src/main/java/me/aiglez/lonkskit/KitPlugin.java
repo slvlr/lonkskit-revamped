@@ -1,6 +1,7 @@
 package me.aiglez.lonkskit;
 
 import me.aiglez.lonkskit.abilities.factory.AbilityFactory;
+import me.aiglez.lonkskit.abilities.factory.AbilityFactoryImpl;
 import me.aiglez.lonkskit.commands.CommandsRegistry;
 import me.aiglez.lonkskit.commands.KitCommand;
 import me.aiglez.lonkskit.controllers.Controllers;
@@ -37,7 +38,6 @@ public final class KitPlugin extends ExtendedJavaPlugin {
         Logger.fine("Loading configuration files...");
         this.conf = loadConfigNode("config.yml");
         this.lang = loadConfigNode("messages.yml");
-
         this.abilityFactory = AbilityFactory.make();
         this.kitFactory = KitFactory.make();
         this.localPlayerFactory = LocalPlayerFactory.make();

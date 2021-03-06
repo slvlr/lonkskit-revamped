@@ -17,7 +17,7 @@ import java.util.UUID;
 
 public class RecallHelper {
 
-    private static final List<EntityPlayer> NPC = new ArrayList<EntityPlayer>();
+    private static final List<EntityPlayer> NPC = new ArrayList<>();
     public static EntityPlayer createNpc(Player player){
         String[] skin = getSkin(player);
         MinecraftServer server = ((CraftServer) Bukkit.getServer()).getServer();

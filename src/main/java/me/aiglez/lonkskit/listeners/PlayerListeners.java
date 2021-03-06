@@ -1,37 +1,27 @@
 package me.aiglez.lonkskit.listeners;
 
-import com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent;
 import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.WorldProvider;
-import me.aiglez.lonkskit.abilities.itembased.DemomanAbility;
 import me.aiglez.lonkskit.commands.MainCommand;
 import me.aiglez.lonkskit.controllers.Controllers;
-import me.aiglez.lonkskit.controllers.PlayerController;
-import me.aiglez.lonkskit.kits.CustomGUI;
-import me.aiglez.lonkskit.kits.KitSelectorGUI;
+import me.aiglez.lonkskit.guis.CustomGUI;
+import me.aiglez.lonkskit.guis.ShopGUI;
 import me.aiglez.lonkskit.messages.Messages;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.struct.HotbarItemStack;
 import me.aiglez.lonkskit.utils.Logger;
 import me.aiglez.lonkskit.utils.Various;
-import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.Schedulers;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Trident;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
@@ -94,9 +84,9 @@ public class PlayerListeners implements Listener {
                                 }
                                 else if (e.getItem().hasItemMeta()){
                                     if (e.getItem().getItemMeta().hasDisplayName()){
-                                        if (e.getItem().getItemMeta().getDisplayName().toLowerCase().contains("points shop")){
+                                        if (e.getItem().getItemMeta().getDisplayName().toLowerCase().contains("points")){
                                             if (localPlayer.isValid()){
-                                            localPlayer.msg("&3 Points SHop");
+                                                new ShopGUI(localPlayer).open();
                                             }else {
                                                 localPlayer.msg("&3 You should enter the kitpvp world first");
                                                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"mail send rangewonk " + e.getPlayer().getDisplayName() + " has kitpvp items in " + e.getPlayer().getWorld().getName());
@@ -124,13 +114,11 @@ public class PlayerListeners implements Listener {
         localPlayer.getMetrics().resetKillStreak();
         localPlayer.setBukkit(null);
         if (FeaturesListeners.demoBlocks.containsValue(localPlayer)){
-            FeaturesListeners.demoBlocks.entrySet().stream().filter(a -> a.getValue() == localPlayer).forEach(block -> {
-                Schedulers.sync().runLater(() -> {
-                    block.getKey().setBlockData(Material.AIR.createBlockData());
-                    Schedulers.sync().runLater(() -> block.getKey().getState().update(true),2L);
-                    FeaturesListeners.demoBlocks.remove(block.getKey());
-                },3L);
-            });
+            FeaturesListeners.demoBlocks.entrySet().stream().filter(a -> a.getValue() == localPlayer).forEach(block -> Schedulers.sync().runLater(() -> {
+                block.getKey().setBlockData(Material.AIR.createBlockData());
+                Schedulers.sync().runLater(() -> block.getKey().getState().update(true),2L);
+                FeaturesListeners.demoBlocks.remove(block.getKey());
+            },3L));
         }
     }
 
@@ -141,12 +129,13 @@ public class PlayerListeners implements Listener {
     public void onAttack(EntityDamageByEntityEvent e) {
         if(!(e.getEntity() instanceof Player)) return;
         final LocalPlayer victim = LocalPlayer.get((Player) e.getEntity());
-        LocalPlayer damager = null;
+        LocalPlayer damager;
         if(e.getDamager() instanceof Player) {
             damager = LocalPlayer.get((Player) e.getDamager());
         } else if(e.getDamager() instanceof Projectile) {
             final ProjectileSource shooter = ((Projectile) e.getDamager()).getShooter();
             if(shooter == null) return;
+            if (!(shooter instanceof Player)) return;
             damager = LocalPlayer.get((Player) shooter);
         } else return;
 
