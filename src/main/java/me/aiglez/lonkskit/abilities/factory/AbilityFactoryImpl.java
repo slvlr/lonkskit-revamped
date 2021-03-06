@@ -9,6 +9,7 @@ import me.aiglez.lonkskit.abilities.itembased.johan.*;
 import me.aiglez.lonkskit.exceptions.AbilityFileNotFoundException;
 import me.aiglez.lonkskit.exceptions.AbilityRegisterException;
 import me.aiglez.lonkskit.utils.Logger;
+import me.lucko.helper.Helper;
 import me.lucko.helper.config.ConfigFactory;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
@@ -125,7 +126,7 @@ public class AbilityFactoryImpl implements AbilityFactory {
     }
 
     public static ConfigurationNode getFileByName(String name) {
-        final File abilityFile = new File(KitPlugin.getSingleton().getDataFolder() + File.separator + "abilities", name + ".yml");
+        final File abilityFile = new File(Helper.hostPlugin().getDataFolder() + File.separator + "abilities", name + ".yml");
         if(!abilityFile.exists()) {
             throw new AbilityFileNotFoundException(name);
         }
@@ -133,7 +134,7 @@ public class AbilityFactoryImpl implements AbilityFactory {
     }
 
     private YAMLConfigurationLoader yamlConfigurationLoader(String name) {
-        final File file = new File(KitPlugin.getSingleton().getDataFolder() + File.separator + "abilities", name + ".yml");
+        final File file = new File(Helper.hostPlugin().getDataFolder() + File.separator + "abilities", name + ".yml");
         if(!file.exists()) {
             throw new AbilityFileNotFoundException(name);
         }

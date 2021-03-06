@@ -28,7 +28,7 @@ public class PlayerController {
     }
 
     public void loadHotbarItems() {
-        final ConfigurationNode config = KitPlugin.getSingleton().getConf().getNode("hotbar");
+        final ConfigurationNode config = Helper.hostPlugin().getConf().getNode("hotbar");
 
         for (final Object childName : config.getChildrenMap().keySet()) {
             final ConfigurationNode child = config.getNode(childName);

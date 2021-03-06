@@ -6,9 +6,9 @@ import me.aiglez.lonkskit.Constants;
 import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.controllers.Controllers;
 import me.aiglez.lonkskit.events.KitSelectEvent;
+import me.aiglez.lonkskit.guis.KitSelectorGUI;
 import me.aiglez.lonkskit.kits.Kit;
 import me.aiglez.lonkskit.kits.KitRank;
-import me.aiglez.lonkskit.guis.KitSelectorGUI;
 import me.aiglez.lonkskit.messages.Messages;
 import me.aiglez.lonkskit.messages.Replaceable;
 import me.aiglez.lonkskit.players.LocalMetrics;
@@ -27,7 +27,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import javax.annotation.Nonnull;

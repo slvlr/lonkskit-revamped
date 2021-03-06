@@ -98,9 +98,9 @@ public class InteractListeners implements Listener {
             if (event.getItem().getType() == Material.MUSHROOM_STEW && (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
                 if (event.getPlayer().getHealth() == 20D) {
                     event.getPlayer().sendMessage("[Debug] You're full HP");
-                } else if (event.getPlayer().getHealth() + KitPlugin.getSingleton().getConf().getNode("soup-healing").getInt() <= 20.0D) {
-                    event.getPlayer().setHealth(event.getPlayer().getHealth() + (double) KitPlugin.getSingleton().getConf().getNode("soup-healing").getInt());
-                    event.getPlayer().sendMessage("[Debug] Added " + KitPlugin.getSingleton().getConf().getNode("soup-healing").getInt());
+                } else if (event.getPlayer().getHealth() + Helper.hostPlugin().getConf().getNode("soup-healing").getInt() <= 20.0D) {
+                    event.getPlayer().setHealth(event.getPlayer().getHealth() + (double) Helper.hostPlugin().getConf().getNode("soup-healing").getInt());
+                    event.getPlayer().sendMessage("[Debug] Added " + Helper.hostPlugin().getConf().getNode("soup-healing").getInt());
                     event.getPlayer().getInventory().setItemInMainHand(null);
                 } else {
                     event.getPlayer().setHealth(20.0D);

@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonElement;
-import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.players.LocalPlayerFactory;
 import me.aiglez.lonkskit.players.OfflineLocalPlayer;
@@ -26,7 +25,7 @@ public class LocalPlayerFactoryImpl implements LocalPlayerFactory {
 
     public LocalPlayerFactoryImpl() {
         this.cache = Sets.newHashSet();
-        this.cacheFile = new File(KitPlugin.getSingleton().getDataFolder(), "cache.json");
+        this.cacheFile = new File(Helper.hostPlugin().getDataFolder(), "cache.json");
         this.setType = new TypeToken<HashSet<OfflineLocalPlayer>>(){}.getType();
     }
 

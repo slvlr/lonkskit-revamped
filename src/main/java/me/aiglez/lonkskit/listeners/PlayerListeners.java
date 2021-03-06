@@ -160,7 +160,7 @@ public class PlayerListeners implements Listener {
         e.setDeathMessage(null);
         victim.setSelectedKit(null);
         e.getDrops().clear();
-        for (int i = 0; i < KitPlugin.getSingleton().getConf().getNode("kill-drops").getInt(); i++ ) {
+        for (int i = 0; i < Helper.hostPlugin().getConf().getNode("kill-drops").getInt(); i++ ) {
             e.getEntity().getWorld().dropItem(e.getEntity().getLocation().clone().add(i,0,0), new ItemStack(Material.MUSHROOM_STEW));
         }
         e.getEntity().setBedSpawnLocation(WorldProvider.KP_WORLD.getSpawnLocation());

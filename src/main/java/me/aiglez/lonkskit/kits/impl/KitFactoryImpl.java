@@ -69,7 +69,7 @@ public class KitFactoryImpl implements KitFactory {
      */
     @Override
     public boolean loadKits() {
-        final File kitsDir = new File(KitPlugin.getSingleton().getDataFolder() + File.separator + "kits");
+        final File kitsDir = new File(Helper.hostPlugin().getDataFolder() + File.separator + "kits");
         final File[] files = kitsDir.listFiles((dir, name) -> name.endsWith(".yml"));
         if(files == null || files.length == 0) {
             Logger.warn("No file found in kits/ directory !");
@@ -117,7 +117,7 @@ public class KitFactoryImpl implements KitFactory {
                 try {
                     final ConfigurationNode inventoryNode = node.getNode("upgrades","level" + i , "inventory","content");
                     System.out.println(inventoryNode.getValueType().name());
-                    
+
                     inventoryContents.put(i,inventoryNode.getList(TypeToken.of(String.class)).stream()
                             .map(ItemStackParser::parseByString).filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList()));
 //                        .map(list -> list.stream().map(ItemStackParser::parseByString).collect(Collectors.toSet()))
@@ -195,7 +195,7 @@ public class KitFactoryImpl implements KitFactory {
                         node.getNode("upgrades","level" + i,"lore").getList(TypeToken.of(String.class))
                 );
             } catch (ObjectMappingException e) {
-                KitPlugin.getSingleton().getLogger().warning("Can't read lore list of " + newKit.getDisplayName());
+                Helper.hostPlugin().getLogger().warning("Can't read lore list of " + newKit.getDisplayName());
             }
         }
 

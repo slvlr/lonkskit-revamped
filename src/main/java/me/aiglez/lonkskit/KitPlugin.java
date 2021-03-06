@@ -12,9 +12,11 @@ import me.aiglez.lonkskit.listeners.InteractListeners;
 import me.aiglez.lonkskit.listeners.PlayerListeners;
 import me.aiglez.lonkskit.players.LocalPlayerFactory;
 import me.aiglez.lonkskit.utils.Logger;
+import me.lucko.helper.Helper;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.plugin.ExtendedJavaPlugin;
 import me.lucko.helper.plugin.ap.Plugin;
+import org.bukkit.plugin.ServicePriority;
 
 @Plugin(
         name = "LonksKit", version  = "1.0.9",
@@ -41,7 +43,7 @@ public final class KitPlugin extends ExtendedJavaPlugin {
         this.abilityFactory = AbilityFactory.make();
         this.kitFactory = KitFactory.make();
         this.localPlayerFactory = LocalPlayerFactory.make();
-
+        provideService(KitPlugin.class,this, ServicePriority.Highest);
         Logger.fine("Loading abilities...");
         this.abilityFactory.registerAbilities();
 

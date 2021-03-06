@@ -28,7 +28,7 @@ public class Various {
         Preconditions.checkNotNull(item, "item may not be null");
         if(!item.hasItemMeta() || !item.getItemMeta().hasLore()) return false;
         return item.getLore().stream().anyMatch(s -> StringUtils.containsIgnoreCase(s, Constants.THROWABLE_LORE));
-    }
+        }
 
     public static void damage(LocalPlayer localPlayer, double amount, boolean ignoreArmor) {
         Preconditions.checkNotNull(localPlayer, "local player may not be null");

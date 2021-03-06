@@ -37,7 +37,7 @@ public abstract class Leaderboard<T> {
         this.format = Text.colorize(format);
 
         Logger.debug("Creating a hologram [{0}] with refresh rate of ({1} {2}) at [{3}]", this.name, refreshRate, timeUnit.name(), Locations.toString(location));
-        this.hologram = HologramsAPI.createHologram(KitPlugin.getSingleton(), location);
+        this.hologram = HologramsAPI.createHologram(Helper.hostPlugin(), location);
         this.hologram.appendTextLine("§8§m--------------------------");
         this.lines = Lists.newArrayList();
         for (int i = 0; i < SIZE; i++) {

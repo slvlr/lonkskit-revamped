@@ -19,7 +19,7 @@ public class LeaderboardController {
     private final List<Leaderboard<?>> leaderboards;
 
     public LeaderboardController() {
-        this.config = KitPlugin.getSingleton().getConf().getNode("leaderboards");
+        this.config = Helper.hostPlugin().getConf().getNode("leaderboards");
         this.leaderboards = Lists.newArrayList();
     }
 

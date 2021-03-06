@@ -11,7 +11,7 @@ public class FlamerAbility extends FunctionalAbility {
 
     public FlamerAbility(YAMLConfigurationLoader configurationLoader) throws IOException {
         super("flamer", configurationLoader);
-        new FlamerListeners(KitPlugin.getSingleton());
+        new FlamerListeners(Helper.hostPlugin());
     }
 
     @Override

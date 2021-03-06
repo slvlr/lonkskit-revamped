@@ -25,7 +25,7 @@ public class CreeperAbility extends FunctionalAbility {
                 .handler(e ->{
                     if (times2 == 0) {
                         e.setCancelled(true);
-                        Bukkit.getScheduler().runTaskLater(KitPlugin.getSingleton(), () -> {
+                        Bukkit.getScheduler().runTaskLater(Helper.hostPlugin(), () -> {
                             e.getEntity().setVelocity(e.getEntity().getLocation().getDirection().multiply(getConfiguration().getNode("creeper-launch").getDouble(1.5D)).setY(3D));
                         },1L);
                     }
