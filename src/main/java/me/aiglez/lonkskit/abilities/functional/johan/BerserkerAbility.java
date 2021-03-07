@@ -1,24 +1,15 @@
 package me.aiglez.lonkskit.abilities.functional.johan;
 
-import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.abilities.AbilityPredicates;
-import me.aiglez.lonkskit.abilities.FunctionalAbility;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
-import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
-import me.lucko.helper.metadata.Metadata;
-import org.bukkit.Location;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Fireball;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.io.IOException;
-import java.util.Objects;
 
 public class BerserkerAbility extends ItemStackAbility {
 

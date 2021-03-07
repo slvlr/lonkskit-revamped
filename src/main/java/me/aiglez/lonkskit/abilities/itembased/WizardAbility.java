@@ -9,20 +9,11 @@ import me.lucko.helper.Events;
 import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.metadata.Metadata;
 import me.lucko.helper.metadata.SoftValue;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Snowball;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.io.IOException;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**

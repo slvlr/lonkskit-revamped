@@ -1,22 +1,23 @@
 package me.aiglez.lonkskit.listeners;
 
 import com.google.common.collect.Maps;
-import com.google.common.reflect.TypeToken;
 import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.WorldProvider;
-import me.aiglez.lonkskit.abilities.Ability;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.abilities.factory.AbilityFactoryImpl;
 import me.aiglez.lonkskit.abilities.itembased.DemomanAbility;
+import me.aiglez.lonkskit.abilities.itembased.johan.TeleAbility;
 import me.aiglez.lonkskit.commands.MainCommand;
 import me.aiglez.lonkskit.messages.Replaceable;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.Various;
 import me.lucko.helper.Schedulers;
-import me.lucko.helper.config.objectmapping.ObjectMappingException;
+import me.lucko.helper.Services;
 import me.lucko.helper.cooldown.Cooldown;
 import me.lucko.helper.cooldown.CooldownMap;
-import org.bukkit.*;
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -24,13 +25,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import java.util.*;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 public class FeaturesListeners implements Listener {
     public FeaturesListeners(KitPlugin plugin){plugin.registerListener(this);}
-    public static final Material teleM = Material.matchMaterial(AbilityFactoryImpl.getFileByName("tele").getNode("item", "material").getString("STONE"));
+    public static final Material teleM = Services.load(TeleAbility.class).getItemStack().getType();
+            //Material.matchMaterial(AbilityFactoryImpl.getFileByName("tele").getNode("item", "material").getString("STONE"));
     private static final CooldownMap<LocalPlayer> cooldown = CooldownMap.create(Cooldown.of(AbilityFactoryImpl.getFileByName("tele").getNode("cooldown").getInt(10),TimeUnit.SECONDS));
     public static final Map<Block,LocalPlayer> demoBlocks = new HashMap<>();
     public static final Map<LocalPlayer,Integer> killstreaks = Maps.newHashMap();

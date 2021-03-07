@@ -1,6 +1,5 @@
 package me.aiglez.lonkskit.abilities.helpers;
 
-import com.google.common.util.concurrent.AtomicDouble;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.Schedulers;
 import org.apache.commons.lang.StringUtils;

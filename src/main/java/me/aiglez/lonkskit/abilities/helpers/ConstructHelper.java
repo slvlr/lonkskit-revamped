@@ -61,12 +61,10 @@ public class ConstructHelper {
             blocks.stream().filter(block -> canBuildOnTop(block,Material.AIR)).forEach(block -> block.setType(WALL_MATERIAL));
             Schedulers
                     .sync()
-                    .runLater(() -> {
-                        blocks.stream().filter(block -> canBuildOnTop(block,Material.AIR)).forEach(block -> {
-                            block.setType(Material.AIR);
-                            Schedulers.sync().runLater(() -> block.getState().update(),2L);
-                        });
-                    },200L);
+                    .runLater(() -> blocks.stream().filter(block -> canBuildOnTop(block,Material.AIR)).forEach(block -> {
+                        block.setType(Material.AIR);
+                        Schedulers.sync().runLater(() -> block.getState().update(),2L);
+                    }),200L);
             return true;
         } else {
             return false;

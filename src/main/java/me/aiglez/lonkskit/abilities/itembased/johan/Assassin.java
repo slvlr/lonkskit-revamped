@@ -7,7 +7,6 @@ import me.lucko.helper.Events;
 import me.lucko.helper.Schedulers;
 import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import org.bukkit.ChatColor;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 
 import java.io.IOException;
@@ -16,7 +15,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Assassin extends FunctionalAbility {
-    static List<LocalPlayer> list = new ArrayList<>();
+    static final List<LocalPlayer> list = new ArrayList<>();
     public Assassin(YAMLConfigurationLoader configurationLoader) throws IOException {
         super("assassin", configurationLoader);
     }

@@ -14,7 +14,6 @@ import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.cooldown.Cooldown;
 import me.lucko.helper.cooldown.CooldownMap;
 import me.lucko.helper.function.chain.Chain;
-import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Material;

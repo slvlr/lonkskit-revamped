@@ -45,10 +45,9 @@ public class CustomGUI extends PaginatedGui {
                 .scheme(scheme)
                 .nextPageSlot(nextPageSlot).previousPageSlot(previousPageSlot);
     }
-    private final LocalPlayer localPlayer;
+
     public CustomGUI(LocalPlayer localPlayer) {
         super(getContent(localPlayer), localPlayer.toBukkit(), SETTINGS);
-        this.localPlayer = localPlayer;
     }
     private static Function<PaginatedGui,List<Item>> getContent(LocalPlayer localPlayer) {
         return gui -> LonksKitProvider.getKitFactory().getCustomKits().stream()

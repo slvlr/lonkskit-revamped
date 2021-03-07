@@ -59,7 +59,7 @@ public class WraithAbility extends ItemStackAbility {
                                         }
                                     }
                                 }
-                                Schedulers.sync().runLater(() -> map.remove(e.getPlayer().getUniqueId()), (long) (configuration.getNode("cooldown").getInt(0) * 20));
+                                Schedulers.sync().runLater(() -> map.remove(e.getPlayer().getUniqueId()), configuration.getNode("cooldown").getInt(0) * 20L);
                             }
                         }
                         if (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
@@ -80,8 +80,7 @@ public class WraithAbility extends ItemStackAbility {
                 .handler(e -> {
                     if (e.getKit().getBackendName().toUpperCase().contains("WRAITH")) {
                         wraithPlayers.add(e.getLocalPlayer());
-                    } else if (wraithPlayers.contains(e.getLocalPlayer()))
-                        wraithPlayers.remove(e.getLocalPlayer());
+                    } else wraithPlayers.remove(e.getLocalPlayer());
                 });
     }
 

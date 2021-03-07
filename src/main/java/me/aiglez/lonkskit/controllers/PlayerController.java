@@ -12,6 +12,7 @@ import me.aiglez.lonkskit.struct.HotbarItemStack;
 import me.aiglez.lonkskit.utils.Logger;
 import me.aiglez.lonkskit.utils.Various;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
+import me.lucko.helper.Services;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.config.objectmapping.ObjectMappingException;
 import org.bukkit.Material;
@@ -28,7 +29,7 @@ public class PlayerController {
     }
 
     public void loadHotbarItems() {
-        final ConfigurationNode config = Helper.hostPlugin().getConf().getNode("hotbar");
+        final ConfigurationNode config = Services.load(KitPlugin.class).getConf().getNode("hotbar");
 
         for (final Object childName : config.getChildrenMap().keySet()) {
             final ConfigurationNode child = config.getNode(childName);

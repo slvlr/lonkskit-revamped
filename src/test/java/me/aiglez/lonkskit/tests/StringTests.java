@@ -1,6 +1,5 @@
 package me.aiglez.lonkskit.tests;
 
-import me.aiglez.lonkskit.messages.Replaceable;
 import org.junit.Assert;
 import org.junit.Test;
 

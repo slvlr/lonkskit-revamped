@@ -2,11 +2,8 @@ package me.aiglez.lonkskit.commands;
 
 import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.LonksKitProvider;
-import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;

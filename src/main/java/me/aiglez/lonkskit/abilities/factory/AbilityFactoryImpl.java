@@ -9,7 +9,7 @@ import me.aiglez.lonkskit.abilities.itembased.johan.*;
 import me.aiglez.lonkskit.exceptions.AbilityFileNotFoundException;
 import me.aiglez.lonkskit.exceptions.AbilityRegisterException;
 import me.aiglez.lonkskit.utils.Logger;
-import me.lucko.helper.Helper;
+import me.lucko.helper.Services;
 import me.lucko.helper.config.ConfigFactory;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
@@ -40,6 +40,7 @@ public class AbilityFactoryImpl implements AbilityFactory {
 
     @Override
     public void registerAbilities() {
+        long ms = System.currentTimeMillis();
         int aiglez = 0, johan = 0;
         try {
             Logger.debug("[Abilities] registering functional abilities...");
@@ -61,7 +62,8 @@ public class AbilityFactoryImpl implements AbilityFactory {
             registerAbility("turtle", new TurtleAbility(yamlConfigurationLoader("turtle")));
             //registerAbility("spider",new SpiderAbility(yamlConfigurationLoader("spider")));
             registerAbility("cowboy",new CowboyAbility(yamlConfigurationLoader("cowboy")));
-            registerAbility("tele",new TeleAbility(yamlConfigurationLoader("tele")));
+            TeleAbility teleAbility = new TeleAbility(yamlConfigurationLoader("tele"));
+            registerAbility("tele",teleAbility);
             registerAbility("assassin",new Assassin(yamlConfigurationLoader("assassin")));
             //registerAbility("snowman",new SnowmanAbility(yamlConfigurationLoader("snowman")));
             //registerAbility("creeper",new CreeperAbility(yamlConfigurationLoader("creeper")));
@@ -105,7 +107,7 @@ public class AbilityFactoryImpl implements AbilityFactory {
             registerAbility("sonic", new SonicAbility(yamlConfigurationLoader("sonic")));
             johan += 8;
             // johan - end
-
+            Services.provide(TeleAbility.class,teleAbility);
         } catch (AbilityRegisterException | AbilityFileNotFoundException | IOException e) {
             e.printStackTrace();
         }
@@ -113,6 +115,7 @@ public class AbilityFactoryImpl implements AbilityFactory {
         Logger.fine(ChatColor.GREEN + "Registered a total of {0} abilities. (aiglez: {1} | johan: {2})",
                 abilities.size(), aiglez, johan
         );
+        Logger.fine(ChatColor.DARK_GREEN + "Took " + ((float) System.currentTimeMillis() - ms) + " ms");
     }
 
     @Override
@@ -126,7 +129,7 @@ public class AbilityFactoryImpl implements AbilityFactory {
     }
 
     public static ConfigurationNode getFileByName(String name) {
-        final File abilityFile = new File(Helper.hostPlugin().getDataFolder() + File.separator + "abilities", name + ".yml");
+        final File abilityFile = new File(KitPlugin.getSingleton().getDataFolder() + File.separator + "abilities", name + ".yml");
         if(!abilityFile.exists()) {
             throw new AbilityFileNotFoundException(name);
         }
@@ -134,7 +137,7 @@ public class AbilityFactoryImpl implements AbilityFactory {
     }
 
     private YAMLConfigurationLoader yamlConfigurationLoader(String name) {
-        final File file = new File(Helper.hostPlugin().getDataFolder() + File.separator + "abilities", name + ".yml");
+        final File file = new File(KitPlugin.getSingleton().getDataFolder() + File.separator + "abilities", name + ".yml");
         if(!file.exists()) {
             throw new AbilityFileNotFoundException(name);
         }

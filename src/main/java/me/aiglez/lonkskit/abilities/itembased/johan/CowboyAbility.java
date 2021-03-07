@@ -2,23 +2,15 @@ package me.aiglez.lonkskit.abilities.itembased.johan;
 
 
 import me.aiglez.lonkskit.WorldProvider;
-import me.aiglez.lonkskit.abilities.Ability;
-import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
-import me.aiglez.lonkskit.abilities.helpers.CowboyHelper;
 import me.aiglez.lonkskit.events.KitSelectEvent;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.lucko.helper.Events;
-import me.lucko.helper.Schedulers;
 import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.metadata.Metadata;
 import me.lucko.helper.metadata.SoftValue;
-import net.minecraft.server.v1_16_R3.ChatComponentText;
-import net.minecraft.server.v1_16_R3.DamageSource;
-import net.minecraft.server.v1_16_R3.WorldServer;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
@@ -27,17 +19,13 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityDropItemEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerUnleashEntityEvent;
-import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -68,24 +56,20 @@ public class CowboyAbility extends ItemStackAbility {
                 });
         Events.subscribe(PlayerDeathEvent.class)
                 .filter(e -> cowboys.containsKey(LocalPlayer.get(e.getEntity())))
-                .handler(e -> {
-                    cowboys.entrySet().stream().filter(a -> a.getKey() == LocalPlayer.get(e.getEntity())).findAny().ifPresent(x -> {
-                        x.getValue().remove();
-                        cowboys.remove(x.getKey());
-                    });
-                });
+                .handler(e -> cowboys.entrySet().stream().filter(a -> a.getKey() == LocalPlayer.get(e.getEntity())).findAny().ifPresent(x -> {
+                    x.getValue().remove();
+                    cowboys.remove(x.getKey());
+                }));
         Events.subscribe(EntityDropItemEvent.class)
                 .filter(e -> e.getItemDrop().getItemStack() != null)
                 .filter(e -> e.getItemDrop().getItemStack().getType() == Material.LEAD)
                 .handler(e -> e.setCancelled(true));
         Events.subscribe(PlayerQuitEvent.class, EventPriority.HIGHEST)
                 .filter(e -> cowboys.containsKey(LocalPlayer.get(e.getPlayer())))
-                .handler(e -> {
-                    cowboys.entrySet().stream().filter(a -> a.getKey() == LocalPlayer.get(e.getPlayer())).findAny().ifPresent(x -> {
-                        cowboys.get(LocalPlayer.get(e.getPlayer())).getInventory().clear();
-                        cowboys.get(LocalPlayer.get(e.getPlayer())).setHealth(0);
-                    });
-                });
+                .handler(e -> cowboys.entrySet().stream().filter(a -> a.getKey() == LocalPlayer.get(e.getPlayer())).findAny().ifPresent(x -> {
+                    cowboys.get(LocalPlayer.get(e.getPlayer())).getInventory().clear();
+                    cowboys.get(LocalPlayer.get(e.getPlayer())).setHealth(0);
+                }));
         Events.subscribe(EntityDeathEvent.class)
                 .filter(e -> e.getEntity() instanceof Horse)
                 .handler(e -> {

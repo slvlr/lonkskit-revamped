@@ -1,4 +1,6 @@
 package me.aiglez.lonkskit.utils.items;
+import com.google.common.base.Preconditions;
+import me.aiglez.lonkskit.utils.Logger;
 import me.lucko.helper.menu.Item;
 import me.lucko.helper.text.Text;
 import me.lucko.helper.utils.annotation.NonnullByDefault;
@@ -14,6 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import javax.annotation.Nullable;
+import javax.naming.ldap.PagedResultsControl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +47,8 @@ public final class ItemStackBuilder {
     }
 
     private ItemStackBuilder(ItemStack itemStack) {
+        Preconditions.checkNotNull(itemStack,"ItemStack may not be null");
+        Preconditions.checkNotNull(itemStack.getItemMeta());
         this.itemStack = Objects.requireNonNull(itemStack, "itemStack");
     }
 
@@ -89,11 +94,13 @@ public final class ItemStackBuilder {
 
     public ItemStackBuilder lore(Iterable<String> lines) {
         return transformMeta(meta -> {
-            List<String> lore = meta.getLore() == null ? new ArrayList<>() : meta.getLore();
-            for (String line : lines) {
-                lore.add(Text.colorize(line));
-            }
-            meta.setLore(lore);
+            if (meta != null) {
+                List<String> lore = meta.getLore() == null ? new ArrayList<>() : meta.getLore();
+                for (String line : lines) {
+                    lore.add(Text.colorize(line));
+                }
+                meta.setLore(lore);
+            }else Logger.warn("meta not found for item " + this.itemStack.getType());
         });
     }
 

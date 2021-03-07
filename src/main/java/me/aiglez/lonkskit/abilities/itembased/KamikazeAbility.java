@@ -4,20 +4,16 @@ import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.MetadataProvider;
-import me.aiglez.lonkskit.utils.Various;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.metadata.Metadata;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class KamikazeAbility extends ItemStackAbility {
 

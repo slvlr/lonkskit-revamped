@@ -57,26 +57,24 @@ public class PotionEffectBuilder {
         return this;
     }
 
-    public PotionEffectBuilder type(String name) {
+    public void type(String name) {
         Preconditions.checkNotNull(name, "Type's name must no be empty.");
         final PotionEffectType type = PotionEffectType.getByName(name);
         if(type == null) {
             Logger.warn("Couldn't find any Potion Effect Type matching (" + name + ")");
             this.type = PotionEffectType.FAST_DIGGING;
-            return this;
+            return;
         }
         this.type = type;
-        return this;
     }
 
-    public PotionEffectBuilder permanent() {
+    public void permanent() {
         this.duration = Integer.MAX_VALUE;
-        return this;
     }
 
-    public PotionEffectBuilder duration(long duration) {
+    public void duration(long duration) {
         Preconditions.checkArgument(duration > 0, "Potion duration may not be inferior to 1");
-        return duration(duration, TimeUnit.SECONDS);
+        duration(duration, TimeUnit.SECONDS);
     }
 
     public PotionEffectBuilder duration(long duration, TimeUnit timeUnit) {
@@ -84,10 +82,9 @@ public class PotionEffectBuilder {
         return this;
     }
 
-    public PotionEffectBuilder amplifier(int amplifier) {
+    public void amplifier(int amplifier) {
         Preconditions.checkArgument(amplifier > 0, "Potion amplifier may not be inferior to 1");
         this.amplifier = amplifier - 1;
-        return this;
     }
 
     public PotionEffect build() {

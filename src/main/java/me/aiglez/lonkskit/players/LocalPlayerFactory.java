@@ -17,9 +17,9 @@ public interface LocalPlayerFactory {
 
     Set<OfflineLocalPlayer> getCachedOfflinePlayers();
 
-    boolean loadOfflineLocalPlayers();
+    void loadOfflineLocalPlayers();
 
-    boolean saveOfflineLocalPlayers();
+    void saveOfflineLocalPlayers();
 
     static LocalPlayerFactory make() {
         return new LocalPlayerFactoryImpl();

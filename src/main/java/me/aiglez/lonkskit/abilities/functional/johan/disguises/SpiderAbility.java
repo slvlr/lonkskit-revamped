@@ -6,7 +6,6 @@ import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.potion.PotionEffectType;
 
 import java.io.IOException;
 

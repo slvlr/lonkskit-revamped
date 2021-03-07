@@ -1,31 +1,21 @@
 package me.aiglez.lonkskit.listeners;
 
 import me.aiglez.lonkskit.KitPlugin;
-import me.aiglez.lonkskit.abilities.ItemStackAbility;
-import me.aiglez.lonkskit.commands.MainCommand;
-import me.aiglez.lonkskit.controllers.Controllers;
 import me.aiglez.lonkskit.players.LocalPlayer;
-import me.aiglez.lonkskit.struct.HotbarItemStack;
 import me.aiglez.lonkskit.utils.Various;
-import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.aiglez.lonkskit.utils.items.ItemStackNBT;
-import org.bukkit.ChatColor;
+import me.lucko.helper.Services;
 import org.bukkit.Material;
-import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-
-import java.util.Arrays;
-import java.util.Objects;
 
 public class InteractListeners implements Listener {
 
@@ -98,9 +88,9 @@ public class InteractListeners implements Listener {
             if (event.getItem().getType() == Material.MUSHROOM_STEW && (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
                 if (event.getPlayer().getHealth() == 20D) {
                     event.getPlayer().sendMessage("[Debug] You're full HP");
-                } else if (event.getPlayer().getHealth() + Helper.hostPlugin().getConf().getNode("soup-healing").getInt() <= 20.0D) {
-                    event.getPlayer().setHealth(event.getPlayer().getHealth() + (double) Helper.hostPlugin().getConf().getNode("soup-healing").getInt());
-                    event.getPlayer().sendMessage("[Debug] Added " + Helper.hostPlugin().getConf().getNode("soup-healing").getInt());
+                } else if (event.getPlayer().getHealth() + Services.load(KitPlugin.class).getConf().getNode("soup-healing").getInt() <= 20.0D) {
+                    event.getPlayer().setHealth(event.getPlayer().getHealth() + (double) Services.load(KitPlugin.class).getConf().getNode("soup-healing").getInt());
+                    event.getPlayer().sendMessage("[Debug] Added " + Services.load(KitPlugin.class).getConf().getNode("soup-healing").getInt());
                     event.getPlayer().getInventory().setItemInMainHand(null);
                 } else {
                     event.getPlayer().setHealth(20.0D);

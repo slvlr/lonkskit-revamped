@@ -10,9 +10,6 @@ import me.aiglez.lonkskit.messages.Messages;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.Logger;
 
-import java.util.Arrays;
-import java.util.Objects;
-
 /**
  * Handles the leave command
  */

@@ -30,7 +30,7 @@ public class GhostAbility extends ItemStackAbility {
             clearArmor(localPlayer.toBukkit());
             applyEffects(localPlayer);
 
-            Bukkit.getScheduler().runTaskLater(Helper.hostPlugin(), () -> localPlayer.toBukkit().getInventory().setArmorContents(armor),300L);
+            Bukkit.getScheduler().runTaskLater(KitPlugin.getSingleton(), () -> localPlayer.toBukkit().getInventory().setArmorContents(armor),300L);
         }
     }
 

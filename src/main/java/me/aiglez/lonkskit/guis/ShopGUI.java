@@ -1,10 +1,10 @@
 package me.aiglez.lonkskit.guis;
 
 import me.aiglez.lonkskit.LonksKitProvider;
-import me.aiglez.lonkskit.commands.MainCommand;
-import me.aiglez.lonkskit.kits.KitRank;
 import me.aiglez.lonkskit.kits.KitSelectorHolder;
+import me.aiglez.lonkskit.kits.impl.KitFactoryImpl;
 import me.aiglez.lonkskit.messages.Messages;
+import me.aiglez.lonkskit.messages.Replaceable;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.players.LocalRent;
 import me.aiglez.lonkskit.utils.Logger;
@@ -15,15 +15,15 @@ import me.lucko.helper.menu.paginated.PaginatedGuiBuilder;
 import me.lucko.helper.menu.scheme.MenuScheme;
 import me.lucko.helper.menu.scheme.StandardSchemeMappings;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ShopGUI extends PaginatedGui {
     private static final PaginatedGuiBuilder SETTINGS;
-    private final LocalPlayer localPlayer;
+
     static {
         final MenuScheme scheme = new MenuScheme(StandardSchemeMappings.HARDENED_CLAY);
         final List<Integer> itemSlots = new MenuScheme()
@@ -50,70 +50,30 @@ public class ShopGUI extends PaginatedGui {
     }
     public ShopGUI(LocalPlayer localPlayer) {
         super(getContent(localPlayer), localPlayer.toBukkit(), SETTINGS);
-        this.localPlayer = localPlayer;
     }
     private static Function<PaginatedGui,List<Item>> getContent(LocalPlayer localPlayer) {
         return gui -> LonksKitProvider.getKitFactory().getEnabledKits().stream()
                 .map(kit -> {
-//                    if (!holder.display()) {
-//                        Logger.severe("A weird error occurred (kit selector holder not found for kit " + kit.getBackendName() + ")");
-//                        return ItemStackBuilder.of(Material.ITEM_FRAME).build(() -> localPlayer.msg("Hi"));
-//                    }
-                    if (localPlayer.hasRented(kit)) {
-                        final LocalRent localRent = localPlayer.getRent(kit).orElseThrow(() -> new IllegalStateException("A weird error has occurred, LocalPlayer#hasRented returns true, but LocalPlayer#getRent returns nothing!"));
-                        return ItemStackBuilder
-                                .of(KitSelectorHolder.buildItemR(kit, KitSelectorGUI.State.RENTED, localRent.getLeftUses(), localPlayer))
-                                .build(() -> {
-                                    if (!MainCommand.check(localPlayer)) {
-                                        if (!localPlayer.hasSelectedKit()) {
-                                            if (localPlayer.isValid()) {
-                                                localPlayer.getRank(kit).get().increaseLevel();
-                                            } else localPlayer.msg("&3enter the kitpvp world to select a kit");
-                                        } else localPlayer.msg("&3clear your kit then choose another one");
-                                    } else
-                                        localPlayer.msg("&4You can't choose a kit cause you have a 'Throwable' item");
-                                });
-                    } else {
-                        // has permanent access
-                        if (localPlayer.hasAccess(kit)) {
-                            return ItemStackBuilder
-                                    .of(KitSelectorHolder.buildItemR(kit, KitSelectorGUI.State.PERMANENT_ACCESS, 0, localPlayer))
-                                    .build(() -> {
-                                        if (!MainCommand.check(localPlayer)) {
-                                            if (!localPlayer.hasSelectedKit()) {
-                                                if (localPlayer.isValid()) {
-                                                        localPlayer.setSelectedKit(kit);
-                                                        localPlayer.msg(Messages.SELECTOR_SELECTED, kit.getDisplayName());
-                                                        gui.close();
-                                                } else
-                                                    localPlayer.msg("&3you should join the kitpvp world to select a kit");
-                                            } else localPlayer.msg("&3clear your kit then choose another one");
-                                        } else
-                                            localPlayer.msg("&4You can't choose a kit cause you have a 'Throwable' item");
-                                    });
-                            // no access
-                        } else {
-                            return ItemStackBuilder
-                                    .of(KitSelectorHolder.buildItemR(kit, KitSelectorGUI.State.NO_ACCESS, 0, localPlayer))
-                                    .build(() -> {
-                                        if (kit.isRentable()) {
-                                            final boolean transaction = localPlayer.decrementPoints(kit.getRentCost());
-                                            if (!transaction) {
-                                                localPlayer.msg(Messages.SELECTOR_RENT_FAILED);
-                                                return;
-                                            }
-                                            final LocalRent newRent = LocalRent.of(localPlayer, kit);
-                                            localPlayer.addRent(newRent);
-                                            localPlayer.msg(Messages.SELECTOR_RENT_RENTED, kit.getDisplayName(), kit.getRentCost(), kit.getUsesPerRent());
-                                            gui.close();
-                                        } else {
-                                            localPlayer.msg(Messages.SELECTOR_NO_ACCESS);
-                                        }
-                                    });
-                        }
-
-
+                    KitSelectorHolder holder = kit.getSelectorHolder();
+                    if (!holder.display()) {
+                        Logger.severe("A weird error occurred (kit selector holder not found for kit " + kit.getBackendName() + ")");
+                        return ItemStackBuilder.of(Material.ITEM_FRAME).build(() -> localPlayer.msg("Hi"));
                     }
+                    return ItemStackBuilder
+                            .of(holder.buildItemR(localPlayer.getRank(kit).get().getLevel()))
+                            .build(() -> {
+                                if (localPlayer.getRank(kit).get().getLevel() >= kit.getSelectorHolder().getLoreOfLevel().values().size()){
+                                    localPlayer.msg(Replaceable.handle(Messages.PLAYER_SELECT_MAX_LEVEL.getValue(),kit.getDisplayName()));
+                                }
+                                final boolean transaction = localPlayer.decrementPoints((int) kit.getPrice());
+                                if (!transaction) {
+                                    localPlayer.msg(Messages.COMMAND_POINTS_PAY_NOT_ENOUGH.getValue());
+                                    return;
+                                }
+                                localPlayer.decrementPoints(Math.toIntExact((long) kit.getPrice()));
+                                localPlayer.getRank(kit).get().increaseLevel();
+                                localPlayer.msg("&aKit ranked up successfully");
+                            });
                 }).collect(Collectors.toList());
     }
 }

@@ -1,7 +1,6 @@
 package me.aiglez.lonkskit.kits;
 
 import com.google.common.base.Preconditions;
-import lombok.val;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.players.OfflineLocalPlayer;
 

@@ -1,28 +1,16 @@
 package me.aiglez.lonkskit.abilities.functional.johan;
 
 import com.google.common.collect.Lists;
-import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.abilities.FunctionalAbility;
 import me.aiglez.lonkskit.events.KitSelectEvent;
-import me.aiglez.lonkskit.players.LocalPlayer;
 import me.libraryaddict.disguise.DisguiseAPI;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import me.libraryaddict.disguise.disguisetypes.MobDisguise;
 import me.lucko.helper.Events;
-import me.lucko.helper.Schedulers;
-import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Snowball;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffectType;
 
 import java.io.IOException;
 import java.util.List;

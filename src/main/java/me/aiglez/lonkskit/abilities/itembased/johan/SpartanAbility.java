@@ -9,12 +9,9 @@ import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.metadata.Metadata;
 import me.lucko.helper.metadata.SoftValue;
 import org.bukkit.entity.AbstractArrow;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Trident;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 

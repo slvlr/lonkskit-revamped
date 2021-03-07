@@ -1,19 +1,14 @@
 package me.aiglez.lonkskit.abilities.itembased.johan;
 
-import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
-import me.aiglez.lonkskit.abilities.factory.AbilityFactoryImpl;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.Events;
-import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -77,9 +72,6 @@ public class TeleAbility extends ItemStackAbility {
 
     @Override
     public void whenLeftClicked(PlayerInteractEvent e) {
-
-    }
-    public static void tp(List<Player> players){
 
     }
 

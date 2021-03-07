@@ -16,7 +16,6 @@ import me.lucko.helper.menu.scheme.StandardSchemeMappings;
 import org.bukkit.Material;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -49,11 +48,8 @@ public class KitSelectorGUI extends PaginatedGui {
                 .nextPageSlot(nextPageSlot).previousPageSlot(previousPageSlot);
     }
 
-    private final LocalPlayer localPlayer;
-
     public KitSelectorGUI(LocalPlayer localPlayer) {
         super(getContent(localPlayer), localPlayer.toBukkit(), SETTINGS);
-        this.localPlayer = localPlayer;
     }
 
     private static Function<PaginatedGui, List<Item>> getContent(LocalPlayer localPlayer) {

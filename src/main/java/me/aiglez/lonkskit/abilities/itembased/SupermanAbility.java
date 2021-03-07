@@ -42,17 +42,11 @@ public class SupermanAbility extends ItemStackAbility {
 
                 })
 
-                .thenRunDelayedSync(() -> {
-                    localPlayer.msg(configuration.getNode("messages", "three-sec-remaining").getString("Message Three sec remaining Null"));
-                }, 7, TimeUnit.SECONDS)
+                .thenRunDelayedSync(() -> localPlayer.msg(configuration.getNode("messages", "three-sec-remaining").getString("Message Three sec remaining Null")), 7, TimeUnit.SECONDS)
 
-                .thenRunDelayedSync(() -> {
-                    localPlayer.msg(configuration.getNode("messages", "two-sec-remaining").getString("Message Two sec remaining Null"));
-                }, 1, TimeUnit.SECONDS)
+                .thenRunDelayedSync(() -> localPlayer.msg(configuration.getNode("messages", "two-sec-remaining").getString("Message Two sec remaining Null")), 1, TimeUnit.SECONDS)
 
-                .thenRunDelayedSync(() -> {
-                    localPlayer.msg(configuration.getNode("messages", "one-sec-remaining").getString("Message One sec remaining Null"));
-                }, 1, TimeUnit.SECONDS)
+                .thenRunDelayedSync(() -> localPlayer.msg(configuration.getNode("messages", "one-sec-remaining").getString("Message One sec remaining Null")), 1, TimeUnit.SECONDS)
 
                 .thenRunDelayedSync(() -> {
                     localPlayer.msg(configuration.getNode("messages", "end").getString("Message end Null"));

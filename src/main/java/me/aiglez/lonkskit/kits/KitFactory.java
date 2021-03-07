@@ -18,7 +18,7 @@ public interface KitFactory {
 
     boolean tryRegisterKit(final Kit kit);
 
-    boolean loadKits();
+    void loadKits();
 
     default Set<Kit> getEnabledKits() {
         return Collections.unmodifiableSet(getRegisteredKits().stream().filter(Kit::enabled).collect(Collectors.toSet()));

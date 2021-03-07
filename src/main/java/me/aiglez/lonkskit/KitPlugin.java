@@ -1,7 +1,6 @@
 package me.aiglez.lonkskit;
 
 import me.aiglez.lonkskit.abilities.factory.AbilityFactory;
-import me.aiglez.lonkskit.abilities.factory.AbilityFactoryImpl;
 import me.aiglez.lonkskit.commands.CommandsRegistry;
 import me.aiglez.lonkskit.commands.KitCommand;
 import me.aiglez.lonkskit.controllers.Controllers;
@@ -12,7 +11,6 @@ import me.aiglez.lonkskit.listeners.InteractListeners;
 import me.aiglez.lonkskit.listeners.PlayerListeners;
 import me.aiglez.lonkskit.players.LocalPlayerFactory;
 import me.aiglez.lonkskit.utils.Logger;
-import me.lucko.helper.Helper;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.plugin.ExtendedJavaPlugin;
 import me.lucko.helper.plugin.ap.Plugin;

@@ -12,6 +12,7 @@ import me.aiglez.lonkskit.struct.HotbarItemStack;
 import me.aiglez.lonkskit.utils.Logger;
 import me.aiglez.lonkskit.utils.Various;
 import me.lucko.helper.Schedulers;
+import me.lucko.helper.Services;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -160,7 +161,7 @@ public class PlayerListeners implements Listener {
         e.setDeathMessage(null);
         victim.setSelectedKit(null);
         e.getDrops().clear();
-        for (int i = 0; i < Helper.hostPlugin().getConf().getNode("kill-drops").getInt(); i++ ) {
+        for (int i = 0; i < Services.load(KitPlugin.class).getConf().getNode("kill-drops").getInt(); i++ ) {
             e.getEntity().getWorld().dropItem(e.getEntity().getLocation().clone().add(i,0,0), new ItemStack(Material.MUSHROOM_STEW));
         }
         e.getEntity().setBedSpawnLocation(WorldProvider.KP_WORLD.getSpawnLocation());

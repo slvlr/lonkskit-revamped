@@ -8,7 +8,6 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
-import scala.Int;
 
 import java.util.Collections;
 import java.util.List;
@@ -21,7 +20,7 @@ public class MemoryKit implements Kit {
     private final Map<Integer,List<ItemStack>> inventoryContent;
     private final Map<Integer,Map<EquipmentSlot, ItemStack>> inventoryArmor;
     private final KitSelectorHolder selectorHolder;
-
+    private double price;
     private final boolean rentable;
     private final int     rentCost;
     private int     usesPerRent;
@@ -34,7 +33,7 @@ public class MemoryKit implements Kit {
 
     public MemoryKit(final String backendName, final String displayName, final Map<Integer, List<ItemStack>> inventoryContent,
                      final Map<Integer, Map<EquipmentSlot, ItemStack>> inventoryArmor, final KitSelectorHolder selectorHolder,
-                     final boolean rentable, final int rentCost, final int usesPerCost, boolean isCustom, final Set<PotionEffect> potionEffects, final Set<Ability> abilities) {
+                     final boolean rentable, final int rentCost, final int usesPerCost, boolean isCustom, final Set<PotionEffect> potionEffects, final Set<Ability> abilities, final double price) {
         this.isCustom = isCustom;
         Preconditions.checkNotNull(backendName);
         Preconditions.checkNotNull(displayName);
@@ -51,6 +50,7 @@ public class MemoryKit implements Kit {
         this.usesPerRent = usesPerCost;
         this.potionEffects = (potionEffects == null ? Collections.emptySet() : potionEffects);
         this.abilities = (abilities == null ? Collections.emptySet() : abilities);
+        this.price = price;
     }
 
     // -------------------------------------------- //
@@ -131,6 +131,16 @@ public class MemoryKit implements Kit {
     @Override
     public void decrementUses() {
         this.usesPerRent--;
+    }
+
+    @Override
+    public double getPrice() {
+        return this.price;
+    }
+
+    @Override
+    public void setPrice(double value) {
+        this.price = value;
     }
 
     @Override

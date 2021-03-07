@@ -9,6 +9,8 @@ public enum Messages {
     PLAYER_METRICS_KILLSTREAK("player.metrics.killstreak", "&e{0} &fgot a killstreak of &a{1}&f."),
     PLAYER_METRICS_RUINED_KILLSTREAK("player.metrics.killstreak", "&c{0} &fended &e{1}&f's killstreak of &a{2}&f."),
 
+    PLAYER_SELECT_MAX_LEVEL("player.select.max.level","&cYou have already upgraded to the max level for {0}."),
+
     SELECTOR_ERROR("selector.error", "&cAn error occurred while trying to select the kit, please try again."),
     SELECTOR_SELECTED("selector.selected", "&eYou have selected the kit &b{0}&e."),
     SELECTOR_NO_ACCESS("selector.no-access", "&cYou don't have access to this kit."),
@@ -53,6 +55,8 @@ public enum Messages {
 
     COMMAND_ENGINE_MUST_BE_INT("command.engine.must_be_a_number", "&cArgument must be a number and valid."),
     COMMAND_ENGINE_PERMISSION_DENIED("command.engine.permission_denied",  "&cYou do not have access to this command.");
+
+
 
     private final String path, fallback;
     Messages(final String path, final String fallback) {

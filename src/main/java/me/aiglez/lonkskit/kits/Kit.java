@@ -1,6 +1,5 @@
 package me.aiglez.lonkskit.kits;
 
-import com.google.common.collect.Lists;
 import me.aiglez.lonkskit.abilities.Ability;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -50,6 +49,10 @@ public interface Kit {
     void incrementUses();
 
     void decrementUses();
+
+    double getPrice();
+
+    void setPrice(double price);
 
     Map<Integer,List<ItemStack>> getInventories();
 

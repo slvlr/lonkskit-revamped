@@ -33,7 +33,7 @@ public class RecallAbility extends FunctionalAbility {
     private final List<Player> teleportedPlayers = Lists.newArrayList();
     private final List<Player> heads = Lists.newArrayList();
     private final List<ItemStack> items = Lists.newArrayList();
-    public static List<EntityPlayer> removedNPCS = Lists.newArrayList();
+    public static final List<EntityPlayer> removedNPCS = Lists.newArrayList();
 
     public RecallAbility(YAMLConfigurationLoader configurationLoader) throws IOException {
         super("recall", configurationLoader);

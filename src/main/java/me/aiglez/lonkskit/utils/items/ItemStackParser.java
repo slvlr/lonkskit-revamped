@@ -86,9 +86,7 @@ public class ItemStackParser {
                 }
                 final String[] splitLore = joinedLore.split("\\|");
 
-                builder.transformMeta(meta -> {
-                    meta.setLore(Arrays.asList(splitLore));
-                });
+                builder.transformMeta(meta -> meta.setLore(Arrays.asList(splitLore)));
 
             } else if(StringUtils.startsWithIgnoreCase(string, "data:")) {
                 final int data = NumberUtils.toInt(StringUtils.replace(string, "data:", ""), -11);

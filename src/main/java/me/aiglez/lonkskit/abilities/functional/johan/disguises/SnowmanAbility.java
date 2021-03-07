@@ -3,7 +3,6 @@ package me.aiglez.lonkskit.abilities.functional.johan.disguises;
 import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.FunctionalAbility;
-import me.aiglez.lonkskit.abilities.functional.johan.DisguiseAbilities;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.aiglez.lonkskit.utils.Various;

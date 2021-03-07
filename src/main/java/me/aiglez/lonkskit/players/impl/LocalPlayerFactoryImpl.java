@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonElement;
+import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.players.LocalPlayerFactory;
 import me.aiglez.lonkskit.players.OfflineLocalPlayer;
@@ -25,7 +26,7 @@ public class LocalPlayerFactoryImpl implements LocalPlayerFactory {
 
     public LocalPlayerFactoryImpl() {
         this.cache = Sets.newHashSet();
-        this.cacheFile = new File(Helper.hostPlugin().getDataFolder(), "cache.json");
+        this.cacheFile = new File(KitPlugin.getSingleton().getDataFolder(), "cache.json");
         this.setType = new TypeToken<HashSet<OfflineLocalPlayer>>(){}.getType();
     }
 
@@ -66,10 +67,11 @@ public class LocalPlayerFactoryImpl implements LocalPlayerFactory {
     }
 
     @Override
-    public boolean loadOfflineLocalPlayers() {
+    public void loadOfflineLocalPlayers() {
+        long ms = System.currentTimeMillis();
         if(!this.cacheFile.exists()) {
             Logger.warn("Cache file not found, assuming there is no player to load...");
-            return true;
+            return;
         }
         try {
             final Reader reader = new FileReader(this.cacheFile);
@@ -81,16 +83,15 @@ public class LocalPlayerFactoryImpl implements LocalPlayerFactory {
         } catch (IOException e) {
             Logger.warn("Error with Cache File");
             e.getCause().printStackTrace();
-            return false;
         }
-        return true;
+        Logger.fine("loading took {0} ms",System.currentTimeMillis() - ms);
     }
 
     @Override
-    public boolean saveOfflineLocalPlayers() {
+    public void saveOfflineLocalPlayers() {
         if(this.cache.isEmpty()) {
             Logger.warn("No player was found to cache...");
-            return true;
+            return;
         }
         if(assertFileExists()) {
             try {
@@ -104,13 +105,10 @@ public class LocalPlayerFactoryImpl implements LocalPlayerFactory {
                 writer.close();
 
                 Logger.fine("Saved " + cache.size() + " player(s).");
-                return true;
             } catch (IOException e) {
                 e.printStackTrace();
-                return false;
             }
         }
-        return false;
     }
 
     private boolean assertFileExists() {

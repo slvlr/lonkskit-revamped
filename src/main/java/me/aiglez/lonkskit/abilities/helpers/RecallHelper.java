@@ -46,7 +46,7 @@ public class RecallHelper {
             connection.sendPacket(new PacketPlayOutNamedEntitySpawn(npc));
             connection.sendPacket(new PacketPlayOutEntityHeadRotation(npc, (byte) (npc.yaw * 256 / 360)));
         }
-        Bukkit.getScheduler().runTaskLater(Helper.hostPlugin(),() -> {
+        Bukkit.getScheduler().runTaskLater(KitPlugin.getSingleton(),() -> {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
                 connection.sendPacket(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER,npc));

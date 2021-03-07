@@ -1,24 +1,17 @@
 package me.aiglez.lonkskit.struct.leaderboards;
 
-import com.comphenix.net.sf.cglib.core.CollectionUtils;
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
-import com.google.common.collect.Comparators;
 import com.google.common.collect.Lists;
-import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.LonksKitProvider;
 import me.aiglez.lonkskit.messages.Replaceable;
 import me.aiglez.lonkskit.players.LocalMetrics;
 import me.aiglez.lonkskit.players.OfflineLocalPlayer;
 import me.aiglez.lonkskit.struct.Leaderboard;
-import me.lucko.helper.Schedulers;
 import org.bukkit.Location;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.LinkedHashSet;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class StatsLeaderboard extends Leaderboard<OfflineLocalPlayer> {
@@ -39,7 +32,7 @@ public class StatsLeaderboard extends Leaderboard<OfflineLocalPlayer> {
     }
 
     @Override
-    public Hologram reloadView() {
+    public void reloadView() {
         if(!this.cache.isEmpty()) {
             this.hologram.clearLines();
         }
@@ -52,8 +45,7 @@ public class StatsLeaderboard extends Leaderboard<OfflineLocalPlayer> {
                 line.setText("");
             }
             this.hologram.appendTextLine(line.getText());
-            return this.hologram;
+            return;
         }
-        return this.hologram;
     }
     }

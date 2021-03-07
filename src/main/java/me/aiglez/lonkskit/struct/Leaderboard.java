@@ -21,8 +21,8 @@ public abstract class Leaderboard<T> {
 
     protected final String name, format;
     protected final long refreshRateTicks;
-    protected Hologram hologram;
-    protected List<TextLine> lines;
+    protected final Hologram hologram;
+    protected final List<TextLine> lines;
     protected List<T> cache;
 
     public static final int SIZE = 10;
@@ -37,7 +37,7 @@ public abstract class Leaderboard<T> {
         this.format = Text.colorize(format);
 
         Logger.debug("Creating a hologram [{0}] with refresh rate of ({1} {2}) at [{3}]", this.name, refreshRate, timeUnit.name(), Locations.toString(location));
-        this.hologram = HologramsAPI.createHologram(Helper.hostPlugin(), location);
+        this.hologram = HologramsAPI.createHologram(KitPlugin.getSingleton(), location);
         this.hologram.appendTextLine("§8§m--------------------------");
         this.lines = Lists.newArrayList();
         for (int i = 0; i < SIZE; i++) {
@@ -60,6 +60,6 @@ public abstract class Leaderboard<T> {
 
     public abstract void reloadCache();
 
-    public abstract Hologram reloadView();
+    public abstract void reloadView();
 
 }

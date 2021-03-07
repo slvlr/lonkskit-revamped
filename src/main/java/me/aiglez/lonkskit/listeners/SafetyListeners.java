@@ -1,7 +1,6 @@
 package me.aiglez.lonkskit.listeners;
 
 import me.aiglez.lonkskit.KitPlugin;
-import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.commands.MainCommand;
 import me.aiglez.lonkskit.kits.Kit;
 import me.aiglez.lonkskit.kits.KitFactory;
@@ -10,18 +9,14 @@ import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.Various;
 import me.aiglez.lonkskit.utils.items.ItemStackNBT;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerPickupArrowEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 

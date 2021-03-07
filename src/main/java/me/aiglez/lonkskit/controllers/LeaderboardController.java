@@ -7,9 +7,9 @@ import me.aiglez.lonkskit.struct.leaderboards.PointsLeaderboard;
 import me.aiglez.lonkskit.struct.leaderboards.StatsLeaderboard;
 import me.aiglez.lonkskit.utils.Locations;
 import me.aiglez.lonkskit.utils.Logger;
+import me.lucko.helper.Services;
 import me.lucko.helper.config.ConfigurationNode;
 import org.bukkit.Location;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +19,7 @@ public class LeaderboardController {
     private final List<Leaderboard<?>> leaderboards;
 
     public LeaderboardController() {
-        this.config = Helper.hostPlugin().getConf().getNode("leaderboards");
+        this.config = Services.load(KitPlugin.class).getConf().getNode("leaderboards");
         this.leaderboards = Lists.newArrayList();
     }
 

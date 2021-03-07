@@ -3,7 +3,6 @@ package me.aiglez.lonkskit.kits.impl;
 import com.google.common.collect.Maps;
 import com.google.common.primitives.Ints;
 import com.google.common.reflect.TypeToken;
-import me.aiglez.lonkskit.Constants;
 import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.LonksKitProvider;
 import me.aiglez.lonkskit.abilities.Ability;
@@ -13,7 +12,6 @@ import me.aiglez.lonkskit.kits.KitSelectorHolder;
 import me.aiglez.lonkskit.utils.Logger;
 import me.aiglez.lonkskit.utils.PotionEffectBuilder;
 import me.aiglez.lonkskit.utils.items.ItemStackParser;
-import me.lucko.helper.Services;
 import me.lucko.helper.config.ConfigFactory;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.config.objectmapping.ObjectMappingException;
@@ -68,19 +66,20 @@ public class KitFactoryImpl implements KitFactory {
      * This code is complete mess, needs a refactor
      */
     @Override
-    public boolean loadKits() {
-        final File kitsDir = new File(Helper.hostPlugin().getDataFolder() + File.separator + "kits");
+    public void loadKits() {
+        long ms = System.currentTimeMillis();
+        final File kitsDir = new File(KitPlugin.getSingleton().getDataFolder() + File.separator + "kits");
         final File[] files = kitsDir.listFiles((dir, name) -> name.endsWith(".yml"));
         if(files == null || files.length == 0) {
             Logger.warn("No file found in kits/ directory !");
-            return true;
+            return;
         }
 
         for (int i = 0; i < files.length; i++) {
             final File file = files[i];
             if(file == null) {
                 Logger.severe("A weird error occurred: Couldn't get the file at index (" + i + ") Length (" + files.length + ")");
-                return false;
+                return;
             }
 
             final ConfigurationNode node = ConfigFactory.yaml().load(file);
@@ -97,7 +96,7 @@ public class KitFactoryImpl implements KitFactory {
             orderedKits.add(kit);
         }
         Logger.fine("Loaded " + kits.size() + " kit(s) (" + (kits.size() - getEnabledKits().size()) + " disabled)");
-        return true;
+        Logger.fine("Loading took {0} ms", System.currentTimeMillis() - ms);
     }
 
     // Utility methods //
@@ -113,7 +112,7 @@ public class KitFactoryImpl implements KitFactory {
         final Map<Integer,List<ItemStack>> inventoryContents = Maps.newHashMap();
         final Map<Integer,Map<EquipmentSlot, ItemStack>> inventoryArmors = Maps.newHashMap();
         try {
-            for (int i = 1; i <= 100 ; i++){
+            for (int i = 1; i <= node.getNode("upgrades").getChildrenMap().size() ; i++){
                 try {
                     final ConfigurationNode inventoryNode = node.getNode("upgrades","level" + i , "inventory","content");
                     System.out.println(inventoryNode.getValueType().name());
@@ -123,7 +122,6 @@ public class KitFactoryImpl implements KitFactory {
 //                        .map(list -> list.stream().map(ItemStackParser::parseByString).collect(Collectors.toSet()))
 //                        .map(optionals -> optionals.stream().filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList()))
 //                        .orElseIfNull(Collections.emptyList()).endOrNull());
-                    System.out.println(inventoryContents.values());
                     inventoryArmors.put(i,Chain.start(node.getNode("upgrades","level" + i ,"armor").getValue(new TypeToken<Map<EquipmentSlot, String>>() {}))
                             .map(map -> {
                                 Map<EquipmentSlot, ItemStack> rt = new HashMap<>();
@@ -146,7 +144,7 @@ public class KitFactoryImpl implements KitFactory {
         final int rentCost = node.getNode("rent", "cost").getInt(0);
         final int usesPerRent = node.getNode("rent", "uses").getInt(0);
         final boolean isCustom = node.getNode("isCustom").getBoolean();
-
+        final double price = node.getNode("price").getDouble(0);
         Set<PotionEffect> potionEffects = null;
         try {
             potionEffects = Chain.start(node.getNode("potion-effects").getList(new TypeToken<String>() {}))
@@ -170,7 +168,7 @@ public class KitFactoryImpl implements KitFactory {
 
         KitSelectorHolder kitSelectorHolder;
         try {
-            kitSelectorHolder = KitSelectorHolder.builder(node.getNode("selector")).build();
+            kitSelectorHolder = KitSelectorHolder.builder(node).build();
         } catch (ObjectMappingException e) {
             Logger.severe("Couldn't map an object (LIST) (Kit Selector) // " + e.getMessage());
             return Optional.empty();
@@ -186,16 +184,17 @@ public class KitFactoryImpl implements KitFactory {
                 rentCost,
                 usesPerRent,
                 isCustom, potionEffects,
-                abilities
+                abilities, price
         );
         final List<String> lore = new LinkedList<>();
-        for (int i = 1; i <= node.getNode("upgrades").getChildrenMap().keySet().size() ; i++){
+        for (int i = 1; i <= node.getNode("upgrades").getChildrenMap().size() ; i++){
             try {
                 lore.addAll(
                         node.getNode("upgrades","level" + i,"lore").getList(TypeToken.of(String.class))
                 );
+                System.out.println();
             } catch (ObjectMappingException e) {
-                Helper.hostPlugin().getLogger().warning("Can't read lore list of " + newKit.getDisplayName());
+                KitPlugin.getSingleton().getLogger().warning("Can't read lore list of " + newKit.getDisplayName());
             }
         }
 
