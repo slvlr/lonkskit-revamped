@@ -1,23 +1,19 @@
 package me.aiglez.lonkskit.kits;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.common.reflect.TypeToken;
+import lombok.SneakyThrows;
 import me.aiglez.lonkskit.guis.KitSelectorGUI;
-import me.aiglez.lonkskit.kits.impl.KitFactoryImpl;
-import me.aiglez.lonkskit.players.LocalPlayer;
+import me.aiglez.lonkskit.utils.Logger;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.aiglez.lonkskit.utils.items.ItemStackParser;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.config.objectmapping.ObjectMappingException;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import scala.Int;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -31,14 +27,15 @@ public class KitSelectorHolder {
     private final List<String> lore;
     private Color              color;
     private final Map<Integer,List<String>> loreOfLevel;
-
-    public KitSelectorHolder(final Material material, final String displayName, final boolean display, final int slot, final List<String> lore, Optional<Color> color, final Map<Integer,List<String>> loreOfLevel) {
+    private final ConfigurationNode node;
+    public KitSelectorHolder(final Material material, final String displayName, final boolean display, final int slot, final List<String> lore, Optional<Color> color, final Map<Integer,List<String>> loreOfLevel, final ConfigurationNode node) {
         this.material = material;
         this.displayName = displayName;
         this.display = display;
         this.slot = slot;
         this.lore = lore;
         this.loreOfLevel = loreOfLevel;
+        this.node = node;
         color.ifPresent(value -> this.color = value);
     }
 
@@ -98,10 +95,16 @@ public class KitSelectorHolder {
         return new Builder(node);
     }
 
+    @SneakyThrows
     public ItemStack buildItemR(int level) {
-        Preconditions.checkArgument(loreOfLevel.get(level) == null,"That is the max level");
-        List<String > lore1 = loreOfLevel.get(level);
+        List<String> lore1 = loreOfLevel.get(level);
+        if (loreOfLevel.get(level) == null ){
 
+            this.loreOfLevel.put(level,this.node.getNode("upgrades","level" + level,"lore").getList(TypeToken.of(String.class)));
+            if (this.loreOfLevel.get(level) != null && !this.loreOfLevel.get(level).isEmpty()){
+                lore1 = loreOfLevel.get(level);
+            }else Logger.warn("level " + level + " of kit : " + this.displayName);
+        }
         return ItemStackBuilder.of(this.material)
                 .name(ChatColor.GOLD + this.displayName)
                 .lore(lore1)
@@ -116,12 +119,11 @@ public class KitSelectorHolder {
         public Builder(final ConfigurationNode node) {
             this.node = node;
         }
-
         public KitSelectorHolder build() throws ObjectMappingException {
             Map<Integer,List<String>> map = Maps.newHashMap();
             for (int i = 1; i <= this.node.getNode("upgrades").getChildrenMap().size(); i++){
                 map.put(i,node.getNode("upgrades","level" + i, "lore").getList(TypeToken.of(String.class)));
-                System.out.println("ok" + node.getNode("upgrades","level" + i, "lore").getValueType());
+                System.out.println(node.getNode("upgrades","level" + i, "lore").getList(TypeToken.of(String.class)));
             }
             node = node.getNode("selector");
             return new KitSelectorHolder(Material.matchMaterial(node.getNode("material").getString("STONE")),
@@ -130,7 +132,7 @@ public class KitSelectorHolder {
                     node.getNode("slot").getInt(RandomUtils.nextInt(10)),
                     node.getNode("lore").getList(new TypeToken<String>() {}),
                     ItemStackParser.getColorByName(node.getNode("color").getString()),
-                    map
+                    map,node.getParent()
             );
         }
 

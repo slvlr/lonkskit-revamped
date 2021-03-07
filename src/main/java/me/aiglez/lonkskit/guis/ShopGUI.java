@@ -2,11 +2,9 @@ package me.aiglez.lonkskit.guis;
 
 import me.aiglez.lonkskit.LonksKitProvider;
 import me.aiglez.lonkskit.kits.KitSelectorHolder;
-import me.aiglez.lonkskit.kits.impl.KitFactoryImpl;
 import me.aiglez.lonkskit.messages.Messages;
 import me.aiglez.lonkskit.messages.Replaceable;
 import me.aiglez.lonkskit.players.LocalPlayer;
-import me.aiglez.lonkskit.players.LocalRent;
 import me.aiglez.lonkskit.utils.Logger;
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder;
 import me.lucko.helper.menu.Item;
@@ -15,9 +13,7 @@ import me.lucko.helper.menu.paginated.PaginatedGuiBuilder;
 import me.lucko.helper.menu.scheme.MenuScheme;
 import me.lucko.helper.menu.scheme.StandardSchemeMappings;
 import org.bukkit.Material;
-
 import java.util.List;
-import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -64,12 +60,15 @@ public class ShopGUI extends PaginatedGui {
                             .build(() -> {
                                 if (localPlayer.getRank(kit).get().getLevel() >= kit.getSelectorHolder().getLoreOfLevel().values().size()){
                                     localPlayer.msg(Replaceable.handle(Messages.PLAYER_SELECT_MAX_LEVEL.getValue(),kit.getDisplayName()));
+                                    return;
                                 }
+
                                 final boolean transaction = localPlayer.decrementPoints((int) kit.getPrice());
                                 if (!transaction) {
                                     localPlayer.msg(Messages.COMMAND_POINTS_PAY_NOT_ENOUGH.getValue());
                                     return;
                                 }
+
                                 localPlayer.decrementPoints(Math.toIntExact((long) kit.getPrice()));
                                 localPlayer.getRank(kit).get().increaseLevel();
                                 localPlayer.msg("&aKit ranked up successfully");

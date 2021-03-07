@@ -115,13 +115,10 @@ public class KitFactoryImpl implements KitFactory {
             for (int i = 1; i <= node.getNode("upgrades").getChildrenMap().size() ; i++){
                 try {
                     final ConfigurationNode inventoryNode = node.getNode("upgrades","level" + i , "inventory","content");
-                    System.out.println(inventoryNode.getValueType().name());
 
                     inventoryContents.put(i,inventoryNode.getList(TypeToken.of(String.class)).stream()
                             .map(ItemStackParser::parseByString).filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList()));
-//                        .map(list -> list.stream().map(ItemStackParser::parseByString).collect(Collectors.toSet()))
-//                        .map(optionals -> optionals.stream().filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList()))
-//                        .orElseIfNull(Collections.emptyList()).endOrNull());
+
                     inventoryArmors.put(i,Chain.start(node.getNode("upgrades","level" + i ,"armor").getValue(new TypeToken<Map<EquipmentSlot, String>>() {}))
                             .map(map -> {
                                 Map<EquipmentSlot, ItemStack> rt = new HashMap<>();
@@ -146,6 +143,7 @@ public class KitFactoryImpl implements KitFactory {
         final boolean isCustom = node.getNode("isCustom").getBoolean();
         final double price = node.getNode("price").getDouble(0);
         Set<PotionEffect> potionEffects = null;
+
         try {
             potionEffects = Chain.start(node.getNode("potion-effects").getList(new TypeToken<String>() {}))
                     .map(list -> list.stream().map(unparsed -> PotionEffectBuilder.parse(unparsed).build()).filter(Objects::nonNull).collect(Collectors.toSet()))
@@ -192,7 +190,6 @@ public class KitFactoryImpl implements KitFactory {
                 lore.addAll(
                         node.getNode("upgrades","level" + i,"lore").getList(TypeToken.of(String.class))
                 );
-                System.out.println();
             } catch (ObjectMappingException e) {
                 KitPlugin.getSingleton().getLogger().warning("Can't read lore list of " + newKit.getDisplayName());
             }
