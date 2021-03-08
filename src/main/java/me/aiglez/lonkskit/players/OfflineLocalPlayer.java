@@ -33,6 +33,8 @@ public interface OfflineLocalPlayer extends LocalRenter, GsonSerializable, Local
 
     boolean decrementPoints(int amount);
 
+    float getKDR();
+
     static OfflineLocalPlayer deserialize(JsonElement element) {
         Preconditions.checkArgument(element.isJsonObject());
         JsonObject object = element.getAsJsonObject();

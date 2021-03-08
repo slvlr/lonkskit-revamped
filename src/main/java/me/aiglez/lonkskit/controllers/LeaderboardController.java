@@ -16,7 +16,7 @@ import java.util.Optional;
 public class LeaderboardController {
 
     private final ConfigurationNode config;
-    private final List<Leaderboard<?>> leaderboards;
+    private final List<Leaderboard> leaderboards;
 
     public LeaderboardController() {
         this.config = Services.load(KitPlugin.class).getConf().getNode("leaderboards");
@@ -25,9 +25,10 @@ public class LeaderboardController {
 
     public void makePointsLeaderboard() {
         final Optional<Location> location = Locations.fromString(this.config.getNode("points", "location").getString(""));
+        final Optional<Location> statsLocation = Locations.fromString(this.config.getNode("stats","location").getString(""));
         if(location.isPresent()) {
-            this.leaderboards.add(new PointsLeaderboard(location.get()));
-            this.leaderboards.add(new StatsLeaderboard(location.get().add(5,0,5)));
+            this.leaderboards.add(new StatsLeaderboard(statsLocation.get(),"&a{0} &7- &a{1} &7- &a{2} &7- &e{3}K/D Ratio"));
+            this.leaderboards.add(new PointsLeaderboard(location.get(),"&a{0} &7- &e{1} &7 point(s)"));
         } else {
             Logger.severe("An error occurred while trying to load the points leaderboard, the location is invalid!");
         }

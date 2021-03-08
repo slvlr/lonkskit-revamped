@@ -3,13 +3,19 @@ package me.aiglez.lonkskit.tests;
 import org.junit.Assert;
 import org.junit.Test;
 
+import javax.swing.text.NumberFormatter;
 import java.io.*;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 
 public class StringTests {
 
     @Test
     public void testReplaceable() throws IOException {
-
+        float kd = (float) 1 / (float) 1000;
+        System.out.println(kd);
+        System.out.println(new DecimalFormat("#0.00").format(kd));
 
 
     }

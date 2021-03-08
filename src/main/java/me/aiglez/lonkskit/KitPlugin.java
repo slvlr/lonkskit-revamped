@@ -12,8 +12,12 @@ import me.aiglez.lonkskit.listeners.PlayerListeners;
 import me.aiglez.lonkskit.players.LocalPlayerFactory;
 import me.aiglez.lonkskit.utils.Logger;
 import me.lucko.helper.config.ConfigurationNode;
+import me.lucko.helper.hologram.Hologram;
+import me.lucko.helper.hologram.HologramFactory;
 import me.lucko.helper.plugin.ExtendedJavaPlugin;
 import me.lucko.helper.plugin.ap.Plugin;
+import me.lucko.helper.serialize.Position;
+import me.lucko.helper.signprompt.SignPromptFactory;
 import org.bukkit.plugin.ServicePriority;
 
 @Plugin(

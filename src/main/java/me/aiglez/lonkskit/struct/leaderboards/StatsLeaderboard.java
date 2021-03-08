@@ -1,51 +1,54 @@
 package me.aiglez.lonkskit.struct.leaderboards;
 
-import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
-import com.google.common.collect.Lists;
 import me.aiglez.lonkskit.LonksKitProvider;
 import me.aiglez.lonkskit.messages.Replaceable;
-import me.aiglez.lonkskit.players.LocalMetrics;
 import me.aiglez.lonkskit.players.OfflineLocalPlayer;
 import me.aiglez.lonkskit.struct.Leaderboard;
+import me.lucko.helper.Schedulers;
+import me.lucko.helper.hologram.individual.HologramLine;
 import org.bukkit.Location;
-
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public class StatsLeaderboard extends Leaderboard<OfflineLocalPlayer> {
+public final class StatsLeaderboard extends Leaderboard {
+    private final byte size = 10;
+    public StatsLeaderboard(Location location, String format) {
+        super(location, format);
+        this.reloadCache();
+        display();
+        Schedulers.sync()
+                .runRepeating(() -> {
+                    this.reloadCache();
+                    this.reloadView();
+                },3, TimeUnit.MILLISECONDS,refreshRate,TimeUnit.SECONDS);
 
-    public StatsLeaderboard(Location location) {
-        super("Statistics", location, 2, TimeUnit.SECONDS, "&a{0} &7 - &a{1} Kills &7 - &c{2} Deaths - &e{3} K/D Ratio");
-        this.cache = Lists.newLinkedList();
     }
 
     @Override
     public void reloadCache() {
-        this.cache.clear();
-        this.cache = new ArrayList<>(LonksKitProvider.getPlayerFactory().getCachedOfflinePlayers());
-        this.cache.stream().map(OfflineLocalPlayer::getMetrics)
-                .sorted(Comparator.comparing(LocalMetrics::getKDR).reversed())
-                .map(LocalMetrics::getHolder)
-                .collect(Collectors.toSet());
+        this.sortedLines.clear();
+        this.sortedPlayers.clear();
+        this.sortedPlayers.addAll(new ArrayList<>(LonksKitProvider.getPlayerFactory().getCachedOfflinePlayers()));
+        this.sortedLines.add("§8§m----------------------------------------");
+        DecimalFormat format = new DecimalFormat("#0.00");
+        for (OfflineLocalPlayer localPlayer : sortedPlayers.stream().sorted(Comparator.comparingDouble(OfflineLocalPlayer::getKDR).reversed()).limit(size).collect(Collectors.toList())) {
+            sortedLines.add(
+                    Replaceable.handle(this.format,
+                            localPlayer.getLastKnownName(),
+                            localPlayer.getMetrics().getKillsCount(),
+                            localPlayer.getMetrics().getDeathsCount(),
+                            format.format(localPlayer.getKDR()))
+            );
+        }
+        this.sortedLines.add("§8§m----------------------------------------");
+
     }
 
     @Override
     public void reloadView() {
-        if(!this.cache.isEmpty()) {
-            this.hologram.clearLines();
-        }
-        for (int i = 0; i < SIZE; i++) {
-            final TextLine line = this.lines.get(i);
-            try {
-                final OfflineLocalPlayer offlineLocalPlayer = this.cache.get(i);
-                line.setText(Replaceable.handle(this.format, offlineLocalPlayer.getLastKnownName(), offlineLocalPlayer.getMetrics().getKillsCount(),offlineLocalPlayer.getMetrics().getDeathsCount(),offlineLocalPlayer.getMetrics().getKDR()));
-            } catch (IndexOutOfBoundsException e) {
-                line.setText("");
-            }
-            this.hologram.appendTextLine(line.getText());
-            return;
-        }
+        this.hologram.updateLines(this.sortedLines);
     }
-    }
+}

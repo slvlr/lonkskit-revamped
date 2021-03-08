@@ -103,6 +103,12 @@ public class MemoryOfflineLocalPlayer implements OfflineLocalPlayer {
     }
 
     @Override
+    public float getKDR() {
+        if (Float.isNaN(this.metrics.getKDR())) return 0;
+        return this.getMetrics().getKDR();
+    }
+
+    @Override
     public List<LocalRent> getRents() { return Collections.unmodifiableList(this.rents); }
 
     @Override

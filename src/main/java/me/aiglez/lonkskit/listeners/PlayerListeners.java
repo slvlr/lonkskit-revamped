@@ -11,10 +11,12 @@ import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.struct.HotbarItemStack;
 import me.aiglez.lonkskit.utils.Logger;
 import me.aiglez.lonkskit.utils.Various;
+import me.libraryaddict.disguise.disguisetypes.watchers.FireballWatcher;
 import me.lucko.helper.Schedulers;
 import me.lucko.helper.Services;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -54,7 +56,6 @@ public class PlayerListeners implements Listener {
                     localPlayer.toBukkit().getInventory().addItem(hotbarItem.getItemStack());
                 }
             }
-            localPlayer.msg("&cYou have cleared your kit.");
         }
 
     }
@@ -156,8 +157,14 @@ public class PlayerListeners implements Listener {
         if (MainCommand.builders.containsKey(victim)){
             MainCommand.builders.replace(victim,false);
         }
+        if (e.getEntity().getKiller() == null ) {
+            if (!victim.getLastAttacker().isPresent()){
+                Controllers.PLAYER.handleSuicide(victim);
+                return;
+            }
+        }
+            e.setShouldDropExperience(false);
         if (e.getEntity().getKiller() != null) Controllers.PLAYER.handleDeathOf(LocalPlayer.get(victim.toBukkit().getKiller()),victim);
-        e.setShouldDropExperience(false);
         e.setDeathMessage(null);
         victim.setSelectedKit(null);
         e.getDrops().clear();

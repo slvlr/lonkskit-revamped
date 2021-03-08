@@ -1,65 +1,53 @@
 
 package me.aiglez.lonkskit.struct;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import me.aiglez.lonkskit.KitPlugin;
-import me.aiglez.lonkskit.utils.Locations;
-import me.aiglez.lonkskit.utils.Logger;
+import me.aiglez.lonkskit.players.OfflineLocalPlayer;
 import me.lucko.helper.Schedulers;
-import me.lucko.helper.scheduler.Ticks;
-import me.lucko.helper.text3.Text;
+import me.lucko.helper.hologram.Hologram;
+import me.lucko.helper.serialize.Position;
 import org.bukkit.Location;
-
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public abstract class Leaderboard<T> {
+public abstract class Leaderboard {
 
-    protected final String name, format;
-    protected final long refreshRateTicks;
-    protected final Hologram hologram;
-    protected final List<TextLine> lines;
-    protected List<T> cache;
+    protected final Location location;
+    protected final int refreshRate = 10;
+    protected final List<OfflineLocalPlayer> sortedPlayers = Lists.newLinkedList();
+    protected final List<String> sortedLines = Lists.newLinkedList();
+    protected Hologram hologram;
+    protected final String format;
+
 
     public static final int SIZE = 10;
 
-    public Leaderboard(final String name, final Location location, final long refreshRate, final TimeUnit timeUnit, final String format) {
-        Preconditions.checkNotNull(name, "name may not be null");
-        Preconditions.checkNotNull(location, "location may not be null");
-        Preconditions.checkNotNull(timeUnit, "time unit may not be null");
-        Preconditions.checkNotNull(format, "format may not be null");
-        this.name = name;
-        this.refreshRateTicks = Ticks.from(refreshRate, timeUnit);
-        this.format = Text.colorize(format);
+    public Leaderboard(final Location location,final String format) {
+        Preconditions.checkNotNull(location,"Location may not be null");
+        Preconditions.checkNotNull(format,"format may not be null");
+        this.location = location;
+        this.format = format;
+        this.reloadCache();
+        this.display();
+        Schedulers.sync()
+                .runRepeating(this::reloadCache,refreshRate,TimeUnit.SECONDS,refreshRate,TimeUnit.SECONDS);
+        Schedulers.sync()
+                .runRepeating(this::reloadView,3,TimeUnit.MILLISECONDS,refreshRate,TimeUnit.SECONDS);
 
-        Logger.debug("Creating a hologram [{0}] with refresh rate of ({1} {2}) at [{3}]", this.name, refreshRate, timeUnit.name(), Locations.toString(location));
-        this.hologram = HologramsAPI.createHologram(KitPlugin.getSingleton(), location);
-        this.hologram.appendTextLine("§8§m--------------------------");
-        this.lines = Lists.newArrayList();
-        for (int i = 0; i < SIZE; i++) {
-            this.lines.add(this.hologram.appendTextLine(this.format));
-        }
-        this.hologram.appendTextLine("§8§m--------------------------");
-
-        Schedulers.builder()
-                .sync()
-                .after(10)
-                .every(this.refreshRateTicks)
-                .run(this::reloadCache);
-
-        Schedulers.builder()
-                .sync()
-                .after(12)
-                .every(this.refreshRateTicks + 2)
-                .run(this::reloadView);
     }
+
+    public void display(){
+        this.hologram = Hologram.create(Position.of(this.location),this.sortedLines);
+        if (!hologram.isSpawned()){
+            this.hologram.spawn();
+        }
+        this.hologram.setClickCallback(player -> player.performCommand("kitpvp stats"));
+    }
+
+    public abstract void reloadView();
 
     public abstract void reloadCache();
 
-    public abstract void reloadView();
 
 }

@@ -169,11 +169,10 @@ public class MemoryLocalPlayer implements LocalPlayer {
 
     @Override
     public void setLastAttacker(LocalPlayer localPlayer) {
-        if(localPlayer == null || localPlayer.getUniqueId().equals(this.getUniqueId())) {
+        if(localPlayer == null || localPlayer.getUniqueId().equals(this.getUniqueId()))
             Metadata.provideForPlayer(toBukkit()).remove(MetadataProvider.LAST_ATTACKER);
-        } else {
+        else
             Metadata.provideForPlayer(toBukkit()).put(MetadataProvider.LAST_ATTACKER, ExpiringValue.of(localPlayer, Constants.ATTACKER_TAG_EXPIRING, TimeUnit.MINUTES));
-        }
     }
 
     @Override
@@ -262,6 +261,11 @@ public class MemoryLocalPlayer implements LocalPlayer {
     @Override
     public boolean decrementPoints(int amount) {
         return this.offline.decrementPoints(amount);
+    }
+
+    @Override
+    public float getKDR() {
+        return this.getMetrics().getKDR();
     }
 
     @Override
