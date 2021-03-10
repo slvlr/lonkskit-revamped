@@ -3,9 +3,7 @@ package me.aiglez.lonkskit.abilities.factory;
 import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.abilities.Ability;
 import me.aiglez.lonkskit.abilities.functional.*;
-import me.aiglez.lonkskit.abilities.functional.johan.*;
 import me.aiglez.lonkskit.abilities.itembased.*;
-import me.aiglez.lonkskit.abilities.itembased.johan.*;
 import me.aiglez.lonkskit.exceptions.AbilityFileNotFoundException;
 import me.aiglez.lonkskit.exceptions.AbilityRegisterException;
 import me.aiglez.lonkskit.utils.Logger;
@@ -105,6 +103,7 @@ public class AbilityFactoryImpl implements AbilityFactory {
             registerAbility("snake", new SnakeAbility(yamlConfigurationLoader("snake")));
             registerAbility("wraith", new WraithAbility(yamlConfigurationLoader("wraith")));
             registerAbility("sonic", new SonicAbility(yamlConfigurationLoader("sonic")));
+            registerAbility("mortar",new MortarAbility(yamlConfigurationLoader("mortar")));
             johan += 8;
             // johan - end
             Services.provide(TeleAbility.class,teleAbility);

@@ -48,6 +48,8 @@ public class StompAbility extends FunctionalAbility {
                             under.toBukkit().damage(damage);
                             under.msg(configuration.getNode("messages", "tip"));
                             localPlayer.msg(configuration.getNode("messages", "stomped"), under.getLastKnownName());
+                            localPlayer.msg("&b[DEBUG] &cYou have entered in combat with " + under.getLastKnownName());
+                            under.msg("&b[DEBUG] &cYou have entered in combat with " + localPlayer.getLastKnownName());
                         }
                     });
                     e.setDamage(Math.min(e.getDamage(), configuration.getNode("max-damage", "stomper").getDouble(4.5D)));

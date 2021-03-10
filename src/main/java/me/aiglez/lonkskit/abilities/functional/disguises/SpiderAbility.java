@@ -1,7 +1,7 @@
-package me.aiglez.lonkskit.abilities.functional.johan.disguises;
+package me.aiglez.lonkskit.abilities.functional.disguises;
 
 import me.aiglez.lonkskit.abilities.FunctionalAbility;
-import me.aiglez.lonkskit.abilities.functional.johan.DisguiseAbilities;
+import me.aiglez.lonkskit.abilities.functional.DisguiseAbilities;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.io.IOException;
 
-import static me.aiglez.lonkskit.abilities.functional.johan.DisguiseAbilities.nearWeb;
+import static me.aiglez.lonkskit.abilities.functional.DisguiseAbilities.nearWeb;
 
 public class SpiderAbility extends FunctionalAbility {
 

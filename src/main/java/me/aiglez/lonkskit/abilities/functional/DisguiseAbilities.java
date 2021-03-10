@@ -1,4 +1,4 @@
-package me.aiglez.lonkskit.abilities.functional.johan;
+package me.aiglez.lonkskit.abilities.functional;
 
 import com.google.common.collect.Lists;
 import me.aiglez.lonkskit.abilities.FunctionalAbility;

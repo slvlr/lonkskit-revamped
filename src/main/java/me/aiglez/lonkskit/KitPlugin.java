@@ -10,6 +10,7 @@ import me.aiglez.lonkskit.listeners.FeaturesListeners;
 import me.aiglez.lonkskit.listeners.InteractListeners;
 import me.aiglez.lonkskit.listeners.PlayerListeners;
 import me.aiglez.lonkskit.players.LocalPlayerFactory;
+import me.aiglez.lonkskit.struct.ghost.GhostFactory;
 import me.aiglez.lonkskit.utils.Logger;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.hologram.Hologram;
@@ -62,6 +63,8 @@ public final class KitPlugin extends ExtendedJavaPlugin {
         Logger.fine("Initializing controllers...");
         Controllers.initControllers();
         loaded = true;
+        new GhostFactory(this);
+
     }
 
     @Override

@@ -8,6 +8,8 @@ import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.metadata.ExpiringValue;
+import me.lucko.helper.metadata.Metadata;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LightningStrike;
@@ -62,6 +64,7 @@ public class ThorAbility extends ItemStackAbility {
                 .handler(e -> {
                     e.setDamage(0);
                     e.setCancelled(true);
+
                 });
 
     }

@@ -1,4 +1,4 @@
-package me.aiglez.lonkskit.abilities.itembased.johan;
+package me.aiglez.lonkskit.abilities.itembased;
 
 import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
@@ -39,9 +39,10 @@ public class ElderAbility extends ItemStackAbility {
                         localPlayer.msg("&b[LonksKit] &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
                         return;
                     }
-
                     applyEffects(localPlayer);
                     work(victim);
+                    localPlayer.msg("&b[DEBUG] &cYou have entered in combat with {0}.",victim.getDisplayName());
+                    victim.sendMessage("&b[DEBUG] &cYou have entered in combat with " + localPlayer.getLastKnownName() + ".");
                 });
     }
 

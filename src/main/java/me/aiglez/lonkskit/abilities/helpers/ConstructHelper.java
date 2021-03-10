@@ -2,6 +2,7 @@ package me.aiglez.lonkskit.abilities.helpers;
 
 import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.utils.Logger;
+import me.aiglez.lonkskit.utils.Various;
 import me.lucko.helper.Schedulers;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -45,8 +46,10 @@ public class ConstructHelper {
             for (int y = minY; y <= maxY; y++) {
                 for (int z = minZ; z <= maxZ; z++) {
                     final Block block = WorldProvider.KP_WORLD.getBlockAt(x, y, z);
-                    blockCount++;
-                    blocks.add(block);
+                    if ((block.isEmpty() || block.getType() == Material.AIR) && Various.assertNotSurroundedWithCactus(block)) {
+                        blockCount++;
+                        blocks.add(block);
+                    }
 //                    if (canBuildOnTop(block, null)) {
 //
 //                    } else {
@@ -58,12 +61,15 @@ public class ConstructHelper {
 
         Logger.debug("[WallBuilder] Block Count: {0}  ||  Buildable Blocks Count {1}", blockCount, blocks.size());
         if(blockCount == blocks.size()) {
-            blocks.stream().filter(block -> canBuildOnTop(block,Material.AIR)).forEach(block -> block.setType(WALL_MATERIAL));
+            blocks.forEach(block -> {
+                block.setType(WALL_MATERIAL);
+                Schedulers.sync().runLater(() -> block.getState().update(),2L);
+            });
             Schedulers
                     .sync()
-                    .runLater(() -> blocks.stream().filter(block -> canBuildOnTop(block,Material.AIR)).forEach(block -> {
+                    .runLater(() -> blocks.forEach(block -> {
                         block.setType(Material.AIR);
-                        Schedulers.sync().runLater(() -> block.getState().update(),2L);
+                        Schedulers.sync().runLater(() -> block.getState().update(true),2L);
                     }),200L);
             return true;
         } else {

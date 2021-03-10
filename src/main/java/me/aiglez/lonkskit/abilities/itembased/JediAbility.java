@@ -5,6 +5,7 @@ import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.Various;
 import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
@@ -48,6 +49,8 @@ public class JediAbility extends ItemStackAbility {
                     );
 
                     player.setVelocity(Various.makeFinite(newVector));
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&b[DEBUG] &cYou have entered in combat with " + localPlayer.getLastKnownName()));
+                    localPlayer.msg("&b[DEBUG] &cYou have entered in combat with {0}.",player.getDisplayName());
                 });
     }
 

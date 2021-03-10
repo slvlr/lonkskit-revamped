@@ -6,7 +6,7 @@ import co.aikar.commands.annotation.*;
 import co.aikar.commands.annotation.Optional;
 import me.aiglez.lonkskit.LonksKitProvider;
 import me.aiglez.lonkskit.WorldProvider;
-import me.aiglez.lonkskit.abilities.itembased.johan.CowboyAbility;
+import me.aiglez.lonkskit.abilities.itembased.CowboyAbility;
 import me.aiglez.lonkskit.controllers.Controllers;
 import me.aiglez.lonkskit.kits.Kit;
 import me.aiglez.lonkskit.kits.KitRank;
@@ -15,9 +15,11 @@ import me.aiglez.lonkskit.messages.Messages;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.struct.HotbarItemStack;
 import me.aiglez.lonkskit.utils.Logger;
+import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.aiglez.lonkskit.utils.Various;
 import me.libraryaddict.disguise.DisguiseAPI;
 import me.lucko.helper.Schedulers;
+import me.lucko.helper.metadata.Metadata;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 
@@ -191,11 +193,15 @@ public class MainCommand extends BaseCommand {
                 localPlayer.getInventory().clear();
                 localPlayer.toBukkit().getActivePotionEffects().forEach(activePe -> localPlayer.toBukkit().removePotionEffect(activePe.getType()));
                 localPlayer.toBukkit().getPassengers().clear();
-                if (FeaturesListeners.demoBlocks.containsValue(localPlayer)){
-                    FeaturesListeners.demoBlocks.entrySet().stream().filter(a -> a.getValue() == localPlayer).forEach(block -> Schedulers.sync().runLater(() -> {
-                        block.getKey().setBlockData(Material.AIR.createBlockData());
-                        Schedulers.sync().runLater(() -> block.getKey().getState().update(true),2L);
-                    },3L));
+                if (Metadata.provide(localPlayer.toBukkit()).has(MetadataProvider.DEMOMAN)){
+                    Metadata.lookupBlocksWithKey(MetadataProvider.DEMO_BLOCK).entrySet().stream()
+                            .filter(a -> a.getValue() == localPlayer)
+                            .forEach(a -> {
+                                Schedulers.sync().runLater(() -> {
+                                    a.getKey().toBlock().setBlockData(Material.AIR.createBlockData());
+                                    Schedulers.sync().runLater(() -> a.getKey().toBlock().getState().update(true),2L);
+                                },3L);
+                            });
                 }
                 for (HotbarItemStack hotbarItem : Controllers.PLAYER.getHotbarItems().stream().sorted(Comparator.comparingInt(HotbarItemStack::getOrder)).collect(Collectors.toList())) {
                     if (!localPlayer.toBukkit().getInventory().contains(hotbarItem.getItemStack())) {

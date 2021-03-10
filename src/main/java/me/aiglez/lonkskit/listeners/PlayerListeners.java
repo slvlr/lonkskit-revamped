@@ -9,11 +9,14 @@ import me.aiglez.lonkskit.guis.ShopGUI;
 import me.aiglez.lonkskit.messages.Messages;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.struct.HotbarItemStack;
+import me.aiglez.lonkskit.struct.ghost.GhostFactory;
 import me.aiglez.lonkskit.utils.Logger;
+import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.aiglez.lonkskit.utils.Various;
 import me.libraryaddict.disguise.disguisetypes.watchers.FireballWatcher;
 import me.lucko.helper.Schedulers;
 import me.lucko.helper.Services;
+import me.lucko.helper.metadata.Metadata;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Firework;
@@ -60,10 +63,9 @@ public class PlayerListeners implements Listener {
 
     }
 
-
-
     @EventHandler
     public void onClickItem(PlayerInteractEvent e){
+        if (Services.load(GhostFactory.class).isGhost(e.getPlayer())) e.setCancelled(true);
         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
             LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
             if (e.hasItem()) {
@@ -93,6 +95,16 @@ public class PlayerListeners implements Listener {
                                                 localPlayer.msg("&3 You should enter the kitpvp world first");
                                                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"mail send rangewonk " + e.getPlayer().getDisplayName() + " has kitpvp items in " + e.getPlayer().getWorld().getName());
                                             }
+                                        }else if (e.getItem().getItemMeta().getDisplayName().toLowerCase().contains("spectator")){
+                                            if (localPlayer.isValid()){
+                                                if (Services.load(GhostFactory.class).isGhost(e.getPlayer())){
+                                                    Services.load(GhostFactory.class).setGhost(e.getPlayer(),false);
+                                                    Services.load(GhostFactory.class).removePlayer(e.getPlayer());
+                                                }else {
+                                                    Services.load(GhostFactory.class).setGhost(e.getPlayer(), true);
+                                                    localPlayer.msg("&3You are invisible now");
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -115,12 +127,15 @@ public class PlayerListeners implements Listener {
         }
         localPlayer.getMetrics().resetKillStreak();
         localPlayer.setBukkit(null);
-        if (FeaturesListeners.demoBlocks.containsValue(localPlayer)){
-            FeaturesListeners.demoBlocks.entrySet().stream().filter(a -> a.getValue() == localPlayer).forEach(block -> Schedulers.sync().runLater(() -> {
-                block.getKey().setBlockData(Material.AIR.createBlockData());
-                Schedulers.sync().runLater(() -> block.getKey().getState().update(true),2L);
-                FeaturesListeners.demoBlocks.remove(block.getKey());
-            },3L));
+        if (Metadata.lookupBlocksWithKey(MetadataProvider.DEMO_BLOCK).containsValue(localPlayer)){
+            Metadata.lookupBlocksWithKey(MetadataProvider.DEMO_BLOCK).entrySet().stream()
+                    .filter(a -> a.getValue() == localPlayer)
+                    .forEach(a -> {
+                        Schedulers.sync().runLater(() -> {
+                            a.getKey().toBlock().setBlockData(Material.AIR.createBlockData());
+                            Schedulers.sync().runLater(() -> a.getKey().toBlock().getState().update(true),2L);
+                        },3L);
+                    });
         }
     }
 

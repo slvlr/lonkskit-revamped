@@ -41,7 +41,7 @@ public class WizardAbility extends ItemStackAbility {
 
         final Snowball snowball = localPlayer.toBukkit().launchProjectile(Snowball.class);
         snowball.setShooter(localPlayer.toBukkit());
-        Metadata.provideForEntity(snowball).put(MetadataProvider.SNOWBALL_EXPLODE, SoftValue.of(true));
+        Metadata.provideForEntity(snowball).put(MetadataProvider.SNOWBALL_EXPLODE, localPlayer);
         e.getPlayer().sendMessage("metadata snowball added");
     }
 
@@ -55,8 +55,13 @@ public class WizardAbility extends ItemStackAbility {
                 .handler(e -> {
                     try {
                         WorldProvider.KP_WORLD.createExplosion(e.getEntity().getLocation(),  getConfiguration().getNode("explosion-power").getInt(3), false, false);
-                        Metadata.provideForEntity(e.getEntity()).remove(MetadataProvider.SNOWBALL_EXPLODE);
-                        e.getHitEntity().sendMessage("explosion");
+                        final LocalPlayer localPlayer = Metadata.provideForEntity(e.getEntity()).get(MetadataProvider.SNOWBALL_EXPLODE).get();
+                        e.getEntity().getLocation().getNearbyPlayers(3,3,3).stream()
+                                .filter(player -> player.getUniqueId().equals(localPlayer.getUniqueId()))
+                                .forEach(player -> {
+                                    player.sendMessage("&b[DEBUG] &cYou have entered in combat with " + localPlayer.getLastKnownName());
+                                    localPlayer.msg("&b[DEBUG] &cYou have entered in combat with {0}.",player.getDisplayName());
+                                });
                     }catch (NullPointerException exception){
                         WorldProvider.KP_WORLD.createExplosion(e.getEntity().getLocation(), getConfiguration().getNode("explosion-power").getInt(3
                          ), false, false);

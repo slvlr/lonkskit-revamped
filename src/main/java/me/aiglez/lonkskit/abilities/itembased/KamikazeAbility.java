@@ -7,6 +7,7 @@ import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.metadata.Metadata;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -55,7 +56,10 @@ public class KamikazeAbility extends ItemStackAbility {
                 configuration.getNode("radius", "y-axis").getDouble(5D),
                 configuration.getNode("radius", "z-axis").getDouble(5D))
                 .stream().filter(player -> !player.getUniqueId().equals(localPlayer.getUniqueId()))
-                .forEach(player -> player.setHealth(player.getHealth() - damage < 0.5 ? 0 :  player.getHealth() - damage ));
+                .forEach(player -> {
+                    player.setHealth(player.getHealth() - damage < 0.5 ? 0 :  player.getHealth() - damage);
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&b[DEBUG] &cYou have entered in combat with " + localPlayer.getLastKnownName()                                                                                                                                                                                                       ));
+                });
 
 
         // damage
@@ -79,4 +83,5 @@ public class KamikazeAbility extends ItemStackAbility {
                     e.getEntity().sendMessage("WELL");
                 });
     }
+
 }

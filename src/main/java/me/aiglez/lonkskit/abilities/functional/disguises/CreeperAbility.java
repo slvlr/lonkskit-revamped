@@ -1,8 +1,8 @@
-package me.aiglez.lonkskit.abilities.functional.johan.disguises;
+package me.aiglez.lonkskit.abilities.functional.disguises;
 
 import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.abilities.FunctionalAbility;
-import me.aiglez.lonkskit.abilities.functional.johan.DisguiseAbilities;
+import me.aiglez.lonkskit.abilities.functional.DisguiseAbilities;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import org.bukkit.Bukkit;

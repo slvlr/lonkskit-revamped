@@ -10,6 +10,7 @@ import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.event.filter.EventFilters;
 import me.lucko.helper.metadata.Metadata;
 import me.lucko.helper.metadata.SoftValue;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
@@ -63,7 +64,8 @@ public class HulkAbility extends FunctionalAbility {
                     }
 
                     eject(e.getPlayer(), passenger);
-
+                    passenger.sendMessage(ChatColor.translateAlternateColorCodes('&',"&b[DEBUG] &cYou have entered in combat with " + e.getPlayer().getDisplayName() + "."));
+                    e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&',"&b[DEBUG] &cYou have entered in combat with " + ((Player)passenger).getDisplayName() + "."));
                     boolean remove = Metadata.provideForEntity(passenger).remove(MetadataProvider.HULK_PICKED_UP);
                     localPlayer.msg("&cYou have ejected {0} (remove result: {1})", passenger.getName(), remove);
                 });

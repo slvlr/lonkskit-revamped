@@ -1,4 +1,4 @@
-package me.aiglez.lonkskit.abilities.itembased.johan;
+package me.aiglez.lonkskit.abilities.itembased;
 
 import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.ItemStackAbility;
@@ -7,9 +7,11 @@ import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.lucko.helper.Events;
 import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.metadata.Metadata;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Explosive;
 import org.bukkit.entity.Fireball;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -59,7 +61,13 @@ public class ShadowbladeAbility extends ItemStackAbility {
                 .handler(e -> e.blockList().clear());
         Events.subscribe(EntityDamageByEntityEvent.class, EventPriority.HIGHEST)
                 .filter(e -> e.getDamager() instanceof Fireball)
+                .filter(e -> e.getEntity() instanceof Player)
                 .filter(e -> Metadata.provideForEntity(e.getDamager()).has(MetadataProvider.SHADOW_FIREBALL))
-                .handler(e-> e.setDamage(getConfiguration().getNode("damage").getDouble(1D)));
+                .handler(e-> {
+                    e.setDamage(getConfiguration().getNode("damage").getDouble(1D));
+                    Player shooter = ((Player) ((Fireball)e.getDamager()).getShooter());
+                    e.getEntity().sendMessage(ChatColor.translateAlternateColorCodes('&',"&b[DEBUG] &cYou have entered in combat with " + shooter.getDisplayName()));
+                    shooter.sendMessage(ChatColor.translateAlternateColorCodes('&',"&b[DEBUG] &cYou have entered in combat with " + ((Player)e.getEntity()).getDisplayName()));
+                });
     }
 }

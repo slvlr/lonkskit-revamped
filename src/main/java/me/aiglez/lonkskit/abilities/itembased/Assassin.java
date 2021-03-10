@@ -1,4 +1,4 @@
-package me.aiglez.lonkskit.abilities.itembased.johan;
+package me.aiglez.lonkskit.abilities.itembased;
 
 import me.aiglez.lonkskit.abilities.AbilityPredicates;
 import me.aiglez.lonkskit.abilities.FunctionalAbility;

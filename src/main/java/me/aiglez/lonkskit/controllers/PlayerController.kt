@@ -17,7 +17,9 @@ import me.aiglez.lonkskit.utils.Various
 import me.aiglez.lonkskit.utils.items.ItemStackBuilder
 import me.lucko.helper.Services
 import org.bukkit.Material
+import kotlin.math.min
 
+@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "NAME_SHADOWING")
 class PlayerController {
     private val loggingItems: MutableSet<HotbarItemStack>
     fun loadHotbarItems() {
@@ -25,7 +27,7 @@ class PlayerController {
         for (childName in config.childrenMap.keys) {
             val child = config.getNode(childName!!)
             val name = child.getNode("name").getString("")
-            val material = Material.matchMaterial(child.getNode("material").getString("STONE"))
+            val material : Material? = Material.matchMaterial(child.getNode("material").getString("STONE"))
             val order = child.getNode("order").int
             try {
                 val lore = child.getNode("lore").getList(object : TypeToken<String?>() {})
@@ -50,7 +52,7 @@ class PlayerController {
 
     val hotbarItems: Set<HotbarItemStack>
         get() = loggingItems.stream().sorted { hotbarItemStack: HotbarItemStack, t1: HotbarItemStack ->
-            Math.min(
+            min(
                 t1.order,
                 hotbarItemStack.order
             )
@@ -104,7 +106,7 @@ class PlayerController {
     }
 
     fun handleSuicide(victim: LocalPlayer) {
-        victim.msg("&6[&bLonksKits&6]&c You have died!");
+        victim.msg("&6[&bLonksKits&6]&c You have died!")
         victim.setInKP(true)
         victim.lastAttacker.ifPresent { victim -> victim.setLastAttacker(null) }
         FeaturesListeners.killstreaks.replace(victim,0)

@@ -1,4 +1,4 @@
-package me.aiglez.lonkskit.abilities.functional.johan.disguises;
+package me.aiglez.lonkskit.abilities.functional.disguises;
 
 import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.abilities.AbilityPredicates;
@@ -25,8 +25,8 @@ import org.bukkit.potion.PotionEffectType;
 import java.io.IOException;
 import java.util.Objects;
 
-import static me.aiglez.lonkskit.abilities.functional.johan.DisguiseAbilities.snowmen;
-import static me.aiglez.lonkskit.abilities.functional.johan.DisguiseAbilities.victimsOfSnow;
+import static me.aiglez.lonkskit.abilities.functional.DisguiseAbilities.snowmen;
+import static me.aiglez.lonkskit.abilities.functional.DisguiseAbilities.victimsOfSnow;
 
 public class SnowmanAbility extends FunctionalAbility {
     private static int times;
