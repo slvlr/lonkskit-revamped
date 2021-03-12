@@ -14,7 +14,7 @@
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <kotlin.version>1.5.0-M1</kotlin.version>
+        <kotlin.version>1.4.0-M1</kotlin.version>
     </properties>
 
     <build>
@@ -22,7 +22,7 @@
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
-                <version>${kotlin.version}</version>
+                <version>1.4.31</version>
                 <executions>
                     <execution>
                         <id>compile</id>
@@ -217,17 +217,27 @@
        <dependency>
            <groupId>org.jetbrains.kotlin</groupId>
            <artifactId>kotlin-stdlib-jdk8</artifactId>
-           <version>${kotlin.version}</version>
+           <version>1.4.31</version>
        </dependency>
        <dependency>
            <groupId>org.jetbrains.kotlin</groupId>
            <artifactId>kotlin-test-junit</artifactId>
-           <version>${kotlin.version}</version>
+           <version>1.4.31</version>
            <scope>test</scope>
+       </dependency>
+
+       <dependency>
+           <groupId>at.pcgamingfreaks</groupId>
+           <artifactId>PluginLib</artifactId>
+           <version>1.0.30-SNAPSHOT</version><!-- Check version shield for newest version -->
        </dependency>
    </dependencies>
 
     <repositories>
+        <repository>
+            <id>pcgf-repo</id>
+            <url>https://repo.pcgamingfreaks.at/repository/maven-everything</url>
+        </repository>
         <repository>
             <id>md_5-public</id>
             <url>http://repo.md-5.net/content/groups/public/</url>

@@ -5,21 +5,23 @@ import me.aiglez.lonkskit.commands.CommandsRegistry;
 import me.aiglez.lonkskit.commands.KitCommand;
 import me.aiglez.lonkskit.controllers.Controllers;
 import me.aiglez.lonkskit.kits.KitFactory;
-import me.aiglez.lonkskit.listeners.AbilityListeners;
-import me.aiglez.lonkskit.listeners.FeaturesListeners;
-import me.aiglez.lonkskit.listeners.InteractListeners;
-import me.aiglez.lonkskit.listeners.PlayerListeners;
+import me.aiglez.lonkskit.listeners.*;
 import me.aiglez.lonkskit.players.LocalPlayerFactory;
 import me.aiglez.lonkskit.struct.ghost.GhostFactory;
 import me.aiglez.lonkskit.utils.Logger;
+import me.lucko.helper.Commands;
+import me.lucko.helper.command.Command;
 import me.lucko.helper.config.ConfigurationNode;
 import me.lucko.helper.hologram.Hologram;
 import me.lucko.helper.hologram.HologramFactory;
+import me.lucko.helper.maven.MavenLibrary;
 import me.lucko.helper.plugin.ExtendedJavaPlugin;
 import me.lucko.helper.plugin.ap.Plugin;
 import me.lucko.helper.serialize.Position;
 import me.lucko.helper.signprompt.SignPromptFactory;
 import org.bukkit.plugin.ServicePriority;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 @Plugin(
         name = "LonksKit", version  = "1.0.9",
@@ -59,11 +61,20 @@ public final class KitPlugin extends ExtendedJavaPlugin {
         Logger.fine("Registering listeners and commands...");
         registerListeners();
         registerCommands();
-
         Logger.fine("Initializing controllers...");
         Controllers.initControllers();
+
         loaded = true;
         new GhostFactory(this);
+        Commands.create().assertPlayer().handler(c -> {
+            if (!c.sender().isGlowing()){
+                c.sender().setGlowing(true);
+                c.sender().addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,200,666,true,false,false));
+            }else {
+                c.sender().setGlowing(false);
+                c.sender().getActivePotionEffects().clear();
+            }
+        }).register("testH");
 
     }
 
@@ -82,6 +93,8 @@ public final class KitPlugin extends ExtendedJavaPlugin {
         new InteractListeners(this);
         new PlayerListeners(this);
         new FeaturesListeners(this);
+        new DisconnectListener(this);
+        new CombatListeners(this);
     }
 
     private void registerCommands() {

@@ -10,6 +10,7 @@ import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.lucko.helper.Events;
 import me.lucko.helper.Schedulers;
+import me.lucko.helper.Services;
 import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.metadata.Metadata;
 import org.bukkit.Material;
@@ -24,14 +25,12 @@ public class DemomanAbility extends ItemStackAbility {
     @Getter
     @Setter
     private static Set<Material> interdit = new HashSet<>();
-    @Getter
-    public static DemomanAbility INSTANCE;
     @SneakyThrows
     public DemomanAbility(YAMLConfigurationLoader configurationLoader) throws IOException {
         super("demoman", configurationLoader);
         interdit.addAll(new ArrayList<>(this.configuration.getNode("blocks").getList(TypeToken.of(String.class)).stream().map(Material::matchMaterial).collect(Collectors.toList())));
-        INSTANCE = this;
         System.out.println(interdit);
+        Services.provide(DemomanAbility.class,this);
     }
 
     @Override

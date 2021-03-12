@@ -5,12 +5,14 @@ import me.aiglez.lonkskit.abilities.ItemStackAbility;
 import me.aiglez.lonkskit.players.LocalPlayer;
 import me.aiglez.lonkskit.utils.MetadataProvider;
 import me.lucko.helper.Events;
+import me.lucko.helper.Helper;
 import me.lucko.helper.config.yaml.YAMLConfigurationLoader;
 import me.lucko.helper.metadata.Metadata;
 import me.lucko.helper.metadata.SoftValue;
 import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Trident;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
@@ -27,12 +29,14 @@ public class SpartanAbility extends ItemStackAbility {
 
     @Override
     public void registerListeners() {
-        Events.subscribe(ProjectileHitEvent.class)
+        Events.subscribe(ProjectileHitEvent.class, EventPriority.HIGHEST)
                 .filter(e -> e.getHitEntity() != null)
                 .filter(AbilityPredicates.entityHasMetadata(MetadataProvider.SPARTAN_STICK))
                 .handler(e -> {
-                    ((Player)e.getHitEntity()).setWalkSpeed(0.9F);
-                    ((Player) e.getHitEntity()).setJumping(true);
+                    if (e.getHitEntity() instanceof Player) {
+                        ((Player)e.getHitEntity()).setWalkSpeed(0F);
+                        ((Player) e.getHitEntity()).setJumping(true);
+                    }
                     Objects.requireNonNull(e.getHitEntity()).setVelocity(e.getHitEntity().getVelocity().setY(2).add(new Vector(0,10,0)));
                     e.getHitEntity().setVelocity(new Vector(0,40,0));
                     Metadata.provideForEntity(e.getEntity()).clear();
@@ -47,6 +51,7 @@ public class SpartanAbility extends ItemStackAbility {
     public void whenRightClicked(PlayerInteractEvent e) {
         LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
         if (!cooldown.test(localPlayer)) {
+
             localPlayer.msg("&b[LonksKit] &cPlease wait, {0} second(s) left", cooldown.remainingTime(localPlayer, TimeUnit.SECONDS));
             return;
         }

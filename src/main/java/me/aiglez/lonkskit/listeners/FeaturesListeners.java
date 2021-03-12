@@ -43,9 +43,18 @@ public class FeaturesListeners implements Listener {
     //----------------------------------------//
     //     BUILD/BREAK BLOCKS                 //
     //----------------------------------------//
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlaceBlock(BlockPlaceEvent e){
-                if (ItemStackAbility.ABILITY_ITEMS.contains(e.getBlock().getType())) {
+        if (e.getBlock().getType() == Material.STONE_PRESSURE_PLATE){
+            System.out.println("pressure");
+            LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
+            if (localPlayer.isValid() && localPlayer.hasSelectedKit() && Metadata.provideForPlayer(e.getPlayer()).has(MetadataProvider.DEMOMAN)){
+                Metadata.provideForBlock(e.getBlock()).put(MetadataProvider.DEMO_BLOCK,localPlayer);
+                e.setCancelled(false);
+                return;
+            } else if (MainCommand.builders.containsKey(localPlayer) && MainCommand.builders.get(localPlayer)) return;
+            else e.setCancelled(true);
+        }else if (ItemStackAbility.ABILITY_ITEMS.contains(e.getBlock().getType())) {
                     LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
                     if (e.getPlayer().getGameMode() != GameMode.CREATIVE) {
                         if (e.getBlock().getType() == teleM && localPlayer.hasSelectedKit()) {
@@ -68,18 +77,6 @@ public class FeaturesListeners implements Listener {
                                 });
                             }
                         }
-                        if (e.getBlock().getType() == Material.STONE_PRESSURE_PLATE && localPlayer.hasSelectedKit()) {
-                            if (Metadata.provide(e.getPlayer()).has(MetadataProvider.DEMOMAN)){
-                                System.out.println(e.getBlockAgainst().getType());
-                                if (Various.assertNotSurroundedWithCactus(e.getBlock()) && DemomanAbility.getInterdit().contains(e.getBlockAgainst().getType())) {
-                                    Metadata.provideForBlock(e.getBlock()).put(MetadataProvider.DEMO_BLOCK,localPlayer);
-                                    e.getPlayer().sendMessage("block added to the list");
-                                }else e.setCancelled(true);
-                            }else e.setCancelled(true);
-                        }else {
-                            e.getPlayer().sendMessage(ChatColor.BOLD + "" + ChatColor.DARK_AQUA + "You Can't Place Ability Items");
-                            e.setCancelled(true);
-                        }
                     }else {
                         if (MainCommand.builders.containsKey(localPlayer)){
                             if (!MainCommand.builders.get(localPlayer)) e.setCancelled(true);
@@ -90,44 +87,14 @@ public class FeaturesListeners implements Listener {
                 }
                 LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
                 if (!MainCommand.builders.containsKey(localPlayer)) {
-                    if (e.getBlock().getType() != Material.STONE_PRESSURE_PLATE) {
                         e.setCancelled(true);
                         e.getPlayer().sendMessage(ChatColor.BOLD + "" + ChatColor.DARK_AQUA + "You don't have permission to build blocks");
                         return;
-                    }else {
-                        if (Various.assertNotSurroundedWithCactus(e.getBlock())) {
-                            Metadata.provideForBlock(e.getBlock()).put(MetadataProvider.DEMO_BLOCK,localPlayer);
-                            e.getPlayer().sendMessage("block added to the list");
-                        }
-                        else e.setCancelled(true);
                     }
-                }
                 if (!MainCommand.builders.get(localPlayer)) {
-                    if (e.getBlock().getType() != Material.STONE_PRESSURE_PLATE) {
                         e.setCancelled(true);
                         e.getPlayer().sendMessage(ChatColor.BOLD + "" + ChatColor.DARK_AQUA + "You don't have permission to build blocks");
                         return;
-                    }else {
-                        if (Various.assertNotSurroundedWithCactus(e.getBlock())) {
-                            Metadata.provideForBlock(e.getBlock()).put(MetadataProvider.DEMO_BLOCK,localPlayer);
-                            e.getPlayer().sendMessage("block added to the list");
-                        }
-                        else e.setCancelled(true);
-                    }
-                }
-                if (ItemStackAbility.ABILITY_ITEMS.contains(e.getBlock().getType())) {
-                    if (e.getBlock().getType() != Material.STONE_PRESSURE_PLATE) {
-                        e.setCancelled(true);
-                        e.getPlayer().sendMessage(ChatColor.BOLD + "" + ChatColor.DARK_AQUA + "You Can't Place Ability Items");
-                    }else {
-                        if (Metadata.provide(e.getPlayer()).has(MetadataProvider.DEMOMAN)){
-                            if (Various.assertNotSurroundedWithCactus(e.getBlock()) && DemomanAbility.getInterdit().contains(e.getBlockAgainst().getType())) {
-                                Metadata.provideForBlock(e.getBlock()).put(MetadataProvider.DEMO_BLOCK,localPlayer);
-                                e.getPlayer().sendMessage("block added to the list");
-                            }
-                            else e.setCancelled(true);
-                        }else e.setCancelled(true);
-                    }
                 }
         }
 

@@ -1,9 +1,11 @@
 package me.aiglez.lonkskit.listeners;
 
+import me.aiglez.lonkskit.Constants;
 import me.aiglez.lonkskit.KitPlugin;
 import me.aiglez.lonkskit.WorldProvider;
 import me.aiglez.lonkskit.commands.MainCommand;
 import me.aiglez.lonkskit.controllers.Controllers;
+import me.aiglez.lonkskit.events.KitSelectEvent;
 import me.aiglez.lonkskit.guis.CustomGUI;
 import me.aiglez.lonkskit.guis.ShopGUI;
 import me.aiglez.lonkskit.messages.Messages;
@@ -22,6 +24,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -49,6 +52,7 @@ public class PlayerListeners implements Listener {
         LocalPlayer.get(e.getPlayer()).setBukkit(e.getPlayer());
         if (LocalPlayer.get(e.getPlayer()).wasInKP()){
             LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
+            localPlayer.toBukkit().teleport(WorldProvider.KP_WORLD.getSpawnLocation());
             localPlayer.setLastAttacker(null);
             localPlayer.setSelectedKit(null);
             localPlayer.getInventory().clear();
@@ -73,14 +77,18 @@ public class PlayerListeners implements Listener {
                             if (e.getItem().getItemMeta().hasDisplayName()){
                                 if (e.getItem().getItemMeta().getDisplayName().toLowerCase().contains("kit selector") && !e.getItem().getItemMeta().getDisplayName().toLowerCase().contains("custom") ){
                                     if (localPlayer.isValid()) {
-                                        localPlayer.openKitSelector();
+                                        if (!Services.load(GhostFactory.class).isGhost(localPlayer.toBukkit())) {
+                                            localPlayer.openKitSelector();
+                                        }else localPlayer.msg("&3 You should be visible first");
                                     }else {
                                         localPlayer.msg("&3 You should enter the kitpvp world first");
                                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"mail send rangewonk " + e.getPlayer().getDisplayName() + " has kitpvp items in " + e.getPlayer().getWorld().getName());
                                     }
                                 }else if (e.getItem().getItemMeta().getDisplayName().toLowerCase().contains("custom kit selector")){
                                      if (localPlayer.isValid()){
-                                         new CustomGUI(localPlayer).open();
+                                         if (!Services.load(GhostFactory.class).isGhost(localPlayer.toBukkit())) {
+                                             new CustomGUI(localPlayer).open();
+                                         }else localPlayer.msg("&3 You should be visible first");
                                      }else {
                                          localPlayer.msg("&3 You should enter the kitpvp world first");
                                          Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"mail send rangewonk " + e.getPlayer().getDisplayName() + " has kitpvp items in " + e.getPlayer().getWorld().getName());
@@ -90,7 +98,9 @@ public class PlayerListeners implements Listener {
                                     if (e.getItem().getItemMeta().hasDisplayName()){
                                         if (e.getItem().getItemMeta().getDisplayName().toLowerCase().contains("points")){
                                             if (localPlayer.isValid()){
-                                                new ShopGUI(localPlayer).open();
+                                                if (!Services.load(GhostFactory.class).isGhost(localPlayer.toBukkit())) {
+                                                    new ShopGUI(localPlayer).open();
+                                                }else localPlayer.msg("&3 You should be visible first");
                                             }else {
                                                 localPlayer.msg("&3 You should enter the kitpvp world first");
                                                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"mail send rangewonk " + e.getPlayer().getDisplayName() + " has kitpvp items in " + e.getPlayer().getWorld().getName());
@@ -100,7 +110,11 @@ public class PlayerListeners implements Listener {
                                                 if (Services.load(GhostFactory.class).isGhost(e.getPlayer())){
                                                     Services.load(GhostFactory.class).setGhost(e.getPlayer(),false);
                                                     Services.load(GhostFactory.class).removePlayer(e.getPlayer());
+                                                    e.getPlayer().setGlowing(!e.getPlayer().isGlowing());
+                                                    e.getPlayer().setGliding(!e.getPlayer().isGliding());
                                                 }else {
+                                                    e.getPlayer().setGlowing(!e.getPlayer().isGlowing());
+                                                    e.getPlayer().setGliding(!e.getPlayer().isGliding());
                                                     Services.load(GhostFactory.class).setGhost(e.getPlayer(), true);
                                                     localPlayer.msg("&3You are invisible now");
                                                 }
@@ -113,14 +127,13 @@ public class PlayerListeners implements Listener {
                 }
             }
         }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onLeave(PlayerQuitEvent e) {
         final LocalPlayer localPlayer = LocalPlayer.get(e.getPlayer());
         if (localPlayer.isValid()) {
-            localPlayer.toBukkit().setHealth(0);
             FeaturesListeners.killstreaks.replace(localPlayer,0);
             localPlayer.setInKP(true);
-            localPlayer.getLastAttacker();
         }
         if (MainCommand.builders.containsKey(localPlayer)){
             MainCommand.builders.replace(localPlayer,false);
@@ -130,12 +143,10 @@ public class PlayerListeners implements Listener {
         if (Metadata.lookupBlocksWithKey(MetadataProvider.DEMO_BLOCK).containsValue(localPlayer)){
             Metadata.lookupBlocksWithKey(MetadataProvider.DEMO_BLOCK).entrySet().stream()
                     .filter(a -> a.getValue() == localPlayer)
-                    .forEach(a -> {
-                        Schedulers.sync().runLater(() -> {
-                            a.getKey().toBlock().setBlockData(Material.AIR.createBlockData());
-                            Schedulers.sync().runLater(() -> a.getKey().toBlock().getState().update(true),2L);
-                        },3L);
-                    });
+                    .forEach(a -> Schedulers.sync().runLater(() -> {
+                        a.getKey().toBlock().setBlockData(Material.AIR.createBlockData());
+                        Schedulers.sync().runLater(() -> a.getKey().toBlock().getState().update(true),2L);
+                    },3L));
         }
     }
 
@@ -225,6 +236,12 @@ public class PlayerListeners implements Listener {
         localPlayer.updateSafeStatus();
     }
 
-
+    @EventHandler
+    public void onKitSelect(KitSelectEvent e){
+        if (e.getKit().getDisplayName().toLowerCase().contains("demo")){
+            Metadata.provideForPlayer(e.getLocalPlayer().toBukkit()).put(MetadataProvider.DEMOMAN,Boolean.TRUE);
+            System.out.println("added");
+        }
+    }
 
 }

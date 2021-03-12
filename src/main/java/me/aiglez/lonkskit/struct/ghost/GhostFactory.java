@@ -128,7 +128,9 @@ public class GhostFactory {
             player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1));
             player.setInvulnerable(true);
             player.setAllowFlight(true);
+            player.setCollidable(!player.isCollidable());
         } else if (!isGhost) {
+            player.setCollidable(!player.isCollidable());
             ghosts.remove(player.getName());
             player.removePotionEffect(PotionEffectType.INVISIBILITY);
             player.setInvulnerable(false);

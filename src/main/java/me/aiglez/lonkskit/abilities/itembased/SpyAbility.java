@@ -16,9 +16,8 @@ import org.bukkit.GameMode;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.*;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.*;
+
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 public class SpyAbility extends ItemStackAbility {
@@ -86,7 +85,8 @@ public class SpyAbility extends ItemStackAbility {
                 .filter(e -> e.getPlayer().getLocation().getY() < 1)
                 .handler(e -> {
                     LocalPlayer.get(e.getPlayer()).getMetadata().remove(MetadataProvider.SPY_PLAYER);
-                    e.getPlayer().setGameMode(GameMode.SURVIVAL);
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "gamemode survival " + e.getPlayer().getName());
+                    System.out.println("YEP SPY");
                 });
 
         Events.subscribe(PlayerInteractEvent.class)
@@ -160,12 +160,9 @@ public class SpyAbility extends ItemStackAbility {
                             LocalPlayer.get(e.getPlayer()).getMetadata().remove(MetadataProvider.SPY_PLAYER);
                             if (e.getPlayer().getGameMode() == GameMode.SPECTATOR ) {
                                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "gamemode survival " + e.getPlayer().getName());
-                                System.out.println("YEP SPY");
-
                             }
                         }));
-
-
-
+        Events.subscribe(AsyncPlayerChatEvent.class)
+                .handler(e -> System.out.println(e.getMessage()));
     }
 }
